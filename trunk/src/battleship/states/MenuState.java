@@ -11,19 +11,18 @@ import battleship.gameobjects.*;
 
 public class MenuState extends State implements Runnable
 {
-	Thread t;
+	
 	boolean threadSuspended = false;
 	boolean enter = false; //what does this do?
 	public MenuState()
 	{
 		name = "MenuState";
-		enterEvents.add(new Event("init"));
-		//enterEvents.add(new Event("leaveGame"));
 		
 		obj.add(new Button(new Rectangle(128, 128, 1, 1), "", "HostGame0.gif", "HostGame1.gif", "HostGame2.gif"));
 		obj.add(new Button(new Rectangle(378, 128, 1, 1), "", "JoinGame0.gif", "JoinGame1.gif", "JoinGame2.gif"));
 		obj.add(new Button(new Rectangle(628, 128, 1, 1), "", "SinglePlayer0.gif", "SinglePlayer1.gif", "SinglePlayer2.gif"));
-		//t = new Thread(this);
+		Thread t = new Thread(this);
+		t.start();
 	}
 
 	@Override
@@ -31,10 +30,10 @@ public class MenuState extends State implements Runnable
 	{
 		System.out.println("Enter State: " + name);
 		threadSuspended = false;
-		try {
-			//t.start();
-			//notify();
-		} catch (IllegalThreadStateException e) {}
+		/*try {
+			t.start();
+			notify();
+		} catch (IllegalThreadStateException e) {}*/
 	}
 
 	@Override
@@ -63,34 +62,24 @@ public class MenuState extends State implements Runnable
 	}
 
 	@Override
-	public List<Event> events()
-	{
-		List<Event> e = new ArrayList<Event>();
-		e.addAll(events);
-		events.clear();
-		return e;
-	}
-
-	@Override
 	public void paint(Graphics g)
 	{
 		for (GameObject go : obj)
 			go.paint(g);
 	}
 
-	@Override
-	public void onEvent(Event e, List<Object> o)
+	/*public void onEvent(Event e, List<Object> o)
 	{
 		MouseEvent me = (MouseEvent) o.get(0);
 		for(GameObject go : obj)
 		{
 			enter = false;
 			if(go.getClass().getName().contains(".Button"))
-				/*buttonHover(e,o,(BHostGame)go,me);
+				buttonHover(e,o,(BHostGame)go,me);
 			if(go.getClass().getName().contains(".BJoinGame"))
 				buttonHover(e,o,(BJoinGame)go,me);
 			if(go.getClass().getName().contains(".BSinglePlayer")) {
-				buttonHover(e,o,(BSinglePlayer)go,me);*/
+				buttonHover(e,o,(BSinglePlayer)go,me);
 			
 				if(enter)
 					events.add(new Event("single"));
@@ -136,5 +125,5 @@ public class MenuState extends State implements Runnable
 		}
 		else
 			events.add(e);
-	}
+	}*/
 }
