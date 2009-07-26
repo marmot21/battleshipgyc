@@ -2,11 +2,8 @@ package battleship.states;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 
-import battleship.*;
+import battleship.EventManager;
 import battleship.gameobjects.*;
 
 public class MenuState extends State implements Runnable
@@ -18,9 +15,9 @@ public class MenuState extends State implements Runnable
 	{
 		name = "MenuState";
 		
-		obj.add(new Button(new Rectangle(128, 128, 1, 1), "", "HostGame0.gif", "HostGame1.gif", "HostGame2.gif"));
-		obj.add(new Button(new Rectangle(378, 128, 1, 1), "", "JoinGame0.gif", "JoinGame1.gif", "JoinGame2.gif"));
-		obj.add(new Button(new Rectangle(628, 128, 1, 1), "", "SinglePlayer0.gif", "SinglePlayer1.gif", "SinglePlayer2.gif"));
+		obj.add(new Button(new Rectangle(128, 128, 1, 1), "../../res/img/", "HostGame0.gif", "HostGame1.gif", "HostGame2.gif"));
+		obj.add(new Button(new Rectangle(378, 128, 1, 1), "../../res/img/", "JoinGame0.gif", "JoinGame1.gif", "JoinGame2.gif"));
+		obj.add(new Button(new Rectangle(628, 128, 1, 1), "../../res/img/", "SinglePlayer0.gif", "SinglePlayer1.gif", "SinglePlayer2.gif"));
 		Thread t = new Thread(this);
 		t.start();
 	}
@@ -28,7 +25,6 @@ public class MenuState extends State implements Runnable
 	@Override
 	public void enterState()
 	{
-		System.out.println("Enter State: " + name);
 		threadSuspended = false;
 		/*try {
 			t.start();
@@ -41,7 +37,6 @@ public class MenuState extends State implements Runnable
 	{
 		threadSuspended = true;
 		//Button.initChildren();
-		System.out.println("Exit State: " + name);
 	}
 
 	@Override

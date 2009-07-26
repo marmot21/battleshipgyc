@@ -53,7 +53,7 @@ public class Button extends GameObject
 		catch (IOException e)
 		{
 			System.out.println("Unable to load \"" + path + "\", using generic.");
-			b = new BufferedImage(r.width, r.height, BufferedImage.OPAQUE);
+			b = new BufferedImage(r.width, r.height, BufferedImage.TRANSLUCENT);
 			Graphics g = b.getGraphics();
 			g.setColor(Color.GRAY);
 			g.fillRect(0, 0, b.getWidth(), b.getHeight());
@@ -101,7 +101,7 @@ public class Button extends GameObject
 	@Override
 	public void update()
 	{
-		//only need to render when changing image
+		
 	}
 	/*public final void register(Button o) { //Handy way to keep track of children, clever me
 		rObj.add(o); //TODO: work out way to get it to remove when object is deleted

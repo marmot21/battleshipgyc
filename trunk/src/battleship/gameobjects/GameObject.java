@@ -2,12 +2,6 @@ package battleship.gameobjects;
 
 import java.awt.*;
 import java.awt.image.*;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-
 
 public abstract class GameObject
 {

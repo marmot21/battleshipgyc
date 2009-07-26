@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import battleship.*;
 import battleship.gameobjects.GameObject;
 
 public class GameState extends State
