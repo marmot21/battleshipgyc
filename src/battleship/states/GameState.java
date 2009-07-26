@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
+import battleship.EventManager;
 import battleship.gameobjects.GameObject;
 
 public class GameState extends State
@@ -38,5 +39,17 @@ public class GameState extends State
 	{
 		g.setColor(Color.RED);
 		g.drawString("lol", 30, 30);
+	}
+
+	@Override
+	public EventManager getEvents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void pumpEvents(EventManager iem) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -3,16 +3,30 @@ package battleship.gameobjects;
 import java.awt.*;
 import java.awt.image.*;
 
+import battleship.EventManager;
+
 public abstract class GameObject
 {
 	public Rectangle r;
 	public BufferedImage img;
 	public Graphics g;
 	public boolean collision, destroy = false;
+	public String name = "";
 	
 	public GameObject(Rectangle r)
 	{
 		this.r = r;
+		if(img == null)
+		{
+			img = new BufferedImage(r.width, r.height, BufferedImage.TRANSLUCENT);
+			g = img.getGraphics();
+		}
+	}
+	
+	public GameObject(Rectangle r, String s)
+	{
+		this.r = r;
+		name = s;
 		if(img == null)
 		{
 			img = new BufferedImage(r.width, r.height, BufferedImage.TRANSLUCENT);
@@ -34,8 +48,11 @@ public abstract class GameObject
 	public abstract void update();
 	public abstract void render();
 	public abstract void paint(Graphics g);
+	public abstract void pumpEvents(EventManager em);
+	public abstract EventManager getEvents();
 }
 
+//what the fuck is this?
 
 /*public class BHostGame extends Button {
 

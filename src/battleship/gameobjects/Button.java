@@ -1,13 +1,16 @@
 package battleship.gameobjects;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
+import battleship.Event;
+import battleship.EventManager;
 
 public class Button extends GameObject
 {
@@ -19,24 +22,24 @@ public class Button extends GameObject
 	}
 	public BUTTON STATE = BUTTON.NORMAL;
 	
-	public Button(Rectangle r)
+	public Button(Rectangle r, String s)
 	{
-		super(r);
+		super(r, s);
 		render();
 	}
 	
-	public Button(Rectangle r, BufferedImage n, BufferedImage h, BufferedImage p)
+	public Button(Rectangle r, String s, BufferedImage n, BufferedImage h, BufferedImage p)
 	{
-		super(r);
+		super(r, s);
 		normal = n;
 		hover = h;
 		pressed = p;
 		render();
 	}
 	
-	public Button(Rectangle r, String b, String n, String h, String p)
+	public Button(Rectangle r, String s, String b, String n, String h, String p)
 	{
-		super(r);
+		super(r, s);
 		normal = loadImage(b+n);
 		hover = loadImage(b+h);
 		pressed = loadImage(b+p);
@@ -101,4 +104,57 @@ public class Button extends GameObject
 	/*public final void register(Button o) { //Handy way to keep track of children, clever me
 		rObj.add(o); //TODO: work out way to get it to remove when object is deleted
 	}*/
+
+	@Override
+	public EventManager getEvents()
+	{
+		return null;
+	}
+
+	@Override
+	public void pumpEvents(EventManager em)
+	{
+		for(int i = 0; i < em.size(); i++)
+		{
+			if(em.getEvent(i).event.startsWith("mouse"))
+			{
+				MouseEvent me = (MouseEvent) em.getEvent(i).param;
+				if(em.getEvent(i).event.equals("mouseMoved"))
+				{
+					if(r.contains(me.getPoint()) && STATE == Button.BUTTON.NORMAL)
+					{
+						STATE = Button.BUTTON.HOVER;
+						render();
+					}
+					else if(!r.contains(me.getPoint()) && STATE == Button.BUTTON.HOVER || STATE == Button.BUTTON.PRESSED)
+					{
+						STATE = Button.BUTTON.NORMAL;
+						render();
+					}
+				}
+				
+				else if(em.getEvent(i).event.equals("mousePressed"))
+				{
+					if(r.contains(me.getPoint()))
+					{
+						STATE = Button.BUTTON.PRESSED;
+						render();
+					}
+				}
+				else if(em.getEvent(i).event.equals("mouseReleased"))
+				{
+					if(r.contains(me.getPoint()))
+					{
+						STATE = Button.BUTTON.HOVER;
+						em.trigger(new Event("buttonClicked", (Object)this));
+					}
+					else
+					{
+						STATE = Button.BUTTON.NORMAL;
+					}
+					render();
+				}
+			}
+		}
+	}
 }

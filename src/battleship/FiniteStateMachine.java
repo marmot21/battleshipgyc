@@ -9,8 +9,8 @@ public class FiniteStateMachine
 {
 	private List<State> states = new ArrayList<State>();
 	private int currentState = 0;
-	public EventManager iem = new EventManager(); //ieq = Input EventManager
 	public EventManager em = new EventManager();
+	public EventManager iem = new EventManager();
 	
 	public FiniteStateMachine()
 	{
@@ -51,6 +51,18 @@ public class FiniteStateMachine
 	public void run()
 	{
 		getState().run();
+		em.flush();
+		em.events.addAll(iem.events);
+		getState().pumpEvents(em);
+		for(int i = 0; i < em.size(); i++)
+		{
+			if(em.getEvent(i).event.equals("setState"))
+			{
+				setState((String)em.getEvent(i).param);
+				em.consume(i);
+			}
+		}
+		iem.events.clear();
 	}
 
 	public void paint(Graphics g)

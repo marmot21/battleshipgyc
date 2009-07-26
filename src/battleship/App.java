@@ -15,6 +15,8 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 	public Image img;
 	public Graphics g;
 	public FiniteStateMachine fsm = new FiniteStateMachine();
+	public long time;
+	public int loop, fps;
 	
 	@Override
 	public void init()
@@ -44,6 +46,7 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 		fsm.setState("MenuState");
 		while(true)
 		{
+			loop++;
 			fsm.run();
 			//TODO: Create a separate thread for fsm.
 			//Why?
@@ -68,76 +71,83 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 	@Override
 	public void paint(Graphics g)
 	{
-		this.g.setColor(Color.WHITE);
+		this.g.setColor(Color.GRAY);
 		this.g.fillRect(0, 0, getWidth(), getHeight());
 		fsm.paint(this.g);
+		this.g.setColor(Color.BLACK);
+		this.g.fillRect(0, 0, 128, 64);
+		this.g.setColor(Color.RED);
+		fps+=(1000/(System.currentTimeMillis() - time));
+		this.g.drawString("FPS: "+(1000/(System.currentTimeMillis() - time)), 0, 10);
+		this.g.drawString("Average FPS: "+fps/loop, 0, 20);
+		this.g.drawString("Threads: "+Thread.activeCount(), 0, 30);
 		g.drawImage(img, 0, 0, this);
+		time = System.currentTimeMillis();
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent arg0)
 	{
-		fsm.iem.triggerEvent(new Event("mouseDragged", arg0));
+		fsm.iem.trigger(new Event("mouseDragged", arg0));
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg0)
 	{
-		fsm.iem.triggerEvent(new Event("mouseMoved", arg0));
+		fsm.iem.trigger(new Event("mouseMoved", arg0));
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0)
 	{
-		fsm.iem.triggerEvent(new Event("mouseClicked", arg0));
+		fsm.iem.trigger(new Event("mouseClicked", arg0));
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0)
 	{
-		fsm.iem.triggerEvent(new Event("mouseEntered", arg0));
+		fsm.iem.trigger(new Event("mouseEntered", arg0));
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0)
 	{
-		fsm.iem.triggerEvent(new Event("mouseExited", arg0));
+		fsm.iem.trigger(new Event("mouseExited", arg0));
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0)
 	{
-		
-		fsm.iem.triggerEvent(new Event("mousePressed", arg0));
+		fsm.iem.trigger(new Event("mousePressed", arg0));
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0)
 	{
-		fsm.iem.triggerEvent(new Event("mouseReleased", arg0));
+		fsm.iem.trigger(new Event("mouseReleased", arg0));
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent arg0)
 	{
-		fsm.iem.triggerEvent(new Event("mouseWheelMoved", arg0));
+		fsm.iem.trigger(new Event("mouseWheelMoved", arg0));
 	}
 
 	@Override
 	public void keyPressed(KeyEvent arg0)
 	{
-		fsm.iem.triggerEvent(new Event("keyPressed", arg0));
+		fsm.iem.trigger(new Event("keyPressed", arg0));
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0)
 	{	
-		fsm.iem.triggerEvent(new Event("keyReleased", arg0));
+		fsm.iem.trigger(new Event("keyReleased", arg0));
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0)
 	{
-		fsm.iem.triggerEvent(new Event("keyTyped", arg0));
+		fsm.iem.trigger(new Event("keyTyped", arg0));
 	}
 }
