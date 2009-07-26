@@ -31,6 +31,11 @@ public class EventManager
 		events.remove(i);
 	}
 	
+	public synchronized void clear()
+	{
+		events.clear();
+	}
+	
 	public synchronized int size()
 	{
 		return events.size();

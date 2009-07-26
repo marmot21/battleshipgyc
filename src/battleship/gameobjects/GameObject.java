@@ -12,6 +12,7 @@ public abstract class GameObject
 	public Graphics g;
 	public boolean collision, destroy = false;
 	public String name = "";
+	protected EventManager goem = new EventManager();
 	
 	public GameObject(Rectangle r)
 	{

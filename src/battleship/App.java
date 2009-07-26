@@ -78,8 +78,10 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 		this.g.fillRect(0, 0, 128, 64);
 		this.g.setColor(Color.RED);
 		if((System.currentTimeMillis() - time) > 0)
+		{
 			fps+=(1000/(System.currentTimeMillis() - time));
-		this.g.drawString("FPS: "+(1000/(System.currentTimeMillis() - time)), 0, 10);
+			this.g.drawString("FPS: "+(1000/(System.currentTimeMillis() - time)), 0, 10);
+		}
 		this.g.drawString("Average FPS: "+fps/loop, 0, 20);
 		this.g.drawString("Threads: "+Thread.activeCount(), 0, 30);
 		g.drawImage(img, 0, 0, this);
