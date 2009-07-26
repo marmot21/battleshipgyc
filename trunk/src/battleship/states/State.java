@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import battleship.EventManager;
-import battleship.gameobjects.*;
+import battleship.gameobjects.GameObject;
 
 public abstract class State
 {

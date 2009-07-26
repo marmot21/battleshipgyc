@@ -14,12 +14,13 @@ import battleship.EventManager;
 
 public class Button extends GameObject
 {
-	//public static List<Button> rObj  = new ArrayList<Button>(); //used in register //what the fuck is this?
 	protected BufferedImage normal, hover, pressed;
+	
 	public static enum BUTTON
 	{
 		NORMAL, HOVER, PRESSED
 	}
+	
 	public BUTTON STATE = BUTTON.NORMAL;
 	
 	public Button(Rectangle r, String s)
@@ -49,6 +50,7 @@ public class Button extends GameObject
 	public BufferedImage loadImage(String path)
 	{
 		BufferedImage b = null;
+		
 		try
 		{
 			 b = ImageIO.read(new File(path));
@@ -58,6 +60,7 @@ public class Button extends GameObject
 			System.out.println("Unable to load \"" + path + "\"");
 			b = new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
 		}
+		
 		return b;
 	}
 	
@@ -87,30 +90,20 @@ public class Button extends GameObject
 		}
 	}
 
-	/*static public void initChildren () {
-		for (Button go : rObj) {
-			go.STATE = BUTTON.NORMAL;
-			go.render();
-			go.paint(go.g);
-		}
-		
-	}*/
-	
 	@Override
 	public void update()
 	{
 		
 	}
-	/*public final void register(Button o) { //Handy way to keep track of children, clever me
-		rObj.add(o); //TODO: work out way to get it to remove when object is deleted
-	}*/
 
 	@Override
 	public EventManager getEvents()
 	{
 		EventManager tmp = new EventManager();
+		
 		for(int i = 0; i < goem.size(); i++)
-			tmp.trigger(goem.getEvent(i));
+			tmp.add(goem.get(i));
+		
 		goem.clear();
 		return tmp;
 	}
@@ -120,10 +113,10 @@ public class Button extends GameObject
 	{
 		for(int i = 0; i < em.size(); i++)
 		{
-			if(em.getEvent(i).event.startsWith("mouse"))
+			if(em.get(i).event.startsWith("mouse"))
 			{
-				MouseEvent me = (MouseEvent) em.getEvent(i).param;
-				if(em.getEvent(i).event.equals("mouseMoved"))
+				MouseEvent me = (MouseEvent) em.get(i).param;
+				if(em.get(i).event.equals("mouseMoved"))
 				{
 					if(r.contains(me.getPoint()) && STATE == Button.BUTTON.NORMAL)
 					{
@@ -137,7 +130,7 @@ public class Button extends GameObject
 					}
 				}
 				
-				else if(em.getEvent(i).event.equals("mousePressed"))
+				else if(em.get(i).event.equals("mousePressed"))
 				{
 					if(r.contains(me.getPoint()))
 					{
@@ -145,12 +138,12 @@ public class Button extends GameObject
 						render();
 					}
 				}
-				else if(em.getEvent(i).event.equals("mouseReleased"))
+				else if(em.get(i).event.equals("mouseReleased"))
 				{
 					if(r.contains(me.getPoint()))
 					{
 						STATE = Button.BUTTON.HOVER;
-						goem.trigger(new Event("buttonClicked", (Object)this));
+						goem.add(new Event("buttonClicked", (Object)this));
 					}
 					else
 					{

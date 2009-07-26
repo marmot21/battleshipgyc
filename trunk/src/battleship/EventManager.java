@@ -1,18 +1,19 @@
 package battleship;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class EventManager
 {
-	public List<Event> events = new ArrayList<Event>();
+	private List<Event> events = new Vector<Event>(); //Vector is thread-safe
 	
-	public synchronized void trigger(Event e)
+	//needs to be synchronized. Unless you want exceptions/deadlocks left right and centre :D
+	public synchronized void add(Event e)
 	{
 		events.add(e);
 	}
 	
-	public synchronized Event getEvent(int i)
+	public synchronized Event get(int i)
 	{
 		return events.get(i);
 	}
