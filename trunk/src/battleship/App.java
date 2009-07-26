@@ -7,6 +7,8 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.util.ArrayList;
 
+import battleship.states.*;
+
 public class App extends Applet implements Runnable, MouseMotionListener, MouseListener, MouseWheelListener, KeyListener
 {
 	private static final long serialVersionUID = 1L;
@@ -43,7 +45,8 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 		while(true)
 		{
 			fsm.run();
-			//TODO:Create a selparate thread for fsm.
+			//TODO: Create a separate thread for fsm.
+			//Why?
 			repaint();
 			try
 			{

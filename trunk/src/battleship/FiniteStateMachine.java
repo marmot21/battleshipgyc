@@ -3,6 +3,8 @@ package battleship;
 import java.awt.Graphics;
 import java.util.*;
 
+import battleship.states.State;
+
 public class FiniteStateMachine
 {
 	private List<State> states = new ArrayList<State>();

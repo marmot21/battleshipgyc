@@ -1,4 +1,4 @@
-package battleship;
+package battleship.gameobjects;
 
 import java.awt.*;
 import java.awt.image.*;
@@ -42,67 +42,8 @@ public abstract class GameObject
 	public abstract void paint(Graphics g);
 }
 
-abstract class Buttons extends GameObject
-{
-	public static List<Buttons> rObj  = new ArrayList<Buttons>(); //used in register
-	protected BufferedImage normal, hover, pressed;
-	public static enum BUTTON
-	{
-		NORMAL, HOVER, PRESSED
-	}
-	public BUTTON STATE = BUTTON.NORMAL;
-	
-	public Buttons(Rectangle r)
-	{
-		super(r);
-	}
-	
-	@Override
-	public void paint(Graphics g)
-	{
-		g.drawImage(img, r.x, r.y, null);
-	}
 
-	@Override
-	public void render()
-	{
-		switch(STATE)
-		{
-			case NORMAL:
-				resize(new Rectangle(r.x, r.y, normal.getWidth(), normal.getHeight()));
-				g.drawImage(normal, 0, 0, null);
-				break;
-			case HOVER:
-				resize(new Rectangle(r.x, r.y, hover.getWidth(), hover.getHeight()));
-				g.drawImage(hover, 0, 0, null);
-				break;
-			case PRESSED:
-				resize(new Rectangle(r.x, r.y, pressed.getWidth(), pressed.getHeight()));
-				g.drawImage(pressed, 0, 0, null);
-				break;
-		}
-	}
-
-	static public void initChildren () {
-		for (Buttons go : rObj) {
-			go.STATE = BUTTON.NORMAL;
-			go.render();
-			go.paint(go.g);
-		}
-		
-	}
-	
-	@Override
-	public void update()
-	{
-		//only need to render when changing image
-	}
-	public final void register(Buttons o) { //Handy way to keep track of children, clever me
-		rObj.add(o); //TODO: work out way to get it to remove when object is deleted
-	}
-}
-
-final class BHostGame extends Buttons {
+/*public class BHostGame extends Button {
 
 	public BHostGame(Rectangle r) {
 		super(r);
@@ -121,7 +62,7 @@ final class BHostGame extends Buttons {
 	}
 }
 
-final class BJoinGame extends Buttons {
+final class BJoinGame extends Button {
 
 	public BJoinGame(Rectangle r) {
 		super(r);
@@ -141,7 +82,7 @@ final class BJoinGame extends Buttons {
 	
 }
 
- final class BSinglePlayer extends Buttons {
+ final class BSinglePlayer extends Button {
 
 	public BSinglePlayer(Rectangle r) {
 		super(r);
@@ -159,4 +100,4 @@ final class BJoinGame extends Buttons {
 		resize(new Rectangle(this.r.x, this.r.y, normal.getWidth(), normal.getHeight()));
 	}
 	
-}
+}*/
