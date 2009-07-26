@@ -16,6 +16,6 @@ public abstract class State
 	public abstract void exitState();
 	public abstract void run();
 	public abstract void paint(Graphics g);
-	public abstract void pumpEvents(EventManager iem);
+	public abstract void pumpEvents(EventManager em);
 	public abstract EventManager getEvents();
 }
