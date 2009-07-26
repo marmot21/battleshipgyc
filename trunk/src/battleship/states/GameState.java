@@ -19,13 +19,13 @@ public class GameState extends State
 	@Override
 	public void enterState()
 	{
-		System.out.println("Enter State: " + name);
+		
 	}
 
 	@Override
 	public void exitState()
 	{
-		System.out.println("Exit State: " + name);
+		
 	}
 
 	@Override
@@ -48,8 +48,31 @@ public class GameState extends State
 	}
 
 	@Override
-	public void pumpEvents(EventManager iem) {
-		// TODO Auto-generated method stub
-		
+	public void pumpEvents(EventManager em)
+	{
+		for(int i = 0; i < em.size(); i++)
+		{
+			if(em.getEvent(i).event.equals("mode"))
+			{
+				if(em.getEvent(i).param.equals("Host"))
+				{
+					//insert host specific stuff here
+					
+					em.consume(i);
+				}
+				else if(em.getEvent(i).param.equals("Join"))
+				{
+					//insert join specific stuff here
+					
+					em.consume(i);
+				}
+				else if(em.getEvent(i).param.equals("Single"))
+				{
+					//insert single specific stuff here
+					
+					em.consume(i);
+				}
+			}
+		}
 	}
 }
