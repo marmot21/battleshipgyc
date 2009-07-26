@@ -28,7 +28,7 @@ public class FiniteStateMachine
 		return states.get(currentState);
 	}
 	
-	public void setState(String s)
+	private void setState(String s)
 	{
 		for(int i = 0; i < states.size(); i++)
 		{
