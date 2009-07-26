@@ -4,6 +4,11 @@ import java.awt.Graphics;
 
 public class GenericState extends State
 {
+	public GenericState()
+	{
+		name = "GenericState";
+	}
+	
 	@Override
 	public void enterState()
 	{
