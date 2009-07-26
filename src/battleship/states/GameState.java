@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import battleship.Event;
+import battleship.*;
 import battleship.gameobjects.GameObject;
 
 public class GameState extends State
@@ -14,7 +14,6 @@ public class GameState extends State
 	public GameState()
 	{
 		name = "GameState";
-		enterEvents.add(new Event("single"));
 	}
 
 	@Override
@@ -36,27 +35,9 @@ public class GameState extends State
 	}
 
 	@Override
-	public List<Event> events()
-	{
-		List<Event> e = new ArrayList<Event>();
-		e.addAll(events);
-		events.clear();
-		return e;
-	}
-
-	@Override
 	public void paint(Graphics g)
 	{
 		g.setColor(Color.RED);
 		g.drawString("lol", 30, 30);
-	}
-
-	@Override
-	public void onEvent(Event e, List<Object> o)
-	{
-		if(e.event.equals("mouseClicked"))
-			events.add(new Event("init"));
-		else events.add(e);
-		
 	}
 }

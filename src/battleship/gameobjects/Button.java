@@ -1,5 +1,6 @@
 package battleship.gameobjects;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -21,6 +22,7 @@ public class Button extends GameObject
 	public Button(Rectangle r)
 	{
 		super(r);
+		render();
 	}
 	
 	public Button(Rectangle r, BufferedImage n, BufferedImage h, BufferedImage p)
@@ -29,35 +31,36 @@ public class Button extends GameObject
 		normal = n;
 		hover = h;
 		pressed = p;
+		render();
 	}
 	
 	public Button(Rectangle r, String b, String n, String h, String p)
 	{
 		super(r);
+		normal = loadImage(b+n);
+		hover = loadImage(b+h);
+		pressed = loadImage(b+p);
+		render();
+	}
+	
+	public BufferedImage loadImage(String path)
+	{
+		BufferedImage b = null;
 		try
 		{
-			normal = ImageIO.read(new File(b+n));
+			 b = ImageIO.read(new File(path));
 		}
 		catch (IOException e)
 		{
-			System.out.println("Unable to load \"" + b+n + "\"");
+			System.out.println("Unable to load \"" + path + "\", using generic.");
+			b = new BufferedImage(r.width, r.height, BufferedImage.OPAQUE);
+			Graphics g = b.getGraphics();
+			g.setColor(Color.GRAY);
+			g.fillRect(0, 0, b.getWidth(), b.getHeight());
+			g.setColor(Color.BLACK);
+			g.drawRect(0, 0, b.getWidth(), b.getHeight());
 		}
-		try
-		{
-			hover = ImageIO.read(new File(b+h));
-		}
-		catch (IOException e)
-		{
-			System.out.println("Unable to load \"" + b+h + "\"");
-		}
-		try
-		{
-			pressed = ImageIO.read(new File(b+p));
-		}
-		catch (IOException e)
-		{
-			System.out.println("Unable to load \"" + b+p + "\"");
-		}
+		return b;
 	}
 	
 	@Override

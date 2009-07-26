@@ -32,7 +32,7 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 			g = img.getGraphics();
 		}
 		
-		
+		fsm.addState(new GenericState());
 		fsm.addState(new MenuState());
 		fsm.addState(new GameState());
 		
@@ -42,6 +42,7 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 	
 	public void run()
 	{
+		fsm.em.triggerEvent(new Event("init"));
 		while(true)
 		{
 			fsm.run();
@@ -77,88 +78,67 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 	@Override
 	public void mouseDragged(MouseEvent arg0)
 	{
-		List<Object> params = new ArrayList<Object>();
-		params.add(arg0);
-		fsm.triggerEvent(new Event("mouseDragged"), params);
+		fsm.iem.triggerEvent(new Event("mouseDragged", arg0));
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg0)
 	{
-		List<Object> params = new ArrayList<Object>();
-		params.add(arg0);
-		fsm.triggerEvent(new Event("mouseMoved"), params);
+		fsm.iem.triggerEvent(new Event("mouseMoved", arg0));
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0)
 	{
-		List<Object> params = new ArrayList<Object>();
-		params.add(arg0);
-		fsm.triggerEvent(new Event("mouseClicked"), params);
+		fsm.iem.triggerEvent(new Event("mouseClicked", arg0));
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0)
 	{
-		List<Object> params = new ArrayList<Object>();
-		params.add(arg0);
-		fsm.triggerEvent(new Event("mouseEntered"), params);
+		fsm.iem.triggerEvent(new Event("mouseEntered", arg0));
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0)
 	{
-		List<Object> params = new ArrayList<Object>();
-		params.add(arg0);
-		fsm.triggerEvent(new Event("mouseExited"), params);
+		fsm.iem.triggerEvent(new Event("mouseExited", arg0));
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0)
 	{
-		List<Object> params = new ArrayList<Object>();
-		params.add(arg0);
-		fsm.triggerEvent(new Event("mousePressed"), params);
+		
+		fsm.iem.triggerEvent(new Event("mousePressed", arg0));
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0)
 	{
-		List<Object> params = new ArrayList<Object>();
-		params.add(arg0);
-		fsm.triggerEvent(new Event("mouseReleased"), params);
+		fsm.iem.triggerEvent(new Event("mouseReleased", arg0));
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent arg0)
 	{
-		List<Object> params = new ArrayList<Object>();
-		params.add(arg0);
-		fsm.triggerEvent(new Event("mouseWheelMoved"), params);
+		fsm.iem.triggerEvent(new Event("mouseWheelMoved", arg0));
 	}
 
 	@Override
 	public void keyPressed(KeyEvent arg0)
 	{
-		List<Object> params = new ArrayList<Object>();
-		params.add(arg0);
-		fsm.triggerEvent(new Event("keyPressed"), params);
+		fsm.iem.triggerEvent(new Event("keyPressed", arg0));
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0)
 	{	
-		List<Object> params = new ArrayList<Object>();
-		params.add(arg0);
-		fsm.triggerEvent(new Event("keyReleased"), params);
+		fsm.iem.triggerEvent(new Event("keyReleased", arg0));
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0)
 	{
-		List<Object> params = new ArrayList<Object>();
-		params.add(arg0);
-		fsm.triggerEvent(new Event("keyTyped"), params);
+		fsm.iem.triggerEvent(new Event("keyTyped", arg0));
 	}
 }

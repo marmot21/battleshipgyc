@@ -8,8 +8,9 @@ import battleship.states.State;
 public class FiniteStateMachine
 {
 	private List<State> states = new ArrayList<State>();
-	private List<Event> events = new ArrayList<Event>();
 	private int currentState = 0;
+	public EventManager iem = new EventManager(); //ieq = Input EventManager
+	public EventManager em = new EventManager();
 	
 	public FiniteStateMachine()
 	{
@@ -48,7 +49,7 @@ public class FiniteStateMachine
 	public void run()
 	{
 		states.get(currentState).run();
-		events.addAll(states.get(currentState).events());
+		/*events.addAll(states.get(currentState).events());
 		int e = 0;
 		for(int i = 0; i < states.size(); i++)
 		{
@@ -65,22 +66,11 @@ public class FiniteStateMachine
 				}
 			}
 		}
-		events.clear();
+		events.clear();*/
 	}
 
 	public void paint(Graphics g)
 	{
 		states.get(currentState).paint(g);
-	}
-	
-	public void triggerEvent(Event e)
-	{
-		triggerEvent(e, new ArrayList<Object>());
-	}
-	
-	public void triggerEvent(Event e, List<Object> params)
-	{
-		//System.out.println("Event triggered: " + e.event);
-		states.get(currentState).onEvent(e, params);
 	}
 }
