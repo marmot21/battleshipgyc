@@ -2,6 +2,8 @@ package battleship.states;
 
 import java.awt.Graphics;
 
+import battleship.EventManager;
+
 public class GenericState extends State
 {
 	public GenericState()
@@ -31,6 +33,18 @@ public class GenericState extends State
 	public void run()
 	{
 
+	}
+
+	@Override
+	public EventManager getEvents()
+	{
+		return new EventManager();
+	}
+
+	@Override
+	public void pumpEvents(EventManager iem)
+	{
+		
 	}
 
 }
