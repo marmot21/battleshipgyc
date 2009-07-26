@@ -2,10 +2,8 @@ package battleship;
 
 import java.applet.Applet;
 import java.awt.*;
-import java.util.List;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.util.ArrayList;
 
 import battleship.states.*;
 
@@ -42,7 +40,8 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 	
 	public void run()
 	{
-		fsm.em.triggerEvent(new Event("init"));
+		//fsm.em.triggerEvent(new Event("init"));
+		fsm.setState("MenuState");
 		while(true)
 		{
 			fsm.run();

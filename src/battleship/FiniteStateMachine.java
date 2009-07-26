@@ -22,12 +22,12 @@ public class FiniteStateMachine
 		states.add(s);
 	}
 	
-	public State getState()
+	private State getState()
 	{
 		return states.get(currentState);
 	}
 	
-	public void setState(String s)
+	public void setState(String s) //change to private later
 	{
 		for(int i = 0; i < states.size(); i++)
 		{
@@ -39,38 +39,22 @@ public class FiniteStateMachine
 		}
 	}
 	
-	public void setState(int i) //does this need to be public - internal call?
+	private void setState(int i)
 	{
-		states.get(currentState).exitState();
+		System.out.println("Exiting State: " + getState().name);
+		getState().exitState();
 		currentState = i;
-		states.get(currentState).enterState();
+		System.out.println("Entering State: " + getState().name);
+		getState().enterState();
 	}
 	
 	public void run()
 	{
-		states.get(currentState).run();
-		/*events.addAll(states.get(currentState).events());
-		int e = 0;
-		for(int i = 0; i < states.size(); i++)
-		{
-			for(int j = 0; j < states.get(i).enterEvents.size(); j++)
-			{
-				for(int k = 0; k < events.size(); k++)
-				{
-					if(states.get(i).enterEvents.get(j).event.equals(events.get(k).event))
-					{ //if the event is equal to the entry condition for a state then enter it
-						e++;
-						if(e == states.get(i).enterEvents.size()) //what is this for?? 
-							setState(i);
-					}	
-				}
-			}
-		}
-		events.clear();*/
+		getState().run();
 	}
 
 	public void paint(Graphics g)
 	{
-		states.get(currentState).paint(g);
+		getState().paint(g);
 	}
 }
