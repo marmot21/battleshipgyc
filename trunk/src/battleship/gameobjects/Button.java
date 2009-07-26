@@ -52,13 +52,8 @@ public class Button extends GameObject
 		}
 		catch (IOException e)
 		{
-			System.out.println("Unable to load \"" + path + "\", using generic.");
-			b = new BufferedImage(r.width, r.height, BufferedImage.TRANSLUCENT);
-			Graphics g = b.getGraphics();
-			g.setColor(Color.GRAY);
-			g.fillRect(0, 0, b.getWidth(), b.getHeight());
-			g.setColor(Color.BLACK);
-			g.drawRect(0, 0, b.getWidth(), b.getHeight());
+			System.out.println("Unable to load \"" + path + "\"");
+			b = new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
 		}
 		return b;
 	}
