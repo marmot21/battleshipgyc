@@ -1,7 +1,8 @@
 package battleship;
 
 import java.awt.Graphics;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import battleship.states.State;
 
@@ -27,7 +28,7 @@ public class FiniteStateMachine
 		return states.get(currentState);
 	}
 	
-	public void setState(String s) //change to private later
+	public void setState(String s)
 	{
 		for(int i = 0; i < states.size(); i++)
 		{
@@ -41,29 +42,38 @@ public class FiniteStateMachine
 	
 	private void setState(int i)
 	{
-		System.out.println("Exiting State: " + getState().name);
+		System.out.println("Exiting State: " + getState().name); //debugging purposes, remove later
 		getState().exitState();
 		currentState = i;
-		System.out.println("Entering State: " + getState().name);
+		System.out.println("Entering State: " + getState().name); //debugging purposes, remove later
 		getState().enterState();
 	}
 	
 	public void run()
 	{
 		getState().run();
-		em.flush();
-		em.events.addAll(iem.events);
-		iem.events.clear();
-		getState().pumpEvents(em);
+		em.flush(); //get rid of old input events
+		for(int i = 0; i < iem.size(); i++) //add new input events
+			em.add(iem.get(i));
+		iem.clear();
+		getState().pumpEvents(em); //send events to current state
+		
+		//get events from current state
 		EventManager em2 = getState().getEvents();
 		if(em2 != null)
-			for(Event e : em2.events)
-				em.trigger(e);
+		{
+			for(int i = 0; i < em2.size(); i++)
+			{
+				em.add(em2.get(i));
+			}
+		}
+		
+		//change state if needed
 		for(int i = 0; i < em.size(); i++)
 		{
-			if(em.getEvent(i).event.equals("setState"))
+			if(em.get(i).event.equals("setState"))
 			{
-				setState((String)em.getEvent(i).param);
+				setState((String)em.get(i).param);
 				em.consume(i);
 			}
 		}

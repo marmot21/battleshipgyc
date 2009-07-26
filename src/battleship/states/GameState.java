@@ -1,6 +1,5 @@
 package battleship.states;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,7 @@ import battleship.gameobjects.GameObject;
 public class GameState extends State
 {
 	public List<GameObject> obj = new ArrayList<GameObject>();
+	
 	public GameState()
 	{
 		name = "GameState";
@@ -37,14 +37,13 @@ public class GameState extends State
 	@Override
 	public void paint(Graphics g)
 	{
-		g.setColor(Color.RED);
-		g.drawString("lol", 30, 30);
+		
 	}
 
 	@Override
-	public EventManager getEvents() {
-		// TODO Auto-generated method stub
-		return null;
+	public EventManager getEvents()
+	{
+		return sem;
 	}
 
 	@Override
@@ -52,21 +51,21 @@ public class GameState extends State
 	{
 		for(int i = 0; i < em.size(); i++)
 		{
-			if(em.getEvent(i).event.equals("mode"))
+			if(em.get(i).event.equals("mode"))
 			{
-				if(em.getEvent(i).param.equals("Host"))
+				if(em.get(i).param.equals("Host"))
 				{
 					//insert host specific stuff here
 					
 					em.consume(i);
 				}
-				else if(em.getEvent(i).param.equals("Join"))
+				else if(em.get(i).param.equals("Join"))
 				{
 					//insert join specific stuff here
 					
 					em.consume(i);
 				}
-				else if(em.getEvent(i).param.equals("Single"))
+				else if(em.get(i).param.equals("Single"))
 				{
 					//insert single specific stuff here
 					

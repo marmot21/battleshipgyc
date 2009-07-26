@@ -1,7 +1,8 @@
 package battleship.gameobjects;
 
-import java.awt.*;
-import java.awt.image.*;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import battleship.EventManager;
 
@@ -17,6 +18,7 @@ public abstract class GameObject
 	public GameObject(Rectangle r)
 	{
 		this.r = r;
+		
 		if(img == null)
 		{
 			img = new BufferedImage(r.width, r.height, BufferedImage.TRANSLUCENT);
@@ -28,6 +30,7 @@ public abstract class GameObject
 	{
 		this.r = r;
 		name = s;
+		
 		if(img == null)
 		{
 			img = new BufferedImage(r.width, r.height, BufferedImage.TRANSLUCENT);
@@ -52,64 +55,3 @@ public abstract class GameObject
 	public abstract void pumpEvents(EventManager em);
 	public abstract EventManager getEvents();
 }
-
-//what the fuck is this?
-
-/*public class BHostGame extends Button {
-
-	public BHostGame(Rectangle r) {
-		super(r);
-		register (this);
-		try
-		{
-			normal = ImageIO.read(new File("Images/HostGame0.gif"));
-			hover = ImageIO.read(new File("Images/HostGame1.gif"));
-			pressed = ImageIO.read(new File("Images/HostGame2.gif"));
-		}
-		catch (Exception e)
-		{
-			System.out.println("Unable to load image, bro.");
-		}
-		resize(new Rectangle(this.r.x, this.r.y, normal.getWidth(), normal.getHeight()));
-	}
-}
-
-final class BJoinGame extends Button {
-
-	public BJoinGame(Rectangle r) {
-		super(r);
-		register (this);
-		try
-		{
-			normal = ImageIO.read(new File("Images/JoinGame0.gif"));
-			hover = ImageIO.read(new File("Images/JoinGame1.gif"));
-			pressed = ImageIO.read(new File("Images/JoinGame2.gif"));
-		}
-		catch (Exception e)
-		{
-			System.out.println("Unable to load image, bro.");
-		}
-		resize(new Rectangle(this.r.x, this.r.y, normal.getWidth(), normal.getHeight()));
-	}
-	
-}
-
- final class BSinglePlayer extends Button {
-
-	public BSinglePlayer(Rectangle r) {
-		super(r);
-		register (this);
-		try
-		{
-			normal = ImageIO.read(new File("Images/SinglePlayer0.gif"));
-			hover = ImageIO.read(new File("Images/SinglePlayer1.gif"));
-			pressed = ImageIO.read(new File("Images/SinglePlayer2.gif"));
-		}
-		catch (Exception e)
-		{
-			System.out.println("Unable to load image, bro.");
-		}
-		resize(new Rectangle(this.r.x, this.r.y, normal.getWidth(), normal.getHeight()));
-	}
-	
-}*/
