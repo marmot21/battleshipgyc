@@ -16,9 +16,9 @@ public class Button extends GameObject
 {
 	protected BufferedImage normal, hover, pressed;
 	
-	public static enum BUTTON
+	public enum BUTTON
 	{
-		NORMAL, HOVER, PRESSED
+		NORMAL, HOVER, PRESSED, ACTIVE
 	}
 	
 	public BUTTON STATE = BUTTON.NORMAL;
@@ -76,6 +76,7 @@ public class Button extends GameObject
 		switch(STATE)
 		{
 			case NORMAL:
+			case ACTIVE:
 				resize(new Rectangle(r.x, r.y, normal.getWidth(), normal.getHeight()));
 				g.drawImage(normal, 0, 0, null);
 				break;
@@ -116,38 +117,47 @@ public class Button extends GameObject
 			if(em.get(i).event.startsWith("mouse"))
 			{
 				MouseEvent me = (MouseEvent) em.get(i).param;
-				if(em.get(i).event.equals("mouseMoved"))
+				if(em.get(i).event.equals("mouseMoved") || em.get(i).event.equals("mouseDragged"))
 				{
-					if(r.contains(me.getPoint()) && STATE == Button.BUTTON.NORMAL)
+					if(r.contains(me.getPoint()) && STATE == BUTTON.NORMAL)
 					{
-						STATE = Button.BUTTON.HOVER;
+						STATE = BUTTON.HOVER;
 						render();
 					}
-					else if(!r.contains(me.getPoint()) && STATE == Button.BUTTON.HOVER || STATE == Button.BUTTON.PRESSED)
+					else if(r.contains(me.getPoint()) && STATE == BUTTON.ACTIVE)
 					{
-						STATE = Button.BUTTON.NORMAL;
+						STATE = BUTTON.PRESSED;
+						render();
+					}
+					else if(!r.contains(me.getPoint()) && STATE == BUTTON.HOVER)
+					{
+						STATE = BUTTON.NORMAL;
+						render();
+					}
+					else if(!r.contains(me.getPoint()) && STATE == BUTTON.PRESSED)
+					{
+						STATE = BUTTON.ACTIVE;
 						render();
 					}
 				}
 				
-				else if(em.get(i).event.equals("mousePressed"))
+				else if(em.get(i).event.equals("mousePressed") && me.getButton() == MouseEvent.BUTTON1)
 				{
 					if(r.contains(me.getPoint()))
 					{
-						STATE = Button.BUTTON.PRESSED;
+						STATE = BUTTON.PRESSED;
 						render();
 					}
 				}
-				else if(em.get(i).event.equals("mouseReleased"))
+				else if(em.get(i).event.equals("mouseReleased") && me.getButton() == MouseEvent.BUTTON1)
 				{
-					if(r.contains(me.getPoint()))
+					if(r.contains(me.getPoint()) && STATE == BUTTON.PRESSED)
 					{
-						STATE = Button.BUTTON.HOVER;
 						goem.add(new Event("buttonClicked", (Object)this));
 					}
 					else
 					{
-						STATE = Button.BUTTON.NORMAL;
+						STATE = BUTTON.NORMAL;
 					}
 					render();
 				}
