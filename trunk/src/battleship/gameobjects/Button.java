@@ -108,7 +108,11 @@ public class Button extends GameObject
 	@Override
 	public EventManager getEvents()
 	{
-		return null;
+		EventManager tmp = new EventManager();
+		for(int i = 0; i < goem.size(); i++)
+			tmp.trigger(goem.getEvent(i));
+		goem.clear();
+		return tmp;
 	}
 
 	@Override
@@ -146,7 +150,7 @@ public class Button extends GameObject
 					if(r.contains(me.getPoint()))
 					{
 						STATE = Button.BUTTON.HOVER;
-						em.trigger(new Event("buttonClicked", (Object)this));
+						goem.trigger(new Event("buttonClicked", (Object)this));
 					}
 					else
 					{

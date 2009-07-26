@@ -53,7 +53,12 @@ public class FiniteStateMachine
 		getState().run();
 		em.flush();
 		em.events.addAll(iem.events);
+		iem.events.clear();
 		getState().pumpEvents(em);
+		EventManager em2 = getState().getEvents();
+		if(em2 != null)
+			for(Event e : em2.events)
+				em.trigger(e);
 		for(int i = 0; i < em.size(); i++)
 		{
 			if(em.getEvent(i).event.equals("setState"))
@@ -62,7 +67,6 @@ public class FiniteStateMachine
 				em.consume(i);
 			}
 		}
-		iem.events.clear();
 	}
 
 	public void paint(Graphics g)

@@ -46,13 +46,13 @@ public class MenuState extends State// implements Runnable
 	@Override
 	public void enterState()
 	{
-
+		
 	}
 
 	@Override
 	public void exitState()
 	{
-
+		
 	}
 
 	@Override
@@ -72,7 +72,18 @@ public class MenuState extends State// implements Runnable
 	@Override
 	public EventManager getEvents()
 	{
-		return null;
+		for(GameObject go : obj)
+		{
+			EventManager goem = go.getEvents();
+			if(goem != null)
+				for(Event e : goem.events)
+					sem.trigger(e);
+		}
+		EventManager tmp = new EventManager();
+		for(int i = 0; i < sem.size(); i++)
+			tmp.trigger(sem.getEvent(i));
+		sem.clear();
+		return tmp;
 	}
 
 	@Override
@@ -87,18 +98,18 @@ public class MenuState extends State// implements Runnable
 				Button b = (Button)em.getEvent(i).param;
 				if(b.name.equals("HostGame"))
 				{
-					em.trigger(new Event("setState", "GameState"));
-					em.trigger(new Event("mode", "Host"));
+					sem.trigger(new Event("setState", "GameState"));
+					sem.trigger(new Event("mode", "Host"));
 				}
 				if(b.name.equals("JoinGame"))
 				{
-					em.trigger(new Event("setState", "GameState"));
-					em.trigger(new Event("mode", "Join"));
+					sem.trigger(new Event("setState", "GameState"));
+					sem.trigger(new Event("mode", "Join"));
 				}
 				if(b.name.equals("SinglePlayer"))
 				{
-					em.trigger(new Event("setState", "GameState"));
-					em.trigger(new Event("mode", "Single"));
+					sem.trigger(new Event("setState", "GameState"));
+					sem.trigger(new Event("mode", "Single"));
 				}
 			}
 				
