@@ -54,7 +54,7 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 	
 	public void run()
 	{
-		fsm.setState("MenuState");
+		fsm.em.add(new Event("setState", "MenuState"));
 		while(true)
 		{
 			loop++;
