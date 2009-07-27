@@ -3,7 +3,7 @@
 
 = Introduction =
 
-Here is a description of things which need further developmant for the guiFunctionality Milestone. This milestone will simply be a GUI which bascily allows the user to see what the game would look like and to navigate away from the main menu and see whe *attack window*. The attack window consists of two grids - one which will be the _Targeting Screen_ and the other _Status Screen_. The _Status Screen_ will be the user's interface for placing their ships, while the _Targeting Screen_ will be the interface for droping bombs on the enemy.
+Here is a description of things which need further development for the guiFunctionality Milestone. This milestone will simply be a GUI which basically allows the user to see what the game would look like and to navigate away from the main menu and see when *attack window*. The attack window consists of two grids - one which will be the _Targeting Screen_ and the other _Status Screen_. The _Status Screen_ will be the user's interface for placing their ships, while the _Targeting Screen_ will be the interface for dropping bombs on the enemy.
 
 
 = Details =
@@ -16,7 +16,7 @@ Here is a description of things which need further developmant for the guiFuncti
 
 ==== Menu ====
   #  Create main title
-  #  Incorprate an animating pic into the background
+  #  Incorporate an animating pic into the background
   #  Make only the *Single player* button work - others display an error
     *  Figure out what error should say
 
@@ -24,13 +24,13 @@ Here is a description of things which need further developmant for the guiFuncti
   #  Have Pictures of each boat on side
     *  Enable the pictures to be able to be _draged_ to a position on grid
     *  Enable boats to be able to be draged between grid positions
-  #  Have buttton to _set_ the positions - ie make it permanent and start game
-  #  Have a anniamiting pic in background
+  #  Have button to _set_ the positions - ie make it permanent and start game
+  #  Have a animating pic in background
 
 == Pics ==
 
 ==== Background ====
-  *  Backdround pic should be water-ish stuff
+  *  Background pic should be water-ish stuff
 
 ==== Boats ====
   *  Aircraft carrier - takes up 5 grid spaces
