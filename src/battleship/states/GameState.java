@@ -1,19 +1,15 @@
 package battleship.states;
 
-import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 import battleship.Event;
 import battleship.EventManager;
-import battleship.gameobjects.Button;
-import battleship.gameobjects.GameObject;
-import battleship.gameobjects.Playfield;
+import battleship.gameobjects.*;
 
 public class GameState extends State
 {
@@ -22,31 +18,11 @@ public class GameState extends State
 	public GameState()
 	{
 		name = "GameState";
-		
-		//example of creating a button at run-time
-		BufferedImage img1 = new BufferedImage(192, 128, BufferedImage.TRANSLUCENT);
-		BufferedImage img2 = new BufferedImage(192, 128, BufferedImage.TRANSLUCENT);
-		BufferedImage img3 = new BufferedImage(192, 128, BufferedImage.TRANSLUCENT);
-		Graphics g = img1.getGraphics();
-		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, img1.getWidth(), img1.getHeight());
-		g.setColor(Color.BLACK);
-		g.drawRect(0, 0, img1.getWidth()-1, img1.getHeight()-1);
-		g.drawString("LOL", 75, 50);
-		g = img2.getGraphics();
-		g.setColor(Color.ORANGE);
-		g.fillRect(0, 0, img2.getWidth(), img2.getHeight());
-		g.setColor(Color.BLACK);
-		g.drawRect(0, 0, img2.getWidth()-1, img2.getHeight()-1);
-		g.drawString("TEST", 75, 50);
-		g = img3.getGraphics();
-		g.setColor(Color.MAGENTA);
-		g.fillRect(0, 0, img3.getWidth(), img3.getHeight());
-		g.setColor(Color.BLACK);
-		g.drawRect(0, 0, img3.getWidth()-1, img3.getHeight()-1);
-		g.drawString("BUTTON", 75, 50);
-		obj.add(new Button(new Rectangle(208, 408, 192, 128), "TestButton", img1, img2, img3));
-		obj.add(new Playfield(new Point(128, 0), new Dimension(20, 20), new Dimension(16, 16)));
+		Playfield p = new Playfield("Status Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24));
+		p.obj.add(new Battleship(new Rectangle(8*p.gridSize.width, 4*p.gridSize.height, 1*p.gridSize.width, 2*p.gridSize.height)));
+		p.render();
+		obj.add(p);
+		obj.add(new Playfield("Targeting Screen", new Rectangle(24, 240+24, 10, 10), new Dimension(24, 24)));
 	}
 
 	@Override
@@ -105,13 +81,15 @@ public class GameState extends State
 				if(em.get(i).param.equals("Host"))
 				{
 					//insert host specific stuff here
-					
+					sem.add(new Event("setState", "MenuState"));
+					sem.add(new Event("error", "Hosting not implemented"));
 					em.consume(i);
 				}
 				else if(em.get(i).param.equals("Join"))
 				{
 					//insert join specific stuff here
-					
+					sem.add(new Event("setState", "MenuState"));
+					sem.add(new Event("error", "Joining not implemented"));
 					em.consume(i);
 				}
 				else if(em.get(i).param.equals("Single"))
