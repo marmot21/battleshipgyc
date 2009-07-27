@@ -8,7 +8,7 @@ import battleship.states.State;
 
 public class FiniteStateMachine
 {
-	public static boolean DEBUG = true;
+	public static boolean DEBUG = battleship.App.DEBUG;
 	private List<State> states = new ArrayList<State>();
 	private int currentState = 0;
 	public EventManager em = new EventManager();
