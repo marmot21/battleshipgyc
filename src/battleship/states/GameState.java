@@ -11,7 +11,9 @@ import java.util.List;
 
 import battleship.Event;
 import battleship.EventManager;
-import battleship.gameobjects.*;
+import battleship.gameobjects.Button;
+import battleship.gameobjects.GameObject;
+import battleship.gameobjects.Playfield;
 
 public class GameState extends State
 {
