@@ -10,7 +10,7 @@ import battleship.gameobjects.GameObject;
 public abstract class State
 {
 	public String name = "";
-	public List<GameObject> obj = new ArrayList<GameObject>();
+	protected List<GameObject> obj = new ArrayList<GameObject>();
 	protected EventManager sem = new EventManager();
 	
 	public abstract void enterState();	

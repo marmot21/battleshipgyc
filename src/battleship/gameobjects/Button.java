@@ -16,7 +16,7 @@ public class Button extends GameObject
 {
 	protected BufferedImage normal, hover, pressed;
 	
-	public enum BUTTON
+	public static enum BUTTON
 	{
 		NORMAL, HOVER, PRESSED, ACTIVE
 	}
@@ -47,7 +47,7 @@ public class Button extends GameObject
 		render();
 	}
 	
-	public BufferedImage loadImage(String path)
+	public static BufferedImage loadImage(String path)
 	{
 		BufferedImage b = null;
 		

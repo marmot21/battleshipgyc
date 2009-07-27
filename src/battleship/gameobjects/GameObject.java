@@ -9,9 +9,8 @@ import battleship.EventManager;
 public abstract class GameObject
 {
 	public Rectangle r;
-	public BufferedImage img;
-	public Graphics g;
-	public boolean collision, destroy = false;
+	protected BufferedImage img;
+	protected Graphics g;
 	public String name = "";
 	protected EventManager goem = new EventManager();
 	
@@ -38,7 +37,7 @@ public abstract class GameObject
 		}
 	}
 	
-	public void resize(Rectangle r)
+	protected void resize(Rectangle r)
 	{
 		if(r.x != this.r.x || r.y != this.r.y || r.width != this.r.width || r.height != this.r.height)
 		{

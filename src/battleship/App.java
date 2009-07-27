@@ -20,13 +20,12 @@ import battleship.states.MenuState;
 public class App extends Applet implements Runnable, MouseMotionListener, MouseListener, MouseWheelListener, KeyListener
 {
 	private static final long serialVersionUID = 1L;
-	public static int FPS = 30;
-	public static int SLEEP = 1000/FPS;
-	public Image img;
-	public Graphics g;
-	public FiniteStateMachine fsm = new FiniteStateMachine();
-	public long time;
-	public int loop = 1, fps = 1;
+	private static int FPS = 30, SLEEP = 1000/FPS;
+	private Image img;
+	private Graphics g;
+	private FiniteStateMachine fsm = new FiniteStateMachine();
+	private long time;
+	private int loop = 1, fps = 1;
 	
 	@Override
 	public void init()

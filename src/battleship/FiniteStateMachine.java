@@ -13,11 +13,6 @@ public class FiniteStateMachine
 	public EventManager em = new EventManager();
 	public EventManager iem = new EventManager();
 	
-	public FiniteStateMachine()
-	{
-		
-	}
-	
 	public void addState(State s)
 	{
 		states.add(s);
