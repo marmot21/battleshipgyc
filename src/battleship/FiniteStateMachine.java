@@ -1,4 +1,4 @@
-package battleship;
+package battleship; //few comments here and there
 
 import java.awt.Graphics;
 import java.util.ArrayList;
