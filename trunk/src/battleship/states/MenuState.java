@@ -37,7 +37,7 @@ public class MenuState extends State
 		for(GameObject go : obj)
 			go.update();
 	}
-
+	
 	@Override
 	public void paint(Graphics g)
 	{

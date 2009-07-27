@@ -65,12 +65,19 @@ public class FiniteStateMachine
 			}
 		}
 		
-		//change state if needed (if an event "setState" is fired)
+		//loops through all events to check if something needs to be done
 		for(int i = 0; i < em.size(); i++)
 		{
+			//change state if needed (if event "setState" is fired)
 			if(em.get(i).event.equals("setState"))
 			{
 				setState((String)em.get(i).param);
+				em.consume(i);
+				run(); //makes sure it changes straight away
+			}
+			else if(em.get(i).event.equals("error"))
+			{
+				System.out.println(em.get(i).param);
 				em.consume(i);
 			}
 		}
