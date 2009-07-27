@@ -8,7 +8,7 @@ import battleship.EventManager;
 import battleship.gameobjects.Button;
 import battleship.gameobjects.GameObject;
 
-public class MenuState extends State// implements Runnable
+public class MenuState extends State
 {
 	public MenuState()
 	{
@@ -72,7 +72,7 @@ public class MenuState extends State// implements Runnable
 		{
 			if(em.get(i).event.equals("buttonClicked"))
 			{
-				Button b = (Button)em.get(i).param;
+				Button b = (Button)em.get(i).param;	
 				if(b.name.equals("HostGame"))
 				{
 					sem.add(new Event("setState", "GameState"));

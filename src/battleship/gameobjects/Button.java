@@ -16,6 +16,7 @@ public class Button extends GameObject
 {
 	protected BufferedImage normal, hover, pressed;
 	
+	//the states a button can be in
 	public static enum BUTTON
 	{
 		NORMAL, HOVER, PRESSED, ACTIVE

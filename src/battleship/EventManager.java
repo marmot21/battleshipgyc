@@ -7,17 +7,22 @@ public class EventManager
 {
 	private List<Event> events = new Vector<Event>(); //Vector is thread-safe
 	
-	//needs to be synchronized. Unless you want exceptions/deadlocks left right and centre :D
+	//all methods accessing 'events' needs to be synchronised.
+	//(unless you want exceptions, etc)
+	
+	//add new event
 	public synchronized void add(Event e)
 	{
 		events.add(e);
 	}
 	
+	//get certain event
 	public synchronized Event get(int i)
 	{
 		return events.get(i);
 	}
 	
+	//flush 'events' which are only needed when they're triggered
 	public synchronized void flush()
 	{
 		for(int i = 0; i < events.size(); i++)
@@ -27,21 +32,25 @@ public class EventManager
 		}
 	}
 	
+	//remove the event (usually called after the event is used)
 	public synchronized void consume(int i)
 	{
 		events.remove(i);
 	}
 	
+	//totally clear 'events'
 	public synchronized void clear()
 	{
 		events.clear();
 	}
 	
+	//return the size
 	public synchronized int size()
 	{
 		return events.size();
 	}
 	
+	//prints all the events that are currently in 'events'
 	public synchronized void print()
 	{
 		for(Event e : events)
