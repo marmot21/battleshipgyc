@@ -1,7 +1,9 @@
 package battleship.states;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -9,8 +11,7 @@ import java.util.List;
 
 import battleship.Event;
 import battleship.EventManager;
-import battleship.gameobjects.Button;
-import battleship.gameobjects.GameObject;
+import battleship.gameobjects.*;
 
 public class GameState extends State
 {
@@ -42,6 +43,7 @@ public class GameState extends State
 		g.drawRect(0, 0, img3.getWidth()-1, img3.getHeight()-1);
 		g.drawString("BUTTON", 75, 50);
 		obj.add(new Button(new Rectangle(208, 408, 192, 128), "TestButton", img1, img2, img3));
+		obj.add(new Playfield(new Point(128, 0), new Dimension(20, 20), new Dimension(16, 16)));
 	}
 
 	@Override
