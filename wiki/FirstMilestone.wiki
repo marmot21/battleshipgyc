@@ -1,0 +1,39 @@
+#summary Tasks for guiFunctionality
+#labels Phase-Design,Featured
+
+= Introduction =
+
+Here is a description of things which need further developmant for the guiFunctionality Milestone. This milestone will simply be a GUI which bascily allows the user to see what the game would look like and to navigate away from the main menu and see whe *attack window*. The attack window consists of two grids - one which will be the _Targeting Screen_ and the other _Status Screen_. The _Status Screen_ will be the user's interface for placing their ships, while the _Targeting Screen_ will be the interface for droping bombs on the enemy.
+
+
+= Details =
+
+== Things to do:==
+
+  *  Assign Tasks to each person. i.e. figure out something to do for yourself and tell me what your doing 
+
+  *  Also when you start something add an issue report
+
+==== Menu ====
+  #  Create main title
+  #  Incorprate an animating pic into the background
+  #  Make only the *Single player* button work - others display an error
+    *  Figure out what error should say
+
+==== Attack Window (_GameState_) ====
+  #  Have Pictures of each boat on side
+    *  Enable the pictures to be able to be _draged_ to a position on grid
+    *  Enable boats to be able to be draged between grid positions
+  #  Have buttton to _set_ the positions - ie make it permanent and start game
+  #  Have a anniamiting pic in background
+
+== Pics ==
+
+==== Background ====
+  *  Backdround pic should be water-ish stuff
+
+==== Boats ====
+  *  Aircraft carrier - takes up 5 grid spaces
+  *  BattleShip - 4 grid spaces
+  *  Sub - 3 grid spaces
+  *  UBoat (small scout thing) - 2 spaces
