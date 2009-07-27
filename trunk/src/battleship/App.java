@@ -88,6 +88,7 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 		fsm.paint(this.g);
 		
 		//debug box thing
+		if(DEBUG) {
 		this.g.setColor(Color.BLACK);
 		this.g.fillRect(0, 0, 128, 64);
 		this.g.setColor(Color.RED);
@@ -98,11 +99,12 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 		}
 		this.g.drawString("Average FPS: "+fps/loop, 0, 20);
 		this.g.drawString("Threads: "+Thread.activeCount(), 0, 30);
-		
+		}
 		//draw double buffer to screen
 		g.drawImage(img, 0, 0, this);
+		if(DEBUG)
+			time = System.currentTimeMillis();
 		
-		time = System.currentTimeMillis();
 	}
 
 	@Override
