@@ -7,7 +7,7 @@ public class EventManager
 {
 	private List<Event> events = new Vector<Event>(); //Vector is thread-safe
 	
-	//all methods accessing 'events' needs to be synchronised.
+	//all methods accessing 'events' need to be synchronised.
 	//(unless you want exceptions, etc)
 	
 	//add new event
@@ -22,7 +22,7 @@ public class EventManager
 		return events.get(i);
 	}
 	
-	//flush 'events' which are only needed when they're triggered
+	//flush events which are only needed when they're triggered
 	public synchronized void flush()
 	{
 		for(int i = 0; i < events.size(); i++)

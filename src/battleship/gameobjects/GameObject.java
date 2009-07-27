@@ -13,7 +13,7 @@ public abstract class GameObject
 	protected Graphics g;
 	public String name = ""; //name, used to identify
 	
-	//GameObject EventManager every GO adds to this when an event is created
+	//GameObject EventManager, every GO adds to their EM when an event is created
 	protected EventManager goem = new EventManager();
 	
 	public GameObject(Rectangle r)
@@ -52,7 +52,7 @@ public abstract class GameObject
 	
 	public abstract void update();
 	
-	 //renders graphics to img
+	//renders graphics to img
 	public abstract void render();
 	//NOTE: Sometimes it is faster to draw primitives (circles etc)
 	//DIRECTLY to the double buffer
