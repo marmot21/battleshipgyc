@@ -8,6 +8,7 @@ import battleship.states.State;
 
 public class FiniteStateMachine
 {
+	public static boolean DEBUG = true;
 	private List<State> states = new ArrayList<State>();
 	private int currentState = 0;
 	public EventManager em = new EventManager();
@@ -37,10 +38,12 @@ public class FiniteStateMachine
 	
 	private void setState(int i)
 	{
-		System.out.println("Exiting State: " + getState().name); //debugging purposes, remove later
+		if(DEBUG)
+			System.out.println("Exiting State: " + getState().name); //debugging purposes, remove later
 		getState().exitState();
 		currentState = i;
-		System.out.println("Entering State: " + getState().name); //debugging purposes, remove later
+		if(DEBUG)
+			System.out.println("Entering State: " + getState().name); //debugging purposes, remove later
 		getState().enterState();
 	}
 	

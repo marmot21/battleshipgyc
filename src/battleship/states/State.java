@@ -12,7 +12,7 @@ public abstract class State
 	public String name = "";
 	protected List<GameObject> obj = new ArrayList<GameObject>();
 	protected EventManager sem = new EventManager();
-	
+	public static boolean DEBUG = true;
 	public abstract void enterState();	
 	public abstract void exitState();
 	public abstract void run();
