@@ -22,9 +22,9 @@ Here is a description of things which need further development for the guiFuncti
 
 ==== Attack Window (_GameState_) ====
   #  Have Pictures of each boat on side
-    *  Enable the pictures to be able to be _draged_ to a position on grid
-    *  Enable boats to be able to be draged between grid positions
-  #  Have button to _set_ the positions - ie make it permanent and start game
+    *  Enable the pictures to be able to be _dragged_ to a position on grid
+    *  Enable boats to be able to be dragged between grid positions
+  #  Have button to _set_ the positions - i.e. make it permanent and start game
   #  Have a animating pic in background
 
 == Pics ==
