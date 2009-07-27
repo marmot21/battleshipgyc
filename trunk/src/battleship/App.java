@@ -19,15 +19,14 @@ import battleship.states.MenuState;
 
 public class App extends Applet implements Runnable, MouseMotionListener, MouseListener, MouseWheelListener, KeyListener
 {
-	//public static boolean DEBUG = true;
 	private static final long serialVersionUID = 1L;
 	private static int FPS = 30, SLEEP = 1000/FPS;
 	public static boolean DEBUG = true;
-	private Image img;
-	private Graphics g;
+	private Image img; //used for double buffer,
+	private Graphics g; //etc.
 	private FiniteStateMachine fsm = new FiniteStateMachine();
 	private long time;
-	private int loop = 1, fps = 1;
+	private int loop = 1, fps = 1; //used for debugging
 	
 	@Override
 	public void init()
@@ -55,14 +54,12 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 	
 	public void run()
 	{
-		fsm.em.add(new Event("setState", "MenuState"));
+		fsm.em.add(new Event("setState", "MenuState")); //enter the Menu state
 		while(true)
 		{
 			loop++;
-			fsm.run();
-			//TODO: Create a separate thread for fsm.
-			//Why?
-			repaint();
+			fsm.run(); //update current state
+			repaint(); //paint state to screen
 			try
 			{
 				Thread.sleep(SLEEP);
@@ -77,36 +74,44 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 	@Override
 	public void update(Graphics g)
 	{
+		//overridden so it doesn't clear the screen
 		paint(g);
 	}
 	
 	@Override
 	public void paint(Graphics g)
 	{
+		//NOTE:
+		//this.g = double buffer
+		//g = screen graphics
+		
+		//clear the double buffer
 		this.g.setColor(getBackground());
 		this.g.fillRect(0, 0, getWidth(), getHeight());
-		fsm.paint(this.g);
+		fsm.paint(this.g); //paint the current state to double buffer
 		
 		//debug box thing
-		if(DEBUG) {
-		this.g.setColor(Color.BLACK);
-		this.g.fillRect(0, 0, 128, 64);
-		this.g.setColor(Color.RED);
-		if((System.currentTimeMillis() - time) > 0)
-		{
-			fps+=(1000/(System.currentTimeMillis() - time));
-			this.g.drawString("FPS: "+(1000/(System.currentTimeMillis() - time)), 0, 10);
-		}
-		this.g.drawString("Average FPS: "+fps/loop, 0, 20);
-		this.g.drawString("Threads: "+Thread.activeCount(), 0, 30);
-		}
-		//draw double buffer to screen
-		g.drawImage(img, 0, 0, this);
 		if(DEBUG)
+		{
+			this.g.setColor(Color.BLACK);
+			this.g.fillRect(0, 0, 128, 64);
+			this.g.setColor(Color.RED);
+			if((System.currentTimeMillis() - time) > 0)
+			{
+				fps += (1000 / (System.currentTimeMillis() - time));
+				this.g.drawString("FPS: " + (1000 / (System.currentTimeMillis() - time)), 0, 10);
+			}
+			this.g.drawString("Average FPS: " + fps/loop, 0, 20);
+			this.g.drawString("Threads: " + Thread.activeCount(), 0, 30);
 			time = System.currentTimeMillis();
+		}
 		
+		//paint double buffer to screen
+		g.drawImage(img, 0, 0, this);
 	}
 
+	//trigger mouse/keyboard events
+	
 	@Override
 	public void mouseDragged(MouseEvent arg0)
 	{

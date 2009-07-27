@@ -22,6 +22,7 @@ public class GameState extends State
 	public GameState()
 	{
 		name = "GameState";
+		
 		//example of creating a button at run-time
 		BufferedImage img1 = new BufferedImage(192, 128, BufferedImage.TRANSLUCENT);
 		BufferedImage img2 = new BufferedImage(192, 128, BufferedImage.TRANSLUCENT);

@@ -1,4 +1,4 @@
-package battleship; //few comments here and there
+package battleship;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import battleship.states.State;
 
 public class FiniteStateMachine
 {
-	public static boolean DEBUG = battleship.App.DEBUG;
 	private List<State> states = new ArrayList<State>();
 	private int currentState = 0;
 	public EventManager em = new EventManager();
@@ -38,11 +37,11 @@ public class FiniteStateMachine
 	
 	private void setState(int i)
 	{
-		if(DEBUG)
+		if(App.DEBUG)
 			System.out.println("Exiting State: " + getState().name); //debugging purposes, remove later
 		getState().exitState();
 		currentState = i;
-		if(DEBUG)
+		if(App.DEBUG)
 			System.out.println("Entering State: " + getState().name); //debugging purposes, remove later
 		getState().enterState();
 	}
@@ -53,8 +52,8 @@ public class FiniteStateMachine
 		em.flush(); //get rid of old input events
 		for(int i = 0; i < iem.size(); i++) //add new input events
 			em.add(iem.get(i));
-		iem.clear();
-		getState().pumpEvents(em); //send events to current state
+		iem.clear(); //clear Input Event Manager, no longer needed
+		getState().pumpEvents(em); //'pump' events to current state
 		
 		//get events from current state
 		EventManager em2 = getState().getEvents();
@@ -66,7 +65,7 @@ public class FiniteStateMachine
 			}
 		}
 		
-		//change state if needed
+		//change state if needed (if an event "setState" is fired)
 		for(int i = 0; i < em.size(); i++)
 		{
 			if(em.get(i).event.equals("setState"))
@@ -79,6 +78,6 @@ public class FiniteStateMachine
 
 	public void paint(Graphics g)
 	{
-		getState().paint(g);
+		getState().paint(g); //paint the current state to double buffer
 	}
 }

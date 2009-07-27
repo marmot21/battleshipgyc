@@ -2,8 +2,8 @@ package battleship;
 
 public class Event
 {
-	public String event;
-	public Object param;
+	public String event; //the actual event name
+	public Object param; //the object passed as parameters
 	
 	public Event(String s)
 	{
