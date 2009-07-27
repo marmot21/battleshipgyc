@@ -10,8 +10,6 @@ import battleship.gameobjects.GameObject;
 
 public class MenuState extends State// implements Runnable
 {
-	boolean threadSuspended = false;
-	
 	public MenuState()
 	{
 		name = "MenuState";

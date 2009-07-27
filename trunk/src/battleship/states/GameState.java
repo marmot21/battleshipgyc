@@ -14,7 +14,7 @@ import battleship.gameobjects.GameObject;
 
 public class GameState extends State
 {
-	public List<GameObject> obj = new ArrayList<GameObject>();
+	private List<GameObject> obj = new ArrayList<GameObject>();
 	
 	public GameState()
 	{
