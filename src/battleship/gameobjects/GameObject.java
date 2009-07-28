@@ -41,13 +41,9 @@ public abstract class GameObject
 	
 	protected void resize(Rectangle r)
 	{
-		if(r.x != this.r.x || r.y != this.r.y || r.width != this.r.width || r.height != this.r.height)
-		{
-			this.r = r;
-			img = new BufferedImage(this.r.width, this.r.height, BufferedImage.TRANSLUCENT);
-			g = img.getGraphics();
-			render();
-		}
+		this.r = r;
+		img = new BufferedImage(this.r.width, this.r.height, BufferedImage.TRANSLUCENT);
+		g = img.getGraphics();
 	}
 	
 	public abstract void update();

@@ -15,10 +15,10 @@ public class MenuState extends State
 	{
 		name = "MenuState";
 		
-		obj.add(new Button(new Rectangle(128, 256, 1, 1), "HostGame", "battleship/res/img/", "HostGame0.png", "HostGame1.png", "HostGame2.png"));
-		obj.add(new Button(new Rectangle(378, 256, 1, 1), "JoinGame", "battleship/res/img/", "JoinGame0.png", "JoinGame1.png", "JoinGame2.png"));
-		obj.add(new Button(new Rectangle(628, 256, 1, 1), "SinglePlayer","battleship/res/img/", "SinglePlayer0.png", "SinglePlayer1.png", "SinglePlayer2.png"));
-		obj.add(new MainTitle(new Rectangle(64, 64, 1, 1)));
+		obj.add(new Button(new Rectangle((800-210)/2-210-32, 256+128, 1, 1), "HostGame", "battleship/res/img/", "HostGame0.png", "HostGame1.png", "HostGame2.png"));
+		obj.add(new Button(new Rectangle((800-210)/2, 256+128, 1, 1), "JoinGame", "battleship/res/img/", "JoinGame0.png", "JoinGame1.png", "JoinGame2.png"));
+		obj.add(new Button(new Rectangle((800-210)/2+210+32, 256+128, 1, 1), "SinglePlayer","battleship/res/img/", "SinglePlayer0.png", "SinglePlayer1.png", "SinglePlayer2.png"));
+		obj.add(new MainTitle(new Rectangle((800-635)/2, 64, 1, 1)));
 	}
 
 	@Override

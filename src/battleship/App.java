@@ -31,7 +31,7 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 	@Override
 	public void init()
 	{
-		setSize(900, 600);
+		setSize(800, 600); //AR of 1/3...
 		setBackground(Color.GRAY);
 		
 		addMouseMotionListener(this);
