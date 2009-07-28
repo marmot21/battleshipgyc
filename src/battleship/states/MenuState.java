@@ -7,6 +7,7 @@ import battleship.Event;
 import battleship.EventManager;
 import battleship.gameobjects.Button;
 import battleship.gameobjects.GameObject;
+import battleship.gameobjects.MainTitle;
 
 public class MenuState extends State
 {
@@ -14,9 +15,10 @@ public class MenuState extends State
 	{
 		name = "MenuState";
 		
-		obj.add(new Button(new Rectangle(128, 128, 1, 1), "HostGame", "battleship/res/img/", "HostGame0.gif", "HostGame1.gif", "HostGame2.gif"));
-		obj.add(new Button(new Rectangle(378, 128, 1, 1), "JoinGame", "battleship/res/img/", "JoinGame0.gif", "JoinGame1.gif", "JoinGame2.gif"));
-		obj.add(new Button(new Rectangle(628, 128, 1, 1), "SinglePlayer","battleship/res/img/", "SinglePlayer0.gif", "SinglePlayer1.gif", "SinglePlayer2.gif"));
+		obj.add(new Button(new Rectangle(128, 256, 1, 1), "HostGame", "battleship/res/img/", "HostGame0.png", "HostGame1.png", "HostGame2.png"));
+		obj.add(new Button(new Rectangle(378, 256, 1, 1), "JoinGame", "battleship/res/img/", "JoinGame0.png", "JoinGame1.png", "JoinGame2.png"));
+		obj.add(new Button(new Rectangle(628, 256, 1, 1), "SinglePlayer","battleship/res/img/", "SinglePlayer0.png", "SinglePlayer1.png", "SinglePlayer2.png"));
+		obj.add(new MainTitle(new Rectangle(64, 64, 1, 1)));
 	}
 
 	@Override
