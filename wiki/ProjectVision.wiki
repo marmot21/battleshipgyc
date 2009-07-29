@@ -22,7 +22,7 @@ The user will be able to easily tell how to start a game and leave one.
 
 ===== When a game is started: =====
 
-The user will see their status screen and will be able to add ships to it. It will be apparent how to play the game - but a help button is provided anyway. Also present will be:
+The user will see their status screen and will be able to add ships to it with a drag and drop interface. It will be apparent how to play the game - but a help button is provided anyway. Also present will be:
   *  Different music to main menu - apprehensive
   *  A similar background to the main menu
   *  A list of available ships and quantities
