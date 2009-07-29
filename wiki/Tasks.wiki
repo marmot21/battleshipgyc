@@ -13,7 +13,7 @@ When designing software it is important to be able to specify issues that relate
 || Awaiting || Development || FSM, FuSM ||
 
 
-_Awaiting_ is intended to indicate that work on that issue has been suspended because it requires another component to work. Also you can use it to indicate that you are waiting for work to complete on the algorithm before continuing.
+_Awaiting_ is intended to indicate that work on that issue has been suspended because it requires another component to work. Also you can use it to indicate that you are waiting for work to complete on the algorithm before continuing. Usually you might add such an issue to the 'blocked on' field but this is better for a small project.
 
 _Development_ This is to signify a development task which is not already a pre-existing feature. If you have something to add then you can use the Development task template when add the issue.
 
