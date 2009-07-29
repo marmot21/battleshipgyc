@@ -1,5 +1,5 @@
 #summary Explanation of milestones and their implementation
-#labels Phase-Design
+#labels Phase-Design,Featured
 
 == Introduction ==
 
