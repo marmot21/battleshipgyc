@@ -130,6 +130,7 @@ public class Button extends GameObject
 						STATE = BUTTON.PRESSED;
 						render();
 					}
+					
 					else if(!r.contains(me.getPoint()) && STATE == BUTTON.HOVER)
 					{
 						STATE = BUTTON.NORMAL;
@@ -157,7 +158,11 @@ public class Button extends GameObject
 						goem.add(new Event("buttonClicked", (Object)this));
 						STATE = BUTTON.HOVER;
 					}
-					//STATE = BUTTON.NORMAL;
+					else if(!r.contains(me.getPoint()) && STATE == BUTTON.ACTIVE)
+					{
+						STATE = BUTTON.NORMAL;
+						render();
+					}
 					render();
 				}
 			}
