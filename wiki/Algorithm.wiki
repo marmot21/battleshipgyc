@@ -1,0 +1,16 @@
+#summary The Algorithm for the project - each time you add something add it here too.
+#labels Featured,Algorithm
+
+
+*Initally*
+  *  Set Image to ship
+  *  Draw Image to screen buffer
+
+*When Image is clicked:*
+  *  _While mouse is being draged_
+   *  Set position of ship to mouse position
+   *  Draw ship to screen buffer
+
+*When mouse is released*
+  *  Stop setting the position of the ship to mouse position
+ 
