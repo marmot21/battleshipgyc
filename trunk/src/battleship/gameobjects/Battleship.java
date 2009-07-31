@@ -71,7 +71,7 @@ public class Battleship extends GameObject
 					
 					if(STATE == SHIPS.FOLLOW) {
 						r.x = me.getX()-r.width/2;
-						r.y = me.getY();
+						r.y = me.getY();//-r.height/2;
 						resize();
 					}
 					if(r.contains(me.getPoint()) && STATE == SHIPS.NORMAL){
@@ -82,8 +82,9 @@ public class Battleship extends GameObject
 				else if(em.get(i).event.equals("mouseReleased")) {
 					if(STATE == SHIPS.FOLLOW){
 						STATE = SHIPS.NORMAL;
-						//snap to grid()
-						
+						//snap it to the grid
+						r.y = r.y/24*24 + 4;
+						r.x = r.x/24*24;
 					}
 				}
 				else if(em.get(i).event.equals("mousePressed")) {
