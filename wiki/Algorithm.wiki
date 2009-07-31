@@ -7,10 +7,16 @@
   *  Draw Image to screen buffer
 
 *When Image is clicked:*
+  *  Store position of ship
   *  _While mouse is being dragged_
    *  Set position of ship to mouse position
    *  Draw ship to screen buffer
 
 *When mouse is released*
-  *  Stop setting the position of the ship to mouse position
- 
+  *  Check position of ship
+   *If position is outside of grid then move back to old grid position
+  *  Else 
+   *  check if ship will be over another ship
+   *  check if ship will be over edge of grid
+    *  If false then snap ship position to grid
+   *  Else return to previous position
