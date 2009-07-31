@@ -19,10 +19,13 @@ public class GameState extends State
 	{
 		name = "GameState";
 		Playfield p = new Playfield("Status Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24));
-		p.obj.add(new Battleship(new Rectangle(8*p.gridSize.width, 4*p.gridSize.height, 1*p.gridSize.width, 2*p.gridSize.height)));
+		p.obj.add(new Battleship(new Rectangle(8*Playfield.gridSize.width, 4*Playfield.gridSize.height, 1*Playfield.gridSize.width, 2*Playfield.gridSize.height),
+				new GameImage(new Rectangle(8*Playfield.gridSize.width, 4*Playfield.gridSize.height, 1*Playfield.gridSize.width, 2*Playfield.gridSize.height),"ship","battleship/res/img/Ships.png")));
+		//p.render();
+		//obj.add(p);
+		obj.add(new Playfield("Targeting Screen", new Rectangle(24, 240+24, 10, 10), new Dimension(24, 24)));
 		p.render();
 		obj.add(p);
-		obj.add(new Playfield("Targeting Screen", new Rectangle(24, 240+24, 10, 10), new Dimension(24, 24)));
 	}
 
 	@Override
@@ -47,12 +50,12 @@ public class GameState extends State
 	@Override
 	public void paint(Graphics g)
 	{
-		for(GameObject go : obj)
+		for(GameObject go : obj) 
 			go.paint(g);
 	}
 
 	@Override
-	public EventManager getEvents()
+	public EventManager getEvents()//output of events
 	{
 		for(GameObject go : obj)
 		{
@@ -70,7 +73,7 @@ public class GameState extends State
 	}
 
 	@Override
-	public void pumpEvents(EventManager em)
+	public void pumpEvents(EventManager em)//Input of events
 	{
 		for(GameObject go : obj)
 			go.pumpEvents(em);
