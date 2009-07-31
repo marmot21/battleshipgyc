@@ -6,8 +6,8 @@ import java.awt.Rectangle;
 import battleship.Event;
 import battleship.EventManager;
 import battleship.gameobjects.Button;
+import battleship.gameobjects.GameImage;
 import battleship.gameobjects.GameObject;
-import battleship.gameobjects.MainTitle;
 
 public class MenuState extends State
 {
@@ -18,7 +18,7 @@ public class MenuState extends State
 		obj.add(new Button(new Rectangle((800-210)/2-210-32, 256+128, 1, 1), "HostGame", "battleship/res/img/", "HostGame0.png", "HostGame1.png", "HostGame2.png"));
 		obj.add(new Button(new Rectangle((800-210)/2, 256+128, 1, 1), "JoinGame", "battleship/res/img/", "JoinGame0.png", "JoinGame1.png", "JoinGame2.png"));
 		obj.add(new Button(new Rectangle((800-210)/2+210+32, 256+128, 1, 1), "SinglePlayer","battleship/res/img/", "SinglePlayer0.png", "SinglePlayer1.png", "SinglePlayer2.png"));
-		obj.add(new MainTitle(new Rectangle((800-635)/2, 64, 1, 1)));
+		obj.add(new GameImage(new Rectangle((800-635)/2, 64, 1, 1), "MainTitle", "battleship/res/img/GameTitle.png"));
 	}
 
 	@Override

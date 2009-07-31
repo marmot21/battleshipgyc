@@ -46,6 +46,11 @@ public abstract class GameObject
 		g = img.getGraphics();
 	}
 	
+	protected void resize()
+	{
+		r = new Rectangle(r.x, r.y, img.getWidth(), img.getHeight());
+	}
+	
 	public abstract void update();
 	
 	//renders graphics to img
