@@ -2,12 +2,12 @@
 #labels Featured,Algorithm
 
 
-*Initally*
+*Initially*
   *  Set Image to ship
   *  Draw Image to screen buffer
 
 *When Image is clicked:*
-  *  _While mouse is being draged_
+  *  _While mouse is being dragged_
    *  Set position of ship to mouse position
    *  Draw ship to screen buffer
 
