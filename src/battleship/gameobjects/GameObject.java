@@ -16,6 +16,11 @@ public abstract class GameObject
 	//GameObject EventManager, every GO adds to their EM when an event is created
 	protected EventManager goem = new EventManager();
 	
+	public GameObject()
+	{
+		
+	}
+	
 	public GameObject(Rectangle r)
 	{
 		this.r = r;
