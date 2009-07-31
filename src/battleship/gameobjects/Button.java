@@ -142,7 +142,6 @@ public class Button extends GameObject
 						render();
 					}
 				}
-				
 				else if(em.get(i).event.equals("mousePressed") && me.getButton() == MouseEvent.BUTTON1)
 				{
 					if(r.contains(me.getPoint()))
@@ -157,13 +156,13 @@ public class Button extends GameObject
 					{
 						goem.add(new Event("buttonClicked", (Object)this));
 						STATE = BUTTON.HOVER;
+						render();
 					}
-					else if(!r.contains(me.getPoint()) && STATE == BUTTON.ACTIVE)
+					else if(!r.contains(me.getPoint()))
 					{
 						STATE = BUTTON.NORMAL;
 						render();
 					}
-					render();
 				}
 			}
 		}
