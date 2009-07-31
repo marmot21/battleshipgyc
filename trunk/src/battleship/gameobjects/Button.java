@@ -3,18 +3,13 @@ package battleship.gameobjects;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import battleship.Event;
 import battleship.EventManager;
 
 public class Button extends GameObject
 {
-	protected BufferedImage normal, hover, pressed;
+	protected GameImage normal, hover, pressed;
 	
 	//the states a button can be in
 	public static enum BUTTON
@@ -30,7 +25,7 @@ public class Button extends GameObject
 		render();
 	}
 	
-	public Button(Rectangle r, String s, BufferedImage n, BufferedImage h, BufferedImage p)
+	public Button(Rectangle r, String s, GameImage n, GameImage h, GameImage p)
 	{
 		super(r, s);
 		normal = n;
@@ -42,27 +37,10 @@ public class Button extends GameObject
 	public Button(Rectangle r, String s, String b, String n, String h, String p)
 	{
 		super(r, s);
-		normal = loadImage(b+n);
-		hover = loadImage(b+h);
-		pressed = loadImage(b+p);
+		normal = new GameImage(new Rectangle(0, 0, 1, 1), "normal", b+n);
+		hover = new GameImage(new Rectangle(0, 0, 1, 1), "hover", b+h);
+		pressed = new GameImage(new Rectangle(0, 0, 1, 1), "pressed", b+p);
 		render();
-	}
-	
-	public static BufferedImage loadImage(String path)
-	{
-		BufferedImage b = null;
-		
-		try
-		{
-			 b = ImageIO.read(new File(path));
-		}
-		catch (IOException e)
-		{
-			System.out.println("Unable to load \"" + path + "\"");
-			b = new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
-		}
-		
-		return b;
 	}
 	
 	@Override
@@ -78,16 +56,16 @@ public class Button extends GameObject
 		{
 			case NORMAL:
 			case ACTIVE:
-				resize(new Rectangle(r.x, r.y, normal.getWidth(), normal.getHeight()));
-				g.drawImage(normal, 0, 0, null);
+				resize(new Rectangle(r.x, r.y, normal.img.getWidth(), normal.img.getHeight()));
+				g.drawImage(normal.img, 0, 0, null);
 				break;
 			case HOVER:
-				resize(new Rectangle(r.x, r.y, hover.getWidth(), hover.getHeight()));
-				g.drawImage(hover, 0, 0, null);
+				resize(new Rectangle(r.x, r.y, hover.img.getWidth(), hover.img.getHeight()));
+				g.drawImage(hover.img, 0, 0, null);
 				break;
 			case PRESSED:
-				resize(new Rectangle(r.x, r.y, pressed.getWidth(), pressed.getHeight()));
-				g.drawImage(pressed, 0, 0, null);
+				resize(new Rectangle(r.x, r.y, pressed.img.getWidth(), pressed.img.getHeight()));
+				g.drawImage(pressed.img, 0, 0, null);
 				break;
 		}
 	}
