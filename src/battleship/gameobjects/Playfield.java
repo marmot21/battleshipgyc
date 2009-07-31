@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import battleship.EventManager;
+//import battleship.gameobjects.Battleship.SHIPS;
 
 public class Playfield extends GameObject
 {
-	public Dimension gridSize;
+	static public Dimension gridSize;//TODO:see if we can get this to be non-static - if need be
 	public List<GameObject> obj = new ArrayList<GameObject>();
 	
 	public Playfield(Rectangle r, Dimension d)
@@ -59,15 +60,21 @@ public class Playfield extends GameObject
 		}
 		
 		//draw battleships to grid
-		for(GameObject go : obj)
-		{
-			go.paint(g);
-		}
+		/**
+		 * Drawing the image to the grid mucks things up
+		 * Needs to be drawn to normal image buffer 
+		 */
+		/*for(GameObject go : obj) {
+			if(((Battleship) go).STATE == SHIPS.NORMAL)
+				go.paint(g);
+		}*/
 	}
 	
 	@Override
 	public void paint(Graphics g)
 	{
+		for(GameObject go :obj)
+			go.paint(g);//draw the ships
 		g.drawImage(img, r.x, r.y, null);
 	}
 
@@ -80,6 +87,11 @@ public class Playfield extends GameObject
 	@Override
 	public void pumpEvents(EventManager em)
 	{
-		
+		for(GameObject go : obj)
+			go.pumpEvents(em); //pass on events to children - ships
+		render();
+	}
+	public static Dimension getgridSize() {
+		return gridSize;
 	}
 }
