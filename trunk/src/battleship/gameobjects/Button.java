@@ -3,13 +3,14 @@ package battleship.gameobjects;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 import battleship.Event;
 import battleship.EventManager;
 
 public class Button extends GameObject
 {
-	protected GameImage normal, hover, pressed;
+	private BufferedImage normal, hover, pressed;
 	
 	//the states a button can be in
 	public static enum BUTTON
@@ -19,55 +20,51 @@ public class Button extends GameObject
 	
 	public BUTTON STATE = BUTTON.NORMAL;
 	
-	public Button(Rectangle r, String s)
+	public Button(String name, Rectangle r)
 	{
-		super(r, s);
-		render();
+		super(name, r);
+		goem = new EventManager();
 	}
 	
-	public Button(Rectangle r, String s, GameImage n, GameImage h, GameImage p)
+	//TODO Change it to one image, and clip it - more efficient.
+	public void setImages(String b, String n, String h, String p)
 	{
-		super(r, s);
-		normal = n;
-		hover = h;
-		pressed = p;
-		render();
-	}
-	
-	public Button(Rectangle r, String s, String b, String n, String h, String p)
-	{
-		super(r, s);
-		normal = new GameImage(new Rectangle(0, 0, 1, 1), "normal", b+n);
-		hover = new GameImage(new Rectangle(0, 0, 1, 1), "hover", b+h);
-		pressed = new GameImage(new Rectangle(0, 0, 1, 1), "pressed", b+p);
-		render();
+		if(!(b+n).equals(""))
+			normal = loadImage(b+n);
+		if(!(b+h).equals(""))
+			hover = loadImage(b+h);
+		if(!(b+p).equals(""))
+			pressed = loadImage(b+p);
 	}
 	
 	@Override
 	public void paint(Graphics g)
 	{
-		g.drawImage(img, r.x, r.y, null);
+		switch(STATE)
+		{
+			case NORMAL:
+			case ACTIVE:
+				g.drawImage(normal, r.x, r.y, null);
+				r.width = normal.getWidth();
+				r.height = normal.getHeight();
+				break;
+			case HOVER:
+				g.drawImage(hover, r.x, r.y, null);
+				r.width = hover.getWidth();
+				r.height = hover.getHeight();
+				break;
+			case PRESSED:
+				g.drawImage(pressed, r.x, r.y, null);
+				r.width = pressed.getWidth();
+				r.height = pressed.getHeight();
+				break;
+		}
 	}
 
 	@Override
 	public void render()
 	{
-		switch(STATE)
-		{
-			case NORMAL:
-			case ACTIVE:
-				resize(new Rectangle(r.x, r.y, normal.img.getWidth(), normal.img.getHeight()));
-				g.drawImage(normal.img, 0, 0, null);
-				break;
-			case HOVER:
-				resize(new Rectangle(r.x, r.y, hover.img.getWidth(), hover.img.getHeight()));
-				g.drawImage(hover.img, 0, 0, null);
-				break;
-			case PRESSED:
-				resize(new Rectangle(r.x, r.y, pressed.img.getWidth(), pressed.img.getHeight()));
-				g.drawImage(pressed.img, 0, 0, null);
-				break;
-		}
+		
 	}
 
 	@Override
@@ -101,23 +98,23 @@ public class Button extends GameObject
 					if(r.contains(me.getPoint()) && STATE == BUTTON.NORMAL)
 					{
 						STATE = BUTTON.HOVER;
-						render();
+						goem.add(new Event("repaint"));
 					}
 					else if(r.contains(me.getPoint()) && STATE == BUTTON.ACTIVE)
 					{
 						STATE = BUTTON.PRESSED;
-						render();
+						goem.add(new Event("repaint"));
 					}
 					
 					else if(!r.contains(me.getPoint()) && STATE == BUTTON.HOVER)
 					{
 						STATE = BUTTON.NORMAL;
-						render();
+						goem.add(new Event("repaint"));
 					}
 					else if(!r.contains(me.getPoint()) && STATE == BUTTON.PRESSED)
 					{
 						STATE = BUTTON.ACTIVE;
-						render();
+						goem.add(new Event("repaint"));
 					}
 				}
 				else if(em.get(i).event.equals("mousePressed") && me.getButton() == MouseEvent.BUTTON1)
@@ -125,7 +122,7 @@ public class Button extends GameObject
 					if(r.contains(me.getPoint()))
 					{
 						STATE = BUTTON.PRESSED;
-						render();
+						goem.add(new Event("repaint"));
 					}
 				}
 				else if(em.get(i).event.equals("mouseReleased") && me.getButton() == MouseEvent.BUTTON1)
@@ -134,12 +131,12 @@ public class Button extends GameObject
 					{
 						goem.add(new Event("buttonClicked", (Object)this));
 						STATE = BUTTON.HOVER;
-						render();
+						goem.add(new Event("repaint"));
 					}
 					else if(!r.contains(me.getPoint()))
 					{
 						STATE = BUTTON.NORMAL;
-						render();
+						goem.add(new Event("repaint"));
 					}
 				}
 			}

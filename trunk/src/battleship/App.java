@@ -60,7 +60,8 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 		{
 			loop++;
 			fsm.run(); //update current state
-			repaint(); //paint state to screen
+			if(fsm.repaint || DEBUG)
+				repaint(); //paint state to screen
 			try
 			{
 				Thread.sleep(SLEEP);

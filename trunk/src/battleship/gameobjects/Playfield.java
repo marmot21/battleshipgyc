@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import battleship.EventManager;
-//import battleship.gameobjects.Battleship.SHIPS;
 
 public class Playfield extends GameObject
 {
@@ -17,14 +16,14 @@ public class Playfield extends GameObject
 	
 	public Playfield(Rectangle r, Dimension d)
 	{
-		super(new Rectangle(r.x, r.y, r.width*d.width+1, r.height*d.height+1));
+		this.r = new Rectangle(r.x, r.y, r.width*d.width, r.height*d.height);
 		gridSize = d;
 		render();
 	}
 
 	public Playfield(String s, Rectangle r, Dimension d)
 	{
-		super(new Rectangle(r.x, r.y, r.width*d.width+1, r.height*d.height+1));
+		this.r = new Rectangle(r.x, r.y, r.width*d.width, r.height*d.height);
 		gridSize = d;
 		name = s;
 		render();
@@ -42,40 +41,23 @@ public class Playfield extends GameObject
 	@Override
 	public void render()
 	{
-		//draw grid
-		g.setColor(Color.BLACK);
-		for(int i = 0; i <= r.width/gridSize.width; i++)
-		{
-			g.drawLine(i*gridSize.width, 0, i*gridSize.width, r.height);
-		}
-		for(int i = 0; i <= r.height/gridSize.height; i++)
-		{
-			g.drawLine(0, i*gridSize.height, r.width, i*gridSize.height);
-		}
 		
-		//draw battleships
-		for(GameObject go : obj)
-		{
-			go.render();
-		}
-		
-		//draw battleships to grid
-		/**
-		 * Drawing the image to the grid mucks things up
-		 * Needs to be drawn to normal image buffer 
-		 */
-		/*for(GameObject go : obj) {
-			if(((Battleship) go).STATE == SHIPS.NORMAL)
-				go.paint(g);
-		}*/
 	}
 	
 	@Override
 	public void paint(Graphics g)
 	{
+		g.setColor(Color.BLACK);
+		for(int i = 0; i <= r.width/gridSize.width; i++)
+		{
+			g.drawLine(r.x+i*gridSize.width, r.y, r.x+i*gridSize.width, r.y+r.height);
+		}
+		for(int i = 0; i <= r.height/gridSize.height; i++)
+		{
+			g.drawLine(r.x, r.y+i*gridSize.height, r.x+r.width, r.y+i*gridSize.height);
+		}
 		for(GameObject go :obj)
 			go.paint(g);//draw the ships
-		g.drawImage(img, r.x, r.y, null);
 	}
 
 	@Override
@@ -89,7 +71,6 @@ public class Playfield extends GameObject
 	{
 		for(GameObject go : obj)
 			go.pumpEvents(em); //pass on events to children - ships
-		render();
 	}
 	public static Dimension getgridSize() {
 		return gridSize;
