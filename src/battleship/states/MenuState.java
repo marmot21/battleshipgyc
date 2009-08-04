@@ -5,7 +5,6 @@ import java.awt.Rectangle;
 
 import battleship.Event;
 import battleship.EventManager;
-import battleship.gameobjects.Background;
 import battleship.gameobjects.Button;
 import battleship.gameobjects.GameImage;
 import battleship.gameobjects.GameObject;
@@ -15,11 +14,18 @@ public class MenuState extends State
 	public MenuState()
 	{
 		name = "MenuState";
-		obj.add(new Background(new Rectangle(0, 0, 800, 600), "BG"));
-		obj.add(new Button(new Rectangle((800-210)/2-210-32, 256+128, 1, 1), "HostGame", "battleship/res/img/", "HostGame0.png", "HostGame1.png", "HostGame2.png"));
-		obj.add(new Button(new Rectangle((800-210)/2, 256+128, 1, 1), "JoinGame", "battleship/res/img/", "JoinGame0.png", "JoinGame1.png", "JoinGame2.png"));
-		obj.add(new Button(new Rectangle((800-210)/2+210+32, 256+128, 1, 1), "SinglePlayer","battleship/res/img/", "SinglePlayer0.png", "SinglePlayer1.png", "SinglePlayer2.png"));
-		obj.add(new GameImage(new Rectangle((800-635)/2, 64, 1, 1), "MainTitle", "battleship/res/img/GameTitle.png"));
+		//TODO Edit constructor once one image is loaded.
+		Button b1 = new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1));
+		b1.setImages("battleship/res/img/", "HostGame0.png", "HostGame1.png", "HostGame2.png");
+		obj.add(b1);
+		Button b2 = new Button("JoinGame", new Rectangle((800-210)/2, 256+128, 1, 1));
+		b2.setImages("battleship/res/img/", "JoinGame0.png", "JoinGame1.png", "JoinGame2.png");
+		obj.add(b2);
+		Button b3 = new Button("SinglePlayer", new Rectangle((800-210)/2+210+32, 256+128, 1, 1));
+		b3.setImages("battleship/res/img/", "SinglePlayer0.png", "SinglePlayer1.png", "SinglePlayer2.png");
+		obj.add(b3);
+		obj.add(new GameImage("MainTitle", new Rectangle((800-635)/2, 64, 1, 1), GameObject.loadImage("battleship/res/img/GameTitle.png")));
+		
 	}
 
 	@Override
@@ -38,7 +44,9 @@ public class MenuState extends State
 	public void run()
 	{
 		for(GameObject go : obj)
+		{
 			go.update();
+		}
 	}
 	
 	@Override

@@ -10,6 +10,7 @@ public class FiniteStateMachine
 {
 	private List<State> states = new ArrayList<State>();
 	private int currentState = 0;
+	public boolean repaint = false;
 	public EventManager em = new EventManager();
 	public EventManager iem = new EventManager();
 	
@@ -48,6 +49,7 @@ public class FiniteStateMachine
 	
 	public void run()
 	{
+		repaint = false;
 		getState().run();
 		em.flush(); //get rid of old input events
 		for(int i = 0; i < iem.size(); i++) //add new input events
@@ -78,6 +80,11 @@ public class FiniteStateMachine
 			else if(em.get(i).event.equals("error"))
 			{
 				System.out.println(em.get(i).param);
+				em.consume(i);
+			}
+			else if(em.get(i).event.equals("repaint"))
+			{
+				repaint = true;
 				em.consume(i);
 			}
 		}

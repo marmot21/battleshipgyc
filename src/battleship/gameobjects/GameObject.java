@@ -3,57 +3,43 @@ package battleship.gameobjects;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import battleship.EventManager;
 
 public abstract class GameObject
 {
-	public Rectangle r; //the bounds of the object
-	protected BufferedImage img;
-	protected Graphics g;
+	public Rectangle r = new Rectangle(); //the bounds of the object
 	public String name = ""; //name, used to identify
-	
-	//GameObject EventManager, every GO adds to their EM when an event is created
-	protected EventManager goem = new EventManager();
+	protected EventManager goem;
 	
 	public GameObject()
 	{
 		
 	}
 	
-	public GameObject(Rectangle r)
+	public GameObject(String name, Rectangle r)
 	{
+		this.name = name;
 		this.r = r;
-		
-		if(img == null)
+	}
+	
+	public static BufferedImage loadImage(String path)
+	{
+		BufferedImage b = null;
+		try
 		{
-			img = new BufferedImage(r.width, r.height, BufferedImage.TRANSLUCENT);
-			g = img.getGraphics();
+			 b = ImageIO.read(new File(path));
 		}
-	}
-	
-	public GameObject(Rectangle r, String s)
-	{
-		this.r = r;
-		name = s;
-		
-		if(img == null)
+		catch (IOException e)
 		{
-			img = new BufferedImage(r.width, r.height, BufferedImage.TRANSLUCENT);
-			g = img.getGraphics();
+			System.out.println("Unable to load \"" + path + "\"");
+			b = new BufferedImage(1, 1, BufferedImage.OPAQUE);
 		}
-	}
-	
-	protected void resize(Rectangle r)
-	{
-		this.r = r;
-		img = new BufferedImage(this.r.width, this.r.height, BufferedImage.TRANSLUCENT);
-		g = img.getGraphics();
-	}
-	
-	protected void resize()
-	{
-		r = new Rectangle(r.x, r.y, img.getWidth(), img.getHeight());
+		return b;
 	}
 	
 	public abstract void update();
