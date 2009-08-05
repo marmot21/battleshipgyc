@@ -77,10 +77,7 @@ public class Button extends GameObject
 	public EventManager getEvents()
 	{
 		EventManager tmp = new EventManager();
-		
-		for(int i = 0; i < goem.size(); i++)
-			tmp.add(goem.get(i));
-		
+		tmp.addAll(goem);
 		goem.clear();
 		return tmp;
 	}

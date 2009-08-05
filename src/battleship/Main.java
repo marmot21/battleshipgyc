@@ -30,6 +30,8 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	private BufferStrategy strategy;
 	public static Dimension dim = new Dimension(800, 600);
 	private FiniteStateMachine fsm = new FiniteStateMachine();
+	private EventManager em = new EventManager();
+	private EventManager iem = new EventManager();
 	
 	public Main()
 	{
@@ -79,17 +81,33 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	
 	public void run()
 	{
-		fsm.em.add(new Event("setState", "MenuState")); //enter the Menu state
+		em.add(new Event("setState", "MenuState")); //enter the Menu state
 		while(true)
 		{
-			fsm.run(); //update current state
-			if(fsm.getState().repaint)
+			em.flush(); //get rid of old input events
+			em.addAll(iem);
+			iem.clear();
+			fsm.getState().run(); //update current state
+			fsm.pumpEvents(em);
+			em.addAll(fsm.getState().getEvents());
+			
+			for(int i = 0; i < em.size(); i++)
 			{
-				Graphics g = strategy.getDrawGraphics(); //get the graphics object to use
-				fsm.getState().paint(g); //paint the current state
-				g.dispose(); //destroy g object
-				strategy.show(); //show the image on screen
+				if(em.get(i).event.equals("error"))
+				{
+					System.out.println(em.get(i).param);
+					em.consume(i);
+				}
+				else if(em.get(i).event.equals("repaint"))
+				{
+					Graphics g = strategy.getDrawGraphics(); //get the graphics object to use
+					fsm.getState().paint(g); //paint the current state
+					g.dispose(); //destroy g object
+					strategy.show(); //show the image on screen
+					em.consume(i);
+				}
 			}
+			
 			try
 			{
 				Thread.sleep(SLEEP);
@@ -119,66 +137,66 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	@Override
 	public void mouseDragged(MouseEvent arg0)
 	{
-		fsm.iem.add(new Event("mouseDragged", arg0));
+		iem.add(new Event("mouseDragged", arg0));
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg0)
 	{
-		fsm.iem.add(new Event("mouseMoved", arg0));
+		iem.add(new Event("mouseMoved", arg0));
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0)
 	{
-		fsm.iem.add(new Event("mouseClicked", arg0));
+		iem.add(new Event("mouseClicked", arg0));
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0)
 	{
-		fsm.iem.add(new Event("mouseEntered", arg0));
+		iem.add(new Event("mouseEntered", arg0));
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0)
 	{
-		fsm.iem.add(new Event("mouseExited", arg0));
+		iem.add(new Event("mouseExited", arg0));
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0)
 	{
-		fsm.iem.add(new Event("mousePressed", arg0));
+		iem.add(new Event("mousePressed", arg0));
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0)
 	{
-		fsm.iem.add(new Event("mouseReleased", arg0));
+		iem.add(new Event("mouseReleased", arg0));
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent arg0)
 	{
-		fsm.iem.add(new Event("mouseWheelMoved", arg0));
+		iem.add(new Event("mouseWheelMoved", arg0));
 	}
 
 	@Override
 	public void keyPressed(KeyEvent arg0)
 	{
-		fsm.iem.add(new Event("keyPressed", arg0));
+		iem.add(new Event("keyPressed", arg0));
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0)
 	{	
-		fsm.iem.add(new Event("keyReleased", arg0));
+		iem.add(new Event("keyReleased", arg0));
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0)
 	{
-		fsm.iem.add(new Event("keyTyped", arg0));
+		iem.add(new Event("keyTyped", arg0));
 	}
 }
