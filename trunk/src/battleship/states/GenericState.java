@@ -1,7 +1,5 @@
 package battleship.states;
 
-import java.awt.Graphics;
-
 import battleship.EventManager;
 
 public class GenericState extends State
@@ -24,7 +22,7 @@ public class GenericState extends State
 	}
 
 	@Override
-	public void paint(Graphics g)
+	public void paint()
 	{
 
 	}
@@ -46,5 +44,4 @@ public class GenericState extends State
 	{
 		
 	}
-
 }

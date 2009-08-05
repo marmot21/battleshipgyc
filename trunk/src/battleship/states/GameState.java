@@ -1,15 +1,20 @@
 package battleship.states;
 
 
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import battleship.Main;
 import battleship.Event;
 import battleship.EventManager;
-import battleship.gameobjects.*;
+import battleship.gameobjects.Battleship;
+import battleship.gameobjects.Button;
+import battleship.gameobjects.GameObject;
+import battleship.gameobjects.Playfield;
 
 public class GameState extends State
 {
@@ -18,8 +23,10 @@ public class GameState extends State
 	public GameState()
 	{
 		name = "GameState";
+		img = new BufferedImage(Main.dim.width, Main.dim.height, BufferedImage.OPAQUE);
+		g = img.getGraphics();
 		Playfield p = new Playfield("Status Screen", new Rectangle(24, 240+24, 10, 10), new Dimension(24, 24));
-		p.obj.add(new Battleship("BS",  new Rectangle(0, 0, 49, 24), GameObject.loadImage("battleship/res/img/Ship1.png")));
+		p.obj.add(new Battleship("BS",  new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png")));
 		obj.add(new Playfield("Targeting Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24)));
 		p.render();
 		obj.add(p);
@@ -29,7 +36,7 @@ public class GameState extends State
 	@Override
 	public void enterState()
 	{
-		
+		sem.add(new Event("repaint"));
 	}
 
 	@Override
@@ -41,13 +48,16 @@ public class GameState extends State
 	@Override
 	public void run()
 	{
+		repaint = false;
 		for(GameObject go : obj)
 			go.update();
 	}
 
 	@Override
-	public void paint(Graphics g)
+	public void paint()
 	{
+		g.setColor(Color.GRAY);
+		g.fillRect(0, 0, img.getWidth(), img.getHeight());
 		for(GameObject go : obj) 
 			go.paint(g);
 	}
