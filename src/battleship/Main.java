@@ -1,9 +1,9 @@
 package battleship;
 
-import java.applet.Applet;
+import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -11,40 +11,54 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import battleship.states.GameState;
 import battleship.states.GenericState;
 import battleship.states.MenuState;
 
-public class App extends Applet implements Runnable, MouseMotionListener, MouseListener, MouseWheelListener, KeyListener
+public class Main extends Canvas implements Runnable, MouseMotionListener, MouseListener, MouseWheelListener, KeyListener
 {
 	private static final long serialVersionUID = 1L;
-	private static int FPS = 30, SLEEP = 1000/FPS;
+	private static int FPS = 60, SLEEP = 1000/FPS;
 	public static boolean DEBUG = false;
-	private Image img; //used for double buffer,
-	private Graphics g; //etc.
+	public static Dimension dim = new Dimension(800, 600);
 	private FiniteStateMachine fsm = new FiniteStateMachine();
-	private long time;
-	private int loop = 1, fps = 1; //used for debugging
 	
-	@Override
-	public void init()
+	public Main()
 	{
-		setSize(800, 600); //AR of 1/3...
-		setBackground(Color.GRAY);
+		JFrame geo = new JFrame("Battleship");
+		JPanel panel = (JPanel)geo.getContentPane();
+		panel.setPreferredSize(dim);
+		panel.setLayout(null);
+		panel.setBackground(Color.GRAY);
+		
+		setBounds(0, 0, dim.width, dim.height);
+		panel.add(this);
+		setIgnoreRepaint(true);
+		geo.pack();
+		geo.setVisible(true);
+		geo.addWindowListener
+		(
+			new WindowAdapter()
+			{
+				public void windowClosing(WindowEvent e)
+				{
+					System.exit(0);
+				}
+			}
+		);
+		requestFocus();
 		
 		addMouseMotionListener(this);
 		addMouseListener(this);
 		addMouseWheelListener(this);
 		addKeyListener(this);
-		
-		if(img == null)
-		{
-			img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TRANSLUCENT);
-			g = img.getGraphics();
-		}
-		
+
 		fsm.addState(new GenericState());
 		fsm.addState(new MenuState());
 		fsm.addState(new GameState());
@@ -53,15 +67,22 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 		t.start();
 	}
 	
+	public static void main(String[] args)
+	{
+		new Main();
+	}
+	
 	public void run()
 	{
 		fsm.em.add(new Event("setState", "MenuState")); //enter the Menu state
 		while(true)
 		{
-			loop++;
 			fsm.run(); //update current state
-			if(fsm.repaint || DEBUG)
+			if(fsm.getState().repaint)
+			{
+				fsm.getState().paint(); //paint the current state
 				repaint(); //paint state to screen
+			}
 			try
 			{
 				Thread.sleep(SLEEP);
@@ -83,33 +104,7 @@ public class App extends Applet implements Runnable, MouseMotionListener, MouseL
 	@Override
 	public void paint(Graphics g)
 	{
-		//NOTE:
-		//this.g = double buffer
-		//g = screen graphics
-		
-		//clear the double buffer
-		this.g.setColor(getBackground());
-		this.g.fillRect(0, 0, getWidth(), getHeight());
-		fsm.paint(this.g); //paint the current state to double buffer
-		
-		//debug box thing
-		if(DEBUG)
-		{
-			this.g.setColor(Color.BLACK);
-			this.g.fillRect(0, 0, 128, 64);
-			this.g.setColor(Color.RED);
-			if((System.currentTimeMillis() - time) > 0)
-			{
-				fps += (1000 / (System.currentTimeMillis() - time));
-				this.g.drawString("FPS: " + (1000 / (System.currentTimeMillis() - time)), 0, 10);
-			}
-			this.g.drawString("Average FPS: " + fps/loop, 0, 20);
-			this.g.drawString("Threads: " + Thread.activeCount(), 0, 30);
-			time = System.currentTimeMillis();
-		}
-		
-		//paint double buffer to screen
-		g.drawImage(img, 0, 0, this);
+		g.drawImage(fsm.getState().getImage(), 0, 0, this);	
 	}
 
 	//trigger mouse/keyboard events

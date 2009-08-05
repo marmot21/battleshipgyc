@@ -1,8 +1,10 @@
 package battleship.states;
 
-import java.awt.Graphics;
+import java.awt.Color;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
+import battleship.Main;
 import battleship.Event;
 import battleship.EventManager;
 import battleship.gameobjects.Button;
@@ -14,24 +16,25 @@ public class MenuState extends State
 	public MenuState()
 	{
 		name = "MenuState";
+		img = new BufferedImage(Main.dim.width, Main.dim.height, BufferedImage.OPAQUE);
+		g = img.getGraphics();
 		//TODO Edit constructor once one image is loaded.
 		Button b1 = new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1));
-		b1.setImages("battleship/res/img/", "HostGame0.png", "HostGame1.png", "HostGame2.png");
+		b1.setImages("res/img/", "HostGame0.png", "HostGame1.png", "HostGame2.png");
 		obj.add(b1);
 		Button b2 = new Button("JoinGame", new Rectangle((800-210)/2, 256+128, 1, 1));
-		b2.setImages("battleship/res/img/", "JoinGame0.png", "JoinGame1.png", "JoinGame2.png");
+		b2.setImages("res/img/", "JoinGame0.png", "JoinGame1.png", "JoinGame2.png");
 		obj.add(b2);
 		Button b3 = new Button("SinglePlayer", new Rectangle((800-210)/2+210+32, 256+128, 1, 1));
-		b3.setImages("battleship/res/img/", "SinglePlayer0.png", "SinglePlayer1.png", "SinglePlayer2.png");
+		b3.setImages("res/img/", "SinglePlayer0.png", "SinglePlayer1.png", "SinglePlayer2.png");
 		obj.add(b3);
-		obj.add(new GameImage("MainTitle", new Rectangle((800-635)/2, 64, 1, 1), GameObject.loadImage("battleship/res/img/GameTitle.png")));
-		
+		obj.add(new GameImage("MainTitle", new Rectangle((800-635)/2, 64, 1, 1), GameObject.loadImage("res/img/GameTitle.png")));
 	}
 
 	@Override
 	public void enterState()
 	{
-		
+		sem.add(new Event("repaint"));
 	}
 
 	@Override
@@ -43,15 +46,16 @@ public class MenuState extends State
 	@Override
 	public void run()
 	{
+		repaint = false;
 		for(GameObject go : obj)
-		{
 			go.update();
-		}
 	}
 	
 	@Override
-	public void paint(Graphics g)
+	public void paint()
 	{
+		g.setColor(Color.GRAY);
+		g.fillRect(0, 0, img.getWidth(), img.getHeight());
 		for(GameObject go : obj)
 			go.paint(g);
 	}

@@ -1,6 +1,5 @@
 package battleship;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,6 @@ public class FiniteStateMachine
 {
 	private List<State> states = new ArrayList<State>();
 	private int currentState = 0;
-	public boolean repaint = false;
 	public EventManager em = new EventManager();
 	public EventManager iem = new EventManager();
 	
@@ -19,7 +17,7 @@ public class FiniteStateMachine
 		states.add(s);
 	}
 	
-	private State getState()
+	public State getState()
 	{
 		return states.get(currentState);
 	}
@@ -38,18 +36,17 @@ public class FiniteStateMachine
 	
 	private void setState(int i)
 	{
-		if(App.DEBUG)
+		if(Main.DEBUG)
 			System.out.println("Exiting State: " + getState().name); //debugging purposes, remove later
 		getState().exitState();
 		currentState = i;
-		if(App.DEBUG)
+		if(Main.DEBUG)
 			System.out.println("Entering State: " + getState().name); //debugging purposes, remove later
 		getState().enterState();
 	}
 	
 	public void run()
 	{
-		repaint = false;
 		getState().run();
 		em.flush(); //get rid of old input events
 		for(int i = 0; i < iem.size(); i++) //add new input events
@@ -84,14 +81,9 @@ public class FiniteStateMachine
 			}
 			else if(em.get(i).event.equals("repaint"))
 			{
-				repaint = true;
+				getState().repaint = true;
 				em.consume(i);
 			}
 		}
-	}
-
-	public void paint(Graphics g)
-	{
-		getState().paint(g); //paint the current state to double buffer
 	}
 }
