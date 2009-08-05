@@ -1,12 +1,13 @@
 package battleship.states;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import battleship.Main;
 import battleship.Event;
 import battleship.EventManager;
+import battleship.Main;
 import battleship.gameobjects.Button;
 import battleship.gameobjects.GameImage;
 import battleship.gameobjects.GameObject;
@@ -16,8 +17,6 @@ public class MenuState extends State
 	public MenuState()
 	{
 		name = "MenuState";
-		img = new BufferedImage(Main.dim.width, Main.dim.height, BufferedImage.OPAQUE);
-		g = img.getGraphics();
 		//TODO Edit constructor once one image is loaded.
 		Button b1 = new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1));
 		b1.setImages("res/img/", "HostGame0.png", "HostGame1.png", "HostGame2.png");
@@ -52,10 +51,10 @@ public class MenuState extends State
 	}
 	
 	@Override
-	public void paint()
+	public void paint(Graphics g)
 	{
 		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, img.getWidth(), img.getHeight());
+		g.fillRect(0, 0, Main.dim.width, Main.dim.height);
 		for(GameObject go : obj)
 			go.paint(g);
 	}

@@ -13,6 +13,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -26,6 +27,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	private static final long serialVersionUID = 1L;
 	private static int FPS = 60, SLEEP = 1000/FPS;
 	public static boolean DEBUG = false;
+	private BufferStrategy strategy;
 	public static Dimension dim = new Dimension(800, 600);
 	private FiniteStateMachine fsm = new FiniteStateMachine();
 	
@@ -54,6 +56,9 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		);
 		requestFocus();
 		
+		createBufferStrategy(2);
+		strategy = getBufferStrategy();
+		
 		addMouseMotionListener(this);
 		addMouseListener(this);
 		addMouseWheelListener(this);
@@ -80,8 +85,10 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 			fsm.run(); //update current state
 			if(fsm.getState().repaint)
 			{
-				fsm.getState().paint(); //paint the current state
-				repaint(); //paint state to screen
+				Graphics g = strategy.getDrawGraphics(); //get the graphics object to use
+				fsm.getState().paint(g); //paint the current state
+				g.dispose(); //destroy g object
+				strategy.show(); //show the image on screen
 			}
 			try
 			{
@@ -104,7 +111,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	@Override
 	public void paint(Graphics g)
 	{
-		g.drawImage(fsm.getState().getImage(), 0, 0, this);	
+		
 	}
 
 	//trigger mouse/keyboard events
