@@ -53,7 +53,7 @@ public class Battleship extends GameObject
 	@Override
 	public void update()
 	{
-
+		
 	}
 	
 	@Override
@@ -71,7 +71,7 @@ public class Battleship extends GameObject
 	@Override
 	public EventManager getEvents()
 	{
-		return null;
+		return goem;
 	}
 
 	@Override
@@ -82,14 +82,11 @@ public class Battleship extends GameObject
 			if(em.get(i).event.startsWith("mouse"))
 			{
 				MouseEvent me = (MouseEvent) em.get(i).param;
-				if(em.get(i).event.equals("mouseDragged"))
+				if(em.get(i).event.equals("mouseDragged") && STATE == SHIPS.FOLLOW)
 				{
-					if(STATE == SHIPS.FOLLOW)
-					{
-						r.x = me.getX()+mouse.x;
-						r.y = me.getY()+mouse.y;
-						goem.add(new Event("repaint"));
-					}
+					r.x = me.getX() - mouse.x;
+					r.y = me.getY() - mouse.y;
+					goem.add(new Event("repaint"));
 					
 				}
 				else if(em.get(i).event.equals("mouseReleased"))
@@ -116,18 +113,18 @@ public class Battleship extends GameObject
 						prevPos.x = r.x;
 						prevPos.y = r.y;
 						prevPos.STATE = STATE;
-						goem.add(new Event("repaint"));
 					}
 				}
 				else if(em.get(i).event.equals("mousePressed"))
 				{
-					if(STATE == SHIPS.INIT || STATE == SHIPS.NORMAL && r.contains(me.getPoint()))
+					if((STATE == SHIPS.INIT || STATE == SHIPS.NORMAL) && r.contains(me.getPoint()))
 					{
+						mouse.x = me.getX() - r.x;
+						mouse.y = me.getY() - r.y;
 						prevPos.x = r.x;
 						prevPos.y = r.y;
 						prevPos.STATE = STATE;
 						STATE = SHIPS.FOLLOW;
-						goem.add(new Event("repaint"));
 					}
 				}
 			}

@@ -3,7 +3,6 @@ package battleship.states;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 
 import battleship.Event;
 import battleship.EventManager;
