@@ -10,7 +10,6 @@ import battleship.gameobjects.GameObject;
 public abstract class State
 {
 	public String name = "";
-	public boolean repaint = false;
 	protected List<GameObject> obj = new ArrayList<GameObject>();
 	protected EventManager sem = new EventManager();
 	

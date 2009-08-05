@@ -44,7 +44,6 @@ public class MenuState extends State
 	@Override
 	public void run()
 	{
-		repaint = false;
 		for(GameObject go : obj)
 			go.update();
 	}
@@ -62,16 +61,9 @@ public class MenuState extends State
 	public EventManager getEvents()
 	{
 		for(GameObject go : obj)
-		{
-			EventManager goem = go.getEvents();
-			if(goem != null)
-				for(int i = 0; i < goem.size(); i++)
-					sem.add(goem.get(i));
-		}
-		
+			sem.addAll(go.getEvents());
 		EventManager tmp = new EventManager();
-		for(int i = 0; i < sem.size(); i++)
-			tmp.add(sem.get(i));
+		tmp.addAll(sem);
 		sem.clear();
 		return tmp;
 	}
@@ -79,8 +71,6 @@ public class MenuState extends State
 	@Override
 	public void pumpEvents(EventManager em)
 	{
-		for(GameObject go : obj)
-			go.pumpEvents(em);
 		for(int i = 0; i < em.size(); i++)
 		{
 			if(em.get(i).event.equals("buttonClicked"))
@@ -104,5 +94,7 @@ public class MenuState extends State
 				em.consume(i);
 			}
 		}
+		for(GameObject go : obj)
+			go.pumpEvents(em);
 	}
 }

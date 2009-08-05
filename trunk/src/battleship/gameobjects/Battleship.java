@@ -71,7 +71,10 @@ public class Battleship extends GameObject
 	@Override
 	public EventManager getEvents()
 	{
-		return goem;
+		EventManager tmp = new EventManager();
+		tmp.addAll(goem);
+		goem.clear();
+		return tmp;
 	}
 
 	@Override
@@ -87,7 +90,6 @@ public class Battleship extends GameObject
 					r.x = me.getX() - mouse.x;
 					r.y = me.getY() - mouse.y;
 					goem.add(new Event("repaint"));
-					
 				}
 				else if(em.get(i).event.equals("mouseReleased"))
 				{

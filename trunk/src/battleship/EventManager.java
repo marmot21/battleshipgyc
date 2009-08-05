@@ -16,6 +16,15 @@ public class EventManager
 		events.add(e);
 	}
 	
+	public synchronized void addAll(EventManager em)
+	{
+		if(em != null)
+		{
+			for(int i = 0; i < em.size(); i++)
+				events.add(em.get(i));
+		}
+	}
+	
 	//get certain event
 	public synchronized Event get(int i)
 	{
