@@ -18,7 +18,7 @@ public class Playfield extends GameObject
 	{
 		this.r = new Rectangle(r.x, r.y, r.width*d.width, r.height*d.height);
 		gridSize = d;
-		render();
+		goem = new EventManager();
 	}
 
 	public Playfield(String s, Rectangle r, Dimension d)
@@ -26,16 +26,14 @@ public class Playfield extends GameObject
 		this.r = new Rectangle(r.x, r.y, r.width*d.width, r.height*d.height);
 		gridSize = d;
 		name = s;
-		render();
+		goem = new EventManager();
 	}
 	
 	@Override
 	public void update()
 	{
 		for(GameObject go : obj)
-		{
 			go.update();
-		}
 	}
 	
 	@Override
@@ -56,14 +54,26 @@ public class Playfield extends GameObject
 		{
 			g.drawLine(r.x, r.y+i*gridSize.height, r.x+r.width, r.y+i*gridSize.height);
 		}
-		for(GameObject go :obj)
+		for(GameObject go : obj)
 			go.paint(g);//draw the ships
 	}
 
 	@Override
 	public EventManager getEvents()
 	{
-		return new EventManager();
+		for(GameObject go : obj)
+		{
+			EventManager goem = go.getEvents();
+			if(goem != null)
+				for(int i = 0; i < goem.size(); i++)
+					this.goem.add(goem.get(i));
+		}
+		
+		EventManager tmp = new EventManager();
+		for(int i = 0; i < goem.size(); i++)
+			tmp.add(goem.get(i));
+		goem.clear();
+		return tmp;
 	}
 
 	@Override
