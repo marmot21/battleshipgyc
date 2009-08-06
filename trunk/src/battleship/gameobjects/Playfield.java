@@ -57,22 +57,22 @@ public class Playfield extends GameObject
 		for(GameObject go : obj)
 			go.paint(g);//draw the ships
 	}
-
+	
 	@Override
-	public EventManager getEvents()
+	public EventManager getEvents()//output of events
 	{
 		for(GameObject go : obj)
+			goem.addAll(go.getEvents());
+		EventManager tmp = null;
+		try
 		{
-			EventManager goem = go.getEvents();
-			if(goem != null)
-				for(int i = 0; i < goem.size(); i++)
-					this.goem.add(goem.get(i));
+			tmp = goem.clone();
+			goem.clear();
 		}
-		
-		EventManager tmp = new EventManager();
-		for(int i = 0; i < goem.size(); i++)
-			tmp.add(goem.get(i));
-		goem.clear();
+		catch(CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
 		return tmp;
 	}
 

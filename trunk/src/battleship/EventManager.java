@@ -3,7 +3,7 @@ package battleship;
 import java.util.List;
 import java.util.Vector;
 
-public class EventManager
+public class EventManager implements Cloneable
 {
 	private List<Event> events = new Vector<Event>(); //Vector is thread-safe
 	
@@ -64,5 +64,12 @@ public class EventManager
 	{
 		for(Event e : events)
 			System.out.println(e.event);
+	}
+	
+	public EventManager clone() throws CloneNotSupportedException
+	{
+		EventManager tmp = new EventManager();
+		tmp.addAll(this);
+		return tmp;
 	}
 }

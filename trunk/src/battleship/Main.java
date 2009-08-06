@@ -43,7 +43,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		
 		setBounds(0, 0, dim.width, dim.height);
 		panel.add(this);
-		setIgnoreRepaint(true);
+		//setIgnoreRepaint(true);
 		geo.pack();
 		geo.setVisible(true);
 		geo.addWindowListener
@@ -56,6 +56,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 				}
 			}
 		);
+
 		requestFocus();
 		
 		createBufferStrategy(2);
@@ -82,8 +83,10 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	public void run()
 	{
 		em.add(new Event("setState", "MenuState")); //enter the Menu state
+		boolean paint;
 		while(true)
 		{
+			paint = false;
 			em.flush(); //get rid of old input events
 			em.addAll(iem);
 			iem.clear();
@@ -100,12 +103,25 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 				}
 				else if(em.get(i).event.equals("repaint"))
 				{
-					Graphics g = strategy.getDrawGraphics(); //get the graphics object to use
-					fsm.getState().paint(g); //paint the current state
-					g.dispose(); //destroy g object
-					strategy.show(); //show the image on screen
+					paint = true;
 					em.consume(i);
 				}
+			}
+			
+			for(int i = 0; i < em.size(); i++)
+			{
+				if(em.get(i).event.equals("setState"))
+				{
+					paint = false;
+				}
+			}
+			
+			if(paint)
+			{
+				Graphics g = strategy.getDrawGraphics(); //get the graphics object to use
+				fsm.getState().paint(g); //paint the current state
+				g.dispose(); //destroy g object
+				strategy.show(); //show the image on screen
 			}
 			
 			try

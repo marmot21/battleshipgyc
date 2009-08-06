@@ -63,9 +63,16 @@ public class GameState extends State
 	{
 		for(GameObject go : obj)
 			sem.addAll(go.getEvents());
-		EventManager tmp = new EventManager();
-		tmp.addAll(sem);
-		sem.clear();
+		EventManager tmp = null;
+		try
+		{
+			tmp = sem.clone();
+			sem.clear();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
 		return tmp;
 	}
 
