@@ -99,26 +99,31 @@ public class Button extends GameObject
 				MouseEvent me = (MouseEvent) em.get(i).param;
 				if(em.get(i).event.equals("mouseMoved") || em.get(i).event.equals("mouseDragged"))
 				{
-					if(r.contains(me.getPoint()) && STATE == BUTTON.NORMAL)
+					if(r.contains(me.getPoint()))
 					{
-						STATE = BUTTON.HOVER;
-						goem.add(new Event("repaint"));
+						if(STATE == BUTTON.NORMAL)
+						{
+							STATE = BUTTON.HOVER;
+							goem.add(new Event("repaint"));
+						}
+						else if(STATE == BUTTON.ACTIVE)
+						{
+							STATE = BUTTON.PRESSED;
+							goem.add(new Event("repaint"));
+						}
 					}
-					else if(r.contains(me.getPoint()) && STATE == BUTTON.ACTIVE)
+					else
 					{
-						STATE = BUTTON.PRESSED;
-						goem.add(new Event("repaint"));
-					}
-					
-					else if(!r.contains(me.getPoint()) && STATE == BUTTON.HOVER)
-					{
-						STATE = BUTTON.NORMAL;
-						goem.add(new Event("repaint"));
-					}
-					else if(!r.contains(me.getPoint()) && STATE == BUTTON.PRESSED)
-					{
-						STATE = BUTTON.ACTIVE;
-						goem.add(new Event("repaint"));
+						if(STATE == BUTTON.HOVER)
+						{
+							STATE = BUTTON.NORMAL;
+							goem.add(new Event("repaint"));
+						}
+						else if(STATE == BUTTON.PRESSED)
+						{
+							STATE = BUTTON.ACTIVE;
+							goem.add(new Event("repaint"));
+						}
 					}
 				}
 				else if(em.get(i).event.equals("mousePressed") && me.getButton() == MouseEvent.BUTTON1)
@@ -131,13 +136,16 @@ public class Button extends GameObject
 				}
 				else if(em.get(i).event.equals("mouseReleased") && me.getButton() == MouseEvent.BUTTON1)
 				{
-					if(r.contains(me.getPoint()) && STATE == BUTTON.PRESSED)
+					if(r.contains(me.getPoint()))
 					{
-						goem.add(new Event("buttonClicked", (Object)this));
-						STATE = BUTTON.HOVER;
-						goem.add(new Event("repaint"));
+						if(STATE == BUTTON.PRESSED)
+						{
+							goem.add(new Event("buttonClicked", (Object)this));
+							STATE = BUTTON.HOVER;
+							goem.add(new Event("repaint"));
+						}
 					}
-					else if(!r.contains(me.getPoint()))
+					else
 					{
 						STATE = BUTTON.NORMAL;
 						goem.add(new Event("repaint"));
