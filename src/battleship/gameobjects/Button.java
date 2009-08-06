@@ -136,19 +136,19 @@ public class Button extends GameObject
 				}
 				else if(em.get(i).event.equals("mouseReleased") && me.getButton() == MouseEvent.BUTTON1)
 				{
-					if(r.contains(me.getPoint()))
+					if(STATE == BUTTON.PRESSED)
 					{
-						if(STATE == BUTTON.PRESSED)
+						if(r.contains(me.getPoint()))
 						{
 							goem.add(new Event("buttonClicked", (Object)this));
 							STATE = BUTTON.HOVER;
 							goem.add(new Event("repaint"));
 						}
-					}
-					else
-					{
-						STATE = BUTTON.NORMAL;
-						goem.add(new Event("repaint"));
+						else
+						{
+							STATE = BUTTON.NORMAL;
+							goem.add(new Event("repaint"));
+						}
 					}
 				}
 			}
