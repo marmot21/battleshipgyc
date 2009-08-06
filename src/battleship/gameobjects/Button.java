@@ -76,9 +76,16 @@ public class Button extends GameObject
 	@Override
 	public EventManager getEvents()
 	{
-		EventManager tmp = new EventManager();
-		tmp.addAll(goem);
-		goem.clear();
+		EventManager tmp = null;
+		try
+		{
+			tmp = goem.clone();
+			goem.clear();
+		}
+		catch(CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
 		return tmp;
 	}
 
