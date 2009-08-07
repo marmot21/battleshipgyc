@@ -1,13 +1,17 @@
 package battleship.gameobjects;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
+import java.awt.image.ImageObserver;
+import java.awt.image.Raster;
 import java.util.ArrayList;
 
 import battleship.Event;
@@ -141,11 +145,9 @@ public class Battleship extends GameObject
 				}
 				else if(em.get(i).event.equals("mouseWheelMoved")) {
 					if(STATE == SHIPS.FOLLOW) {
-						Graphics2D g2d = (Graphics2D) img.getGraphics();
-						g2d.rotate(90);
-						//AffineTransform transform = g2d.getTransform();
-						g2d.dispose();
-						//img = g2d.drawImage(img, (BufferedImageOp) img, 0, 0);
+						RotateImage45Degrees r = new RotateImage45Degrees(img);
+						
+						img = r.destinationBI;
 						System.out.println("rotating");//debugging
 						goem.add(new Event("repaint"));
 					}
