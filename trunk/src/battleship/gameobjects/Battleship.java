@@ -1,10 +1,13 @@
 package battleship.gameobjects;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
 import java.util.ArrayList;
 
 import battleship.Event;
@@ -92,7 +95,7 @@ public class Battleship extends GameObject
 			if(em.get(i).event.startsWith("mouse"))
 			{
 				MouseEvent me = (MouseEvent) em.get(i).param;
-				if(em.get(i).event.equals("mouseDragged") && STATE == SHIPS.FOLLOW)
+				if(em.get(i).event.equals("mouseDragged") && STATE == SHIPS.FOLLOW) //if ship is being dragged then follow mouse
 				{
 					r.x = me.getX() - mouse.x;
 					r.y = me.getY() - mouse.y;
@@ -111,7 +114,7 @@ public class Battleship extends GameObject
 						goem.add(new Event("repaint"));
 					}
 					else if(STATE == SHIPS.FOLLOW && !statusScreen.contains(me.getPoint()))
-					{
+					{ //if the ship was dragged outside of the grid then return it to its prev. pos.
 						r.x = prevPos.x;
 						r.y = prevPos.y;
 						STATE = prevPos.STATE;
@@ -135,6 +138,18 @@ public class Battleship extends GameObject
 						prevPos.STATE = STATE;
 						STATE = SHIPS.FOLLOW;
 					}
+				}
+				else if(em.get(i).event.equals("mouseWheelMoved")) {
+					if(STATE == SHIPS.FOLLOW) {
+						Graphics2D g2d = (Graphics2D) img.getGraphics();
+						g2d.rotate(90);
+						//AffineTransform transform = g2d.getTransform();
+						g2d.dispose();
+						//img = g2d.drawImage(img, (BufferedImageOp) img, 0, 0);
+						System.out.println("rotating");//debugging
+						goem.add(new Event("repaint"));
+					}
+						
 				}
 			}
 		}
