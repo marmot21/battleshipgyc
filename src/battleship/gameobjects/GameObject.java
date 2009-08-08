@@ -32,7 +32,7 @@ public abstract class GameObject
 		BufferedImage b = null;
 		try
 		{
-			 b = ImageIO.read(new File(path));
+			b = ImageIO.read(new File(path));
 		}
 		catch (IOException e)
 		{

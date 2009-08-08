@@ -16,16 +16,9 @@ public class MenuState extends State
 	public MenuState()
 	{
 		name = "MenuState";
-		//TODO Edit constructor once one image is loaded.
-		Button b1 = new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1));
-		b1.setImages("res/img/", "HostGame0.png", "HostGame1.png", "HostGame2.png");
-		obj.add(b1);
-		Button b2 = new Button("JoinGame", new Rectangle((800-210)/2, 256+128, 1, 1));
-		b2.setImages("res/img/", "JoinGame0.png", "JoinGame1.png", "JoinGame2.png");
-		obj.add(b2);
-		Button b3 = new Button("SinglePlayer", new Rectangle((800-210)/2+210+32, 256+128, 1, 1));
-		b3.setImages("res/img/", "SinglePlayer0.png", "SinglePlayer1.png", "SinglePlayer2.png");
-		obj.add(b3);
+		obj.add(new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1), GameObject.loadImage("res/img/HostGame.png")));
+		obj.add(new Button("JoinGame", new Rectangle((800-210)/2, 256+128, 1, 1), GameObject.loadImage("res/img/JoinGame.png")));
+		obj.add(new Button("SinglePlayer", new Rectangle((800-210)/2+210+32, 256+128, 1, 1), GameObject.loadImage("res/img/SinglePlayer.png")));
 		obj.add(new GameImage("MainTitle", new Rectangle((800-635)/2, 64, 1, 1), GameObject.loadImage("res/img/GameTitle.png")));
 	}
 

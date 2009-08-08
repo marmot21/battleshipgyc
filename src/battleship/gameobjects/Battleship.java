@@ -1,17 +1,10 @@
 package battleship.gameobjects;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ImageObserver;
-import java.awt.image.Raster;
 import java.util.ArrayList;
 
 import battleship.Event;
@@ -149,8 +142,10 @@ public class Battleship extends GameObject
 						STATE = SHIPS.FOLLOW;
 					}
 				}
-				else if(em.get(i).event.equals("mouseWheelMoved")) {//rotate ship
-					if(STATE == SHIPS.FOLLOW) {
+				else if(em.get(i).event.equals("mouseWheelMoved"))
+				{//rotate ship
+					if(STATE == SHIPS.FOLLOW)
+					{
 						Battleship temp = new Battleship();
 						copy(rotatedImg, temp);
 						copy(this, rotatedImg);
@@ -165,7 +160,9 @@ public class Battleship extends GameObject
 			}
 		}
 	}
-	protected void copy(Battleship in, Battleship out){
+	
+	protected void copy(Battleship in, Battleship out)
+	{
 		out.r = in.r;
 		out.img = in.img;
 	}
