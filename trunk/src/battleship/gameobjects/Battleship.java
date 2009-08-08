@@ -152,6 +152,16 @@ public class Battleship extends GameObject
 					if(STATE == SHIPS.FOLLOW)
 					{
 						rotated = !rotated;
+						if(rotated)
+						{
+							r.width = himg.getWidth();
+							r.height = himg.getHeight();
+						}
+						else
+						{
+							r.width = vimg.getWidth();
+							r.height = vimg.getHeight();
+						}
 						goem.add(new Event("repaint"));
 					}	
 				}
