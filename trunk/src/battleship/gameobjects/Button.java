@@ -10,7 +10,7 @@ import battleship.EventManager;
 
 public class Button extends GameObject
 {
-	private BufferedImage normal, hover, pressed;
+	private BufferedImage img, img2;
 	
 	//the states a button can be in
 	public static enum BUTTON
@@ -26,45 +26,39 @@ public class Button extends GameObject
 		goem = new EventManager();
 	}
 	
-	//TODO Change it to one image, and clip it - more efficient.
-	public void setImages(String b, String n, String h, String p)
+	public Button(String name, Rectangle r, BufferedImage i)
 	{
-		if(!(b+n).equals(""))
-			normal = loadImage(b+n);
-		if(!(b+h).equals(""))
-			hover = loadImage(b+h);
-		if(!(b+p).equals(""))
-			pressed = loadImage(b+p);
+		super(name, r);
+		img = i;
+		render();
+		goem = new EventManager();
 	}
 	
 	@Override
 	public void paint(Graphics g)
 	{
-		switch(STATE)
-		{
-			case NORMAL:
-			case ACTIVE:
-				g.drawImage(normal, r.x, r.y, null);
-				r.width = normal.getWidth();
-				r.height = normal.getHeight();
-				break;
-			case HOVER:
-				g.drawImage(hover, r.x, r.y, null);
-				r.width = hover.getWidth();
-				r.height = hover.getHeight();
-				break;
-			case PRESSED:
-				g.drawImage(pressed, r.x, r.y, null);
-				r.width = pressed.getWidth();
-				r.height = pressed.getHeight();
-				break;
-		}
+		g.drawImage(img2, r.x, r.y, null);
 	}
 
 	@Override
 	public void render()
 	{
-		
+		img2 = null;
+		r.height = img.getHeight()/3;
+		r.width = img.getWidth();
+		switch(STATE)
+		{
+			case NORMAL:
+			case ACTIVE:
+				img2 = img.getSubimage(0, 0, img.getWidth(), img.getHeight()/3);
+				break;
+			case HOVER:
+				img2 = img.getSubimage(0, img.getHeight()/3, img.getWidth(), img.getHeight()/3);
+				break;
+			case PRESSED:
+				img2 = img.getSubimage(0, img.getHeight()*2/3, img.getWidth(), img.getHeight()/3);
+				break;
+		}
 	}
 
 	@Override
@@ -104,11 +98,13 @@ public class Button extends GameObject
 						if(STATE == BUTTON.NORMAL)
 						{
 							STATE = BUTTON.HOVER;
+							render();
 							goem.add(new Event("repaint"));
 						}
 						else if(STATE == BUTTON.ACTIVE)
 						{
 							STATE = BUTTON.PRESSED;
+							render();
 							goem.add(new Event("repaint"));
 						}
 					}
@@ -117,11 +113,13 @@ public class Button extends GameObject
 						if(STATE == BUTTON.HOVER)
 						{
 							STATE = BUTTON.NORMAL;
+							render();
 							goem.add(new Event("repaint"));
 						}
 						else if(STATE == BUTTON.PRESSED)
 						{
 							STATE = BUTTON.ACTIVE;
+							render();
 							goem.add(new Event("repaint"));
 						}
 					}
@@ -131,6 +129,7 @@ public class Button extends GameObject
 					if(r.contains(me.getPoint()))
 					{
 						STATE = BUTTON.PRESSED;
+						render();
 						goem.add(new Event("repaint"));
 					}
 				}
@@ -142,11 +141,13 @@ public class Button extends GameObject
 						{
 							goem.add(new Event("buttonClicked", (Object)this));
 							STATE = BUTTON.HOVER;
+							render();
 							goem.add(new Event("repaint"));
 						}
 						else
 						{
 							STATE = BUTTON.NORMAL;
+							render();
 							goem.add(new Event("repaint"));
 						}
 					}
