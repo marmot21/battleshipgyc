@@ -16,17 +16,17 @@ public class Playfield extends GameObject
 	
 	public Playfield(Rectangle r, Dimension d)
 	{
-		this.r = new Rectangle(r.x, r.y, r.width*d.width, r.height*d.height);
+		this.mBounds = new Rectangle(r.x, r.y, r.width*d.width, r.height*d.height);
 		gridSize = d;
-		goem = new EventManager();
+		mGameObjEventMgr = new EventManager();
 	}
 
 	public Playfield(String s, Rectangle r, Dimension d)
 	{
-		this.r = new Rectangle(r.x, r.y, r.width*d.width, r.height*d.height);
+		this.mBounds = new Rectangle(r.x, r.y, r.width*d.width, r.height*d.height);
 		gridSize = d;
-		name = s;
-		goem = new EventManager();
+		mName = s;
+		mGameObjEventMgr = new EventManager();
 	}
 	
 	@Override
@@ -46,13 +46,13 @@ public class Playfield extends GameObject
 	public void paint(Graphics g)
 	{
 		g.setColor(Color.BLACK);
-		for(int i = 0; i <= r.width/gridSize.width; i++)
+		for(int i = 0; i <= mBounds.width/gridSize.width; i++)
 		{
-			g.drawLine(r.x+i*gridSize.width, r.y, r.x+i*gridSize.width, r.y+r.height);
+			g.drawLine(mBounds.x+i*gridSize.width, mBounds.y, mBounds.x+i*gridSize.width, mBounds.y+mBounds.height);
 		}
-		for(int i = 0; i <= r.height/gridSize.height; i++)
+		for(int i = 0; i <= mBounds.height/gridSize.height; i++)
 		{
-			g.drawLine(r.x, r.y+i*gridSize.height, r.x+r.width, r.y+i*gridSize.height);
+			g.drawLine(mBounds.x, mBounds.y+i*gridSize.height, mBounds.x+mBounds.width, mBounds.y+i*gridSize.height);
 		}
 		for(GameObject go : obj)
 			go.paint(g);//draw the ships
@@ -62,12 +62,12 @@ public class Playfield extends GameObject
 	public EventManager getEvents()//output of events
 	{
 		for(GameObject go : obj)
-			goem.addAll(go.getEvents());
+			mGameObjEventMgr.addAll(go.getEvents());
 		EventManager tmp = null;
 		try
 		{
-			tmp = goem.clone();
-			goem.clear();
+			tmp = mGameObjEventMgr.clone();
+			mGameObjEventMgr.clear();
 		}
 		catch(CloneNotSupportedException e)
 		{

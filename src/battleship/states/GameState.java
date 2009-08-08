@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
 
 import battleship.Event;
 import battleship.EventManager;
@@ -18,16 +16,14 @@ import battleship.gameobjects.Playfield;
 
 public class GameState extends State
 {
-	private List<GameObject> obj = new ArrayList<GameObject>();
-	
 	public GameState()
 	{
-		name = "GameState";
+		mName = "GameState";
 		Playfield p = new Playfield("Status Screen", new Rectangle(24, 240+24, 10, 10), new Dimension(24, 24));
 		p.obj.add(new Battleship("BS", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
-		obj.add(new Playfield("Targeting Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24)));
-		obj.add(p);
-		sem.add(new Event("repaint"));
+		mObj.add(new Playfield("Targeting Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24)));
+		mObj.add(p);
+		mStateEventMgr.add(new Event("repaint"));
 	}
 
 	@Override
@@ -45,7 +41,7 @@ public class GameState extends State
 	@Override
 	public void run()
 	{
-		for(GameObject go : obj)
+		for(GameObject go : mObj)
 			go.update();
 	}
 
@@ -53,21 +49,21 @@ public class GameState extends State
 	public void paint(Graphics g)
 	{
 		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, Main.dim.width, Main.dim.height);
-		for(GameObject go : obj) 
+		g.fillRect(0, 0, Main.mDim.width, Main.mDim.height);
+		for(GameObject go : mObj) 
 			go.paint(g);
 	}
 
 	@Override
 	public EventManager getEvents()//output of events
 	{
-		for(GameObject go : obj)
-			sem.addAll(go.getEvents());
+		for(GameObject go : mObj)
+			mStateEventMgr.addAll(go.getEvents());
 		EventManager tmp = null;
 		try
 		{
-			tmp = sem.clone();
-			sem.clear();
+			tmp = mStateEventMgr.clone();
+			mStateEventMgr.clear();
 		}
 		catch (CloneNotSupportedException e)
 		{
@@ -81,40 +77,40 @@ public class GameState extends State
 	{
 		for(int i = 0; i < em.size(); i++)
 		{
-			if(em.get(i).event.equals("mode"))
+			if(em.get(i).mEvent.equals("mode"))
 			{
-				if(em.get(i).param.equals("Host"))
+				if(em.get(i).mParam.equals("Host"))
 				{
 					//insert host specific stuff here
-					sem.add(new Event("setState", "MenuState"));
-					sem.add(new Event("error", "Hosting not implemented"));
+					mStateEventMgr.add(new Event("setState", "MenuState"));
+					mStateEventMgr.add(new Event("error", "Hosting not implemented"));
 					em.consume(i);
 				}
-				else if(em.get(i).param.equals("Join"))
+				else if(em.get(i).mParam.equals("Join"))
 				{
 					//insert join specific stuff here
-					sem.add(new Event("setState", "MenuState"));
-					sem.add(new Event("error", "Joining not implemented"));
+					mStateEventMgr.add(new Event("setState", "MenuState"));
+					mStateEventMgr.add(new Event("error", "Joining not implemented"));
 					em.consume(i);
 				}
-				else if(em.get(i).param.equals("Single"))
+				else if(em.get(i).mParam.equals("Single"))
 				{
 					//insert single specific stuff here
-					sem.add(new Event("repaint"));
+					mStateEventMgr.add(new Event("repaint"));
 					em.consume(i);
 				}
 			}
-			else if(em.get(i).event.equals("buttonClicked"))
+			else if(em.get(i).mEvent.equals("buttonClicked"))
 			{
-				Button b = (Button)em.get(i).param;
-				if(b.name.equals("TestButton"))
+				Button b = (Button)em.get(i).mParam;
+				if(b.mName.equals("TestButton"))
 				{
-					sem.add(new Event("setState", "MenuState"));
+					mStateEventMgr.add(new Event("setState", "MenuState"));
 					em.consume(i);
 				}
 			}
 		}
-		for(GameObject go : obj)
+		for(GameObject go : mObj)
 			go.pumpEvents(em);
 	}
 }

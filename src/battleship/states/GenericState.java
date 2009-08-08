@@ -8,7 +8,7 @@ public class GenericState extends State
 {
 	public GenericState()
 	{
-		name = "GenericState";
+		mName = "GenericState";
 	}
 	
 	@Override
