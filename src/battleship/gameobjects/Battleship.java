@@ -27,6 +27,7 @@ public class Battleship extends GameObject
 	public SHIPS STATE = SHIPS.NORMAL;
 	public BufferedImage img;
 	private Point mouse = new Point();
+	private Battleship rotatedImg;
 	protected static Rectangle statusScreen = new Rectangle(24, 240+24, 241+24, 241+240+24);
 	protected static Position prevPos = new Position();
 	protected static ArrayList<Battleship> inits = new ArrayList<Battleship>();
@@ -55,6 +56,11 @@ public class Battleship extends GameObject
 		this.r.x = inits.size()*30+400;
 		this.r.y = ((inits.size()-inits.size()%2)/2)*26;
 		inits.add(this);
+	}
+	
+	public Battleship(String name, Rectangle r1, BufferedImage i1, Rectangle r2, BufferedImage i2) {
+		this(name, r1, i1);
+		rotatedImg = new Battleship(name, r2, i2);
 	}
 
 	@Override
@@ -99,8 +105,8 @@ public class Battleship extends GameObject
 			if(em.get(i).event.startsWith("mouse"))
 			{
 				MouseEvent me = (MouseEvent) em.get(i).param;
-				if(em.get(i).event.equals("mouseDragged") && STATE == SHIPS.FOLLOW) //if ship is being dragged then follow mouse
-				{
+				if(em.get(i).event.equals("mouseDragged") && STATE == SHIPS.FOLLOW) 
+				{//if ship is being dragged then follow mouse
 					r.x = me.getX() - mouse.x;
 					r.y = me.getY() - mouse.y;
 					goem.add(new Event("repaint"));
@@ -143,17 +149,24 @@ public class Battleship extends GameObject
 						STATE = SHIPS.FOLLOW;
 					}
 				}
-				else if(em.get(i).event.equals("mouseWheelMoved")) {
+				else if(em.get(i).event.equals("mouseWheelMoved")) {//rotate ship
 					if(STATE == SHIPS.FOLLOW) {
-						RotateImage45Degrees r = new RotateImage45Degrees(img);
-						
-						img = r.destinationBI;
-						System.out.println("rotating");//debugging
+						Battleship temp = new Battleship();
+						copy(rotatedImg, temp);
+						copy(this, rotatedImg);
+						copy(temp, this);
+						//set the position of the ship to mouse position
+						r.x = me.getX() - mouse.x;
+						r.y = me.getY() - mouse.y;
 						goem.add(new Event("repaint"));
 					}
 						
 				}
 			}
 		}
+	}
+	protected void copy(Battleship in, Battleship out){
+		out.r = in.r;
+		out.img = in.img;
 	}
 }

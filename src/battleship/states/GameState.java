@@ -24,7 +24,7 @@ public class GameState extends State
 	{
 		name = "GameState";
 		Playfield p = new Playfield("Status Screen", new Rectangle(24, 240+24, 10, 10), new Dimension(24, 24));
-		p.obj.add(new Battleship("BS", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png")));
+		p.obj.add(new Battleship("BS", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), new Rectangle (0,0,24,49), GameObject.loadImage("res/img/Ship2.png")));
 		obj.add(new Playfield("Targeting Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24)));
 		obj.add(p);
 		sem.add(new Event("repaint"));
