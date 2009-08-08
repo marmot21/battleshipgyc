@@ -9,9 +9,9 @@ import battleship.gameobjects.GameObject;
 
 public abstract class State
 {
-	public String name = "";
-	protected List<GameObject> obj = new ArrayList<GameObject>();
-	protected EventManager sem = new EventManager();
+	public String mName = "";
+	protected List<GameObject> mObj = new ArrayList<GameObject>();
+	protected EventManager mStateEventMgr = new EventManager();
 	
 	public abstract void enterState();	
 	public abstract void exitState();

@@ -3,69 +3,100 @@ package battleship;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * A manager of events
+ * @author Amec
+ * 
+ */
+
 public class EventManager implements Cloneable
 {
-	private List<Event> events = new Vector<Event>(); //Vector is thread-safe
+	private List<Event> mEvents = new Vector<Event>(); //Vector is thread-safe
 	
-	//all methods accessing 'events' need to be synchronised.
-	//(unless you want exceptions, etc)
-	
-	//add new event
-	public synchronized void add(Event e)
+	/**
+	 * Adds a new event to be processed.
+	 * @param event The actual event to be added.
+	 */
+	public synchronized void add(Event event)
 	{
-		events.add(e);
+		mEvents.add(event);
 	}
 	
-	public synchronized void addAll(EventManager em)
+	/**
+	 * Adds an EventManager to another.
+	 * @param eventMgr The EventManager which is to be added to this.
+	 */
+	public synchronized void addAll(EventManager eventMgr)
 	{
-		if(em != null)
+		if(eventMgr != null)
 		{
-			for(int i = 0; i < em.size(); i++)
-				events.add(em.get(i));
+			for(int i = 0; i < eventMgr.size(); i++)
+				mEvents.add(eventMgr.get(i));
 		}
 	}
 	
-	//get certain event
-	public synchronized Event get(int i)
+	/**
+	 * 
+	 * @param eventNum The event number to return.
+	 * @return
+	 */
+	public synchronized Event get(int eventNum)
 	{
-		return events.get(i);
+		return mEvents.get(eventNum);
 	}
 	
-	//flush events which are only needed when they're triggered
+	/**
+	 * 'Flushes' the EventManager of all one time events.
+	 */
 	public synchronized void flush()
 	{
-		for(int i = 0; i < events.size(); i++)
+		for(int i = 0; i < mEvents.size(); i++)
 		{
-			if(events.get(i).event.startsWith("mouse") || events.get(i).event.startsWith("key"))
-				events.remove(i);
+			if(mEvents.get(i).mEvent.startsWith("mouse") || mEvents.get(i).mEvent.startsWith("key"))
+				mEvents.remove(i);
 		}
 	}
 	
-	//remove the event (usually called after the event is used)
-	public synchronized void consume(int i)
+	/**
+	 * Removes the event corresponding with eventNum from the event pool.
+	 * @param eventNum
+	 */
+	public synchronized void consume(int eventNum)
 	{
-		events.remove(i);
+		mEvents.remove(eventNum);
 	}
 	
-	//totally clear 'events'
+	/**
+	 * Clears all events.
+	 */
 	public synchronized void clear()
 	{
-		events.clear();
+		mEvents.clear();
 	}
 	
-	//return the size
+	/**
+	 * Returns the amount of events currently in the pool.
+	 * @return
+	 */
 	public synchronized int size()
 	{
-		return events.size();
+		return mEvents.size();
 	}
 	
-	//prints all the events that are currently in 'events'
+	/**
+	 * Prints all events.
+	 */
 	public synchronized void print()
 	{
-		for(Event e : events)
-			System.out.println(e.event);
+		for(Event e : mEvents)
+			System.out.println(e.mEvent);
 	}
 	
+	/**
+	 * Returns a copy of the EventManager
+	 * @return
+	 */
+	@Override
 	public EventManager clone() throws CloneNotSupportedException
 	{
 		EventManager tmp = new EventManager();

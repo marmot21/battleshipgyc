@@ -22,26 +22,35 @@ import battleship.states.GameState;
 import battleship.states.GenericState;
 import battleship.states.MenuState;
 
+/**
+ * The main class for Battleship. Sets up everything etc.
+ * @author Amec
+ *
+ */
+
 public class Main extends Canvas implements Runnable, MouseMotionListener, MouseListener, MouseWheelListener, KeyListener
 {
 	private static final long serialVersionUID = 1L;
 	private static int FPS = 60, SLEEP = 1000/FPS;
 	public static boolean DEBUG = false;
-	private BufferStrategy strategy;
-	public static Dimension dim = new Dimension(800, 600);
-	private FiniteStateMachine fsm = new FiniteStateMachine();
-	private EventManager em = new EventManager();
-	private EventManager iem = new EventManager();
+	private BufferStrategy mStrategy;
+	public static Dimension mDim = new Dimension(800, 600);
+	private FiniteStateMachine mFSM = new FiniteStateMachine();
+	private EventManager mEventMgr = new EventManager();
+	private EventManager mInputEventMgr = new EventManager();
 	
+	/**
+	 * Default constructor
+	 */
 	public Main()
 	{
 		JFrame geo = new JFrame("Battleship");
 		JPanel panel = (JPanel)geo.getContentPane();
-		panel.setPreferredSize(dim);
+		panel.setPreferredSize(mDim);
 		panel.setLayout(null);
 		panel.setBackground(Color.GRAY);
 		
-		setBounds(0, 0, dim.width, dim.height);
+		setBounds(0, 0, mDim.width, mDim.height);
 		panel.add(this);
 		//setIgnoreRepaint(true);
 		geo.pack();
@@ -59,58 +68,72 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 
 		requestFocus();
 		
+		/*
+		 * Creates a bufferstrategy with 1 extra buffer
+		 * mStrategy.show(); flips it
+		 */
 		createBufferStrategy(2);
-		strategy = getBufferStrategy();
+		mStrategy = getBufferStrategy();
 		
+		//Add EventListeners
 		addMouseMotionListener(this);
 		addMouseListener(this);
 		addMouseWheelListener(this);
 		addKeyListener(this);
 
-		fsm.addState(new GenericState());
-		fsm.addState(new MenuState());
-		fsm.addState(new GameState());
+		//Add states
+		mFSM.addState(new GenericState());
+		mFSM.addState(new MenuState());
+		mFSM.addState(new GameState());
 		
+		//Start the main thread
 		Thread t = new Thread(this);
 		t.start();
 	}
 	
+	/**
+	 * Gee, I wonder what this does.
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
 		new Main();
 	}
 	
+	/**
+	 * Called when Thread t is started.
+	 */
 	public void run()
 	{
-		em.add(new Event("setState", "MenuState")); //enter the Menu state
+		mEventMgr.add(new Event("setState", "MenuState")); //enter the Menu state
 		boolean paint;
 		while(true)
 		{
 			paint = false;
-			em.flush(); //get rid of old input events
-			em.addAll(iem);
-			iem.clear();
-			fsm.getState().run(); //update current state
-			fsm.pumpEvents(em);
-			em.addAll(fsm.getState().getEvents());
+			mEventMgr.flush(); //get rid of old input events
+			mEventMgr.addAll(mInputEventMgr);
+			mInputEventMgr.clear();
+			mFSM.getState().run(); //update current state
+			mFSM.pumpEvents(mEventMgr);
+			mEventMgr.addAll(mFSM.getState().getEvents());
 			
-			for(int i = 0; i < em.size(); i++)
+			for(int i = 0; i < mEventMgr.size(); i++)
 			{
-				if(em.get(i).event.equals("error"))
+				if(mEventMgr.get(i).mEvent.equals("error"))
 				{
-					System.out.println(em.get(i).param);
-					em.consume(i);
+					System.out.println(mEventMgr.get(i).mParam);
+					mEventMgr.consume(i);
 				}
-				else if(em.get(i).event.equals("repaint"))
+				else if(mEventMgr.get(i).mEvent.equals("repaint"))
 				{
 					paint = true;
-					em.consume(i);
+					mEventMgr.consume(i);
 				}
 			}
 			
-			for(int i = 0; i < em.size(); i++)
+			for(int i = 0; i < mEventMgr.size(); i++)
 			{
-				if(em.get(i).event.equals("setState"))
+				if(mEventMgr.get(i).mEvent.equals("setState"))
 				{
 					paint = false;
 				}
@@ -118,10 +141,10 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 			
 			if(paint)
 			{
-				Graphics g = strategy.getDrawGraphics(); //get the graphics object to use
-				fsm.getState().paint(g); //paint the current state
+				Graphics g = mStrategy.getDrawGraphics(); //get the graphics object to use
+				mFSM.getState().paint(g); //paint the current state
 				g.dispose(); //destroy g object
-				strategy.show(); //show the image on screen
+				mStrategy.show(); //show the image on screen
 			}
 			
 			try
@@ -135,84 +158,124 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		}
 	}
 	
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.Canvas#update(java.awt.Graphics)
+	 */
 	@Override
 	public void update(Graphics g)
 	{
 		//overridden so it doesn't clear the screen
 		paint(g);
 	}
-	
-	@Override
-	public void paint(Graphics g)
-	{
-		
-	}
 
-	//trigger mouse/keyboard events
-	
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseDragged(MouseEvent arg0)
 	{
-		iem.add(new Event("mouseDragged", arg0));
+		mInputEventMgr.add(new Event("mouseDragged", arg0));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseMoved(MouseEvent arg0)
 	{
-		iem.add(new Event("mouseMoved", arg0));
+		mInputEventMgr.add(new Event("mouseMoved", arg0));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseClicked(MouseEvent arg0)
 	{
-		iem.add(new Event("mouseClicked", arg0));
+		mInputEventMgr.add(new Event("mouseClicked", arg0));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseEntered(MouseEvent arg0)
 	{
-		iem.add(new Event("mouseEntered", arg0));
+		mInputEventMgr.add(new Event("mouseEntered", arg0));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseExited(MouseEvent arg0)
 	{
-		iem.add(new Event("mouseExited", arg0));
+		mInputEventMgr.add(new Event("mouseExited", arg0));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mousePressed(MouseEvent arg0)
 	{
-		iem.add(new Event("mousePressed", arg0));
+		mInputEventMgr.add(new Event("mousePressed", arg0));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseReleased(MouseEvent arg0)
 	{
-		iem.add(new Event("mouseReleased", arg0));
+		mInputEventMgr.add(new Event("mouseReleased", arg0));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
+	 */
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent arg0)
 	{
-		iem.add(new Event("mouseWheelMoved", arg0));
+		mInputEventMgr.add(new Event("mouseWheelMoved", arg0));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyPressed(KeyEvent arg0)
 	{
-		iem.add(new Event("keyPressed", arg0));
+		mInputEventMgr.add(new Event("keyPressed", arg0));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyReleased(KeyEvent arg0)
 	{	
-		iem.add(new Event("keyReleased", arg0));
+		mInputEventMgr.add(new Event("keyReleased", arg0));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyTyped(KeyEvent arg0)
 	{
-		iem.add(new Event("keyTyped", arg0));
+		mInputEventMgr.add(new Event("keyTyped", arg0));
 	}
 }

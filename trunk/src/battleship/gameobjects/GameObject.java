@@ -12,44 +12,46 @@ import battleship.EventManager;
 
 public abstract class GameObject
 {
-	public Rectangle r = new Rectangle(); //the bounds of the object
-	public String name = ""; //name, used to identify
-	protected EventManager goem;
+	public Rectangle mBounds = new Rectangle(); //the bounds of the object
+	public String mName = ""; //name, used to identify
+	protected EventManager mGameObjEventMgr;
 	
 	public GameObject()
 	{
 		
 	}
 	
-	public GameObject(String name, Rectangle r)
+	public GameObject(String name, Rectangle rect)
 	{
-		this.name = name;
-		this.r = r;
+		this.mName = name;
+		this.mBounds = rect;
 	}
 	
+	//static method to load images easily
 	public static BufferedImage loadImage(String path)
 	{
-		BufferedImage b = null;
+		BufferedImage tempImage = null;
 		try
 		{
-			b = ImageIO.read(new File(path));
+			tempImage = ImageIO.read(new File(path));
 		}
 		catch (IOException e)
 		{
 			System.out.println("Unable to load \"" + path + "\"");
-			b = new BufferedImage(1, 1, BufferedImage.OPAQUE);
+			tempImage = new BufferedImage(1, 1, BufferedImage.OPAQUE);
 		}
-		return b;
+		return tempImage;
 	}
+	
 	
 	public abstract void update();
 	
 	//renders graphics to img
-	public abstract void render();
 	//NOTE: Sometimes it is faster to draw primitives (circles etc)
 	//DIRECTLY to the double buffer
+	public abstract void render();
 	
-	//paints to double buffer 
+	//paints to double buffer
 	public abstract void paint(Graphics g);
 	
 	//catches events

@@ -36,7 +36,7 @@ public class GameImage extends GameObject
 	@Override
 	public void paint(Graphics g)
 	{
-		g.drawImage(img, r.x, r.y, null);
+		g.drawImage(img, mBounds.x, mBounds.y, null);
 	}
 
 	@Override

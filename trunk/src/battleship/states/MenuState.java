@@ -15,17 +15,17 @@ public class MenuState extends State
 {
 	public MenuState()
 	{
-		name = "MenuState";
-		obj.add(new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1), GameObject.loadImage("res/img/HostGame.png")));
-		obj.add(new Button("JoinGame", new Rectangle((800-210)/2, 256+128, 1, 1), GameObject.loadImage("res/img/JoinGame.png")));
-		obj.add(new Button("SinglePlayer", new Rectangle((800-210)/2+210+32, 256+128, 1, 1), GameObject.loadImage("res/img/SinglePlayer.png")));
-		obj.add(new GameImage("MainTitle", new Rectangle((800-635)/2, 64, 1, 1), GameObject.loadImage("res/img/GameTitle.png")));
+		mName = "MenuState";
+		mObj.add(new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1), GameObject.loadImage("res/img/HostGame.png")));
+		mObj.add(new Button("JoinGame", new Rectangle((800-210)/2, 256+128, 1, 1), GameObject.loadImage("res/img/JoinGame.png")));
+		mObj.add(new Button("SinglePlayer", new Rectangle((800-210)/2+210+32, 256+128, 1, 1), GameObject.loadImage("res/img/SinglePlayer.png")));
+		mObj.add(new GameImage("MainTitle", new Rectangle((800-635)/2, 64, 1, 1), GameObject.loadImage("res/img/GameTitle.png")));
 	}
 
 	@Override
 	public void enterState()
 	{
-		sem.add(new Event("repaint"));
+		mStateEventMgr.add(new Event("repaint"));
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class MenuState extends State
 	@Override
 	public void run()
 	{
-		for(GameObject go : obj)
+		for(GameObject go : mObj)
 			go.update();
 	}
 	
@@ -45,21 +45,21 @@ public class MenuState extends State
 	public void paint(Graphics g)
 	{
 		g.setColor(Color.GRAY);
-		g.fillRect(0, 0, Main.dim.width, Main.dim.height);
-		for(GameObject go : obj)
+		g.fillRect(0, 0, Main.mDim.width, Main.mDim.height);
+		for(GameObject go : mObj)
 			go.paint(g);
 	}
 
 	@Override
 	public EventManager getEvents()
 	{
-		for(GameObject go : obj)
-			sem.addAll(go.getEvents());
+		for(GameObject go : mObj)
+			mStateEventMgr.addAll(go.getEvents());
 		EventManager tmp = null;
 		try
 		{
-			tmp = sem.clone();
-			sem.clear();
+			tmp = mStateEventMgr.clone();
+			mStateEventMgr.clear();
 		}
 		catch (CloneNotSupportedException e)
 		{
@@ -73,28 +73,28 @@ public class MenuState extends State
 	{
 		for(int i = 0; i < em.size(); i++)
 		{
-			if(em.get(i).event.equals("buttonClicked"))
+			if(em.get(i).mEvent.equals("buttonClicked"))
 			{
-				Button b = (Button)em.get(i).param;	
-				if(b.name.equals("HostGame"))
+				Button b = (Button)em.get(i).mParam;	
+				if(b.mName.equals("HostGame"))
 				{
-					sem.add(new Event("setState", "GameState"));
-					sem.add(new Event("mode", "Host"));
+					mStateEventMgr.add(new Event("setState", "GameState"));
+					mStateEventMgr.add(new Event("mode", "Host"));
 				}
-				else if(b.name.equals("JoinGame"))
+				else if(b.mName.equals("JoinGame"))
 				{
-					sem.add(new Event("setState", "GameState"));
-					sem.add(new Event("mode", "Join"));
+					mStateEventMgr.add(new Event("setState", "GameState"));
+					mStateEventMgr.add(new Event("mode", "Join"));
 				}
-				else if(b.name.equals("SinglePlayer"))
+				else if(b.mName.equals("SinglePlayer"))
 				{
-					sem.add(new Event("setState", "GameState"));
-					sem.add(new Event("mode", "Single"));
+					mStateEventMgr.add(new Event("setState", "GameState"));
+					mStateEventMgr.add(new Event("mode", "Single"));
 				}
 				em.consume(i);
 			}
 		}
-		for(GameObject go : obj)
+		for(GameObject go : mObj)
 			go.pumpEvents(em);
 	}
 }
