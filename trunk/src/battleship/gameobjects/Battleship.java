@@ -18,12 +18,12 @@ public class Battleship extends GameObject
 	}
 	
 	public SHIPS STATE = SHIPS.NORMAL;
-	public BufferedImage img;
+	public BufferedImage himg, vimg;
 	private Point mouse = new Point();
-	private Battleship rotatedImg;
 	protected static Rectangle statusScreen = new Rectangle(24, 240+24, 241+24, 241+240+24);
 	protected static Position prevPos = new Position();
 	protected static ArrayList<Battleship> inits = new ArrayList<Battleship>();
+	private boolean rotated = false;
 	
 	public Battleship()
 	{
@@ -42,18 +42,19 @@ public class Battleship extends GameObject
 	public Battleship(String name, Rectangle r, BufferedImage i)
 	{
 		super(name, r);
-		img = i;
-		r.width = img.getWidth();
-		r.height = img.getHeight();
+		vimg = i;
+		r.width = vimg.getWidth();
+		r.height = vimg.getHeight();
 		goem = new EventManager();
 		this.r.x = inits.size()*30+400;
 		this.r.y = ((inits.size()-inits.size()%2)/2)*26;
 		inits.add(this);
 	}
 	
-	public Battleship(String name, Rectangle r1, BufferedImage i1, Rectangle r2, BufferedImage i2) {
-		this(name, r1, i1);
-		rotatedImg = new Battleship(name, r2, i2);
+	public Battleship(String name, Rectangle r1, BufferedImage i, BufferedImage i2)
+	{
+		this(name, r1, i);
+		himg = i2;
 	}
 
 	@Override
@@ -71,7 +72,11 @@ public class Battleship extends GameObject
 	@Override
 	public void paint(Graphics g)
 	{
-		g.drawImage(img, r.x, r.y, null);
+		
+		if(rotated)
+			g.drawImage(himg, r.x, r.y, null);
+		else
+			g.drawImage(vimg, r.x, r.y, null);
 	}
 
 	@Override
@@ -142,28 +147,15 @@ public class Battleship extends GameObject
 						STATE = SHIPS.FOLLOW;
 					}
 				}
-				else if(em.get(i).event.equals("mouseWheelMoved"))
-				{//rotate ship
+				else if(em.get(i).event.equals("mouseWheelMoved")) //rotate ship
+				{
 					if(STATE == SHIPS.FOLLOW)
 					{
-						Battleship temp = new Battleship();
-						copy(rotatedImg, temp);
-						copy(this, rotatedImg);
-						copy(temp, this);
-						//set the position of the ship to mouse position
-						r.x = me.getX() - mouse.x;
-						r.y = me.getY() - mouse.y;
+						rotated = !rotated;
 						goem.add(new Event("repaint"));
-					}
-						
+					}	
 				}
 			}
 		}
-	}
-	
-	protected void copy(Battleship in, Battleship out)
-	{
-		out.r = in.r;
-		out.img = in.img;
 	}
 }
