@@ -11,7 +11,7 @@ import battleship.Event;
 import battleship.EventManager;
 
 /**
- * 
+ * Class to handle any ships etc
  * @author Amec
  * @author Obi
  */
@@ -20,8 +20,12 @@ public class Battleship extends GameObject
 {
 	public enum SHIPS
 	{
-		NORMAL, FOLLOW, INIT
-	}
+		NORMAL, FOLLOW, INIT //Doesn't use init yet :(
+	}/*
+	Normal - ship not moving
+	Follow - ship following mouse
+	Init - ship in initial position
+	*/
 	
 	public SHIPS STATE = SHIPS.NORMAL;
 	public BufferedImage mImgH, mImgV;
@@ -165,22 +169,22 @@ public class Battleship extends GameObject
 						//snap it to the grid
 						mBounds.y = mBounds.y/24*24;
 						mBounds.x = mBounds.x/24*24;
-						if(mPrevPos.STATE == SHIPS.INIT)
+						if(mPrevPos.mSTATE == SHIPS.INIT)
 							mInits.remove(this);
 						mGameObjEventMgr.add(new Event("repaint"));
 					}
 					else if(STATE == SHIPS.FOLLOW && !mStatusScreen.contains(me.getPoint()))
 					{ //if the ship was dragged outside of the grid then return it to its prev. pos.
-						mBounds.x = mPrevPos.x;
-						mBounds.y = mPrevPos.y;
-						STATE = mPrevPos.STATE;
+						mBounds.x = mPrevPos.mX;
+						mBounds.y = mPrevPos.mY;
+						STATE = mPrevPos.mSTATE;
 						mGameObjEventMgr.add(new Event("repaint"));
 					}
 					else if(STATE == SHIPS.NORMAL)
 					{
-						mPrevPos.x = mBounds.x;
-						mPrevPos.y = mBounds.y;
-						mPrevPos.STATE = STATE;
+						mPrevPos.mX = mBounds.x;
+						mPrevPos.mY = mBounds.y;
+						mPrevPos.mSTATE = STATE;
 					}
 				}
 				else if(em.get(i).mEvent.equals("mousePressed"))
@@ -189,9 +193,9 @@ public class Battleship extends GameObject
 					{
 						mMouse.x = me.getX() - mBounds.x;
 						mMouse.y = me.getY() - mBounds.y;
-						mPrevPos.x = mBounds.x;
-						mPrevPos.y = mBounds.y;
-						mPrevPos.STATE = STATE;
+						mPrevPos.mX = mBounds.x;
+						mPrevPos.mY = mBounds.y;
+						mPrevPos.mSTATE = STATE;
 						STATE = SHIPS.FOLLOW;
 					}
 				}

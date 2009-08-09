@@ -4,8 +4,12 @@ import java.awt.Graphics;
 
 import battleship.EventManager;
 
+
 public class GenericState extends State
 {
+	/**
+	 * Default constructor
+	 */
 	public GenericState()
 	{
 		mName = "GenericState";

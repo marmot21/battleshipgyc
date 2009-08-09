@@ -13,14 +13,23 @@ import battleship.gameobjects.Battleship;
 import battleship.gameobjects.Button;
 import battleship.gameobjects.GameObject;
 import battleship.gameobjects.Playfield;
-
+/**
+ * 
+ * @author Amec
+ * @author Daniel
+ *
+ */
 public class GameState extends State
 {
+	/**
+	 * Default constructor, does a few things:
+	 * 1. sets the name 2. Adds the targeting and status screens 3. Adds objects to screens
+	 */
 	public GameState()
 	{
 		mName = "GameState";
 		Playfield p = new Playfield("Status Screen", new Rectangle(24, 240+24, 10, 10), new Dimension(24, 24));
-		p.obj.add(new Battleship("BS", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
+		p.mObj.add(new Battleship("BS", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
 		mObj.add(new Playfield("Targeting Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24)));
 		mObj.add(p);
 		mStateEventMgr.add(new Event("repaint"));

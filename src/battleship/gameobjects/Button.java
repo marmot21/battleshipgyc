@@ -26,12 +26,23 @@ public class Button extends GameObject
 	
 	public BUTTON STATE = BUTTON.NORMAL;
 	
+	/**
+	 * Constructor when storing the button later
+	 * @param name The name of the Button - for reference
+	 * @param bounds The bounds of the button
+	 */
 	public Button(String name, Rectangle bounds)
 	{
 		super(name, bounds);
 		mGameObjEventMgr = new EventManager();
 	}
 	
+	/**
+	 * Constructor when you are storing the image too
+	 * @param name The name of the Button - for reference
+	 * @param bounds The bounds of the button
+	 * @param img The image of the button
+	 */
 	public Button(String name, Rectangle bounds, BufferedImage img)
 	{
 		super(name, bounds);

@@ -4,6 +4,10 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -44,7 +48,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	 */
 	public Main()
 	{
-		JFrame geo = new JFrame("Battleship");
+		final JFrame geo = new JFrame("Battleship");
 		JPanel panel = (JPanel)geo.getContentPane();
 		panel.setPreferredSize(mDim);
 		panel.setLayout(null);
@@ -56,6 +60,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		geo.pack();
 		geo.setVisible(true);
 		geo.addWindowListener
+		
 		(
 			new WindowAdapter()
 			{
@@ -65,8 +70,19 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 				}
 			}
 		);
+		//
+		geo.addComponentListener(new ComponentAdapter()
+	    {
+		public void componentMoved(ComponentEvent e)
+		{
+			mInputEventMgr.add(new Event("repaint"));
+		} // end componentMoved()
+
+	    } // end inner class
+			       );
 
 		requestFocus();
+		this.addFocusListener(new FocusListener());
 		
 		/*
 		 * Creates a bufferstrategy with 1 extra buffer
@@ -91,8 +107,18 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		t.start();
 	}
 	
+	class FocusListener extends FocusAdapter{//TODO: get it to redraw when when it goes of screen too
+	    public void focusGained(FocusEvent fe){
+	    	mInputEventMgr.add(new Event("repaint"));
+	    }
+	    public void focusLost(FocusEvent fe){
+	    }
+	  }
+
+	
 	/**
 	 * Gee, I wonder what this does.
+	 * Don't know Mr. P
 	 * @param args
 	 */
 	public static void main(String[] args)
