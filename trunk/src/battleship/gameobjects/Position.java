@@ -1,17 +1,28 @@
 package battleship.gameobjects;
 
+import java.awt.Point;
+
 import battleship.gameobjects.Battleship.SHIPS;
 
 /**
  * A wrapper for storing the previous position of ships
  * @author Obi
- *
+ * @author Amec
  */
-public class Position {
 
-	public int mX;
-	public int mY;
+public class Position
+{
+	public Point mPos;
 	public SHIPS mSTATE;
+	
+	/**
+	 * Default constructor
+	 * Used when setting the position of ships later
+	 */
+	public Position()
+	{
+
+	}
 	
 	/**
 	 * Constructor
@@ -20,18 +31,10 @@ public class Position {
 	 * @param y The current y position of ship
 	 * @param STATE The current state of the ship
 	 */
-	public Position(int x, int y, SHIPS STATE) {
-		this.mX = x;
-		this.mY = y;
-		this.mSTATE = STATE;
-	}
-	
-	/**
-	 * Default constructor
-	 * Used when setting the position of ships later
-	 */
-	public Position() {
-
+	public Position(Point pos, SHIPS STATE)
+	{
+		this.mPos = pos;
+		mSTATE = STATE;
 	}
 
 	/**
@@ -40,9 +43,9 @@ public class Position {
 	 * @param y The current y position of ship
 	 * @param STATE The current state of the ship
 	 */
-	public void set(int x, int y, SHIPS STATE) {
-		this.mX = x;
-		this.mY = y;
-		this.mSTATE = STATE;
+	public void set(Point pos, SHIPS STATE)
+	{
+		this.mPos = pos;
+		mSTATE = STATE;
 	}
 }

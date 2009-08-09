@@ -6,12 +6,10 @@ import java.util.List;
 import battleship.states.State;
 
 /**
- * A Finite State Machine which is used to seperate
- * the game's logic in to seperate 'states', each of
+ * A Finite State Machine which is used to separate
+ * the game's logic in to separate 'states', each of
  * which has it's own unique code.
- * 
  * @author Amec
- *
  */
 
 public class FiniteStateMachine

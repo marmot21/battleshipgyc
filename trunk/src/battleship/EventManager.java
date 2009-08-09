@@ -6,7 +6,6 @@ import java.util.Vector;
 /**
  * A manager of events
  * @author Amec
- * 
  */
 
 public class EventManager implements Cloneable

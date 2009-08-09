@@ -12,7 +12,6 @@ import battleship.EventManager;
  * A GameObject used to draw custom buttons etc.
  * @author Obi
  * @author Amec
- *
  */
 
 public class Button extends GameObject
@@ -51,12 +50,20 @@ public class Button extends GameObject
 		mGameObjEventMgr = new EventManager();
 	}
 	
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.gameobjects.GameObject#paint(java.awt.Graphics)
+	 */
 	@Override
 	public void paint(Graphics g)
 	{
 		g.drawImage(mDrawImg, mBounds.x, mBounds.y, null);
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.gameobjects.GameObject#render()
+	 */
 	@Override
 	public void render()
 	{
@@ -78,12 +85,20 @@ public class Button extends GameObject
 		}
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.gameobjects.GameObject#update()
+	 */
 	@Override
 	public void update()
 	{
 		
 	}
-
+	
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.gameobjects.GameObject#getEvents()
+	 */
 	@Override
 	public EventManager getEvents()
 	{
@@ -99,7 +114,11 @@ public class Button extends GameObject
 		}
 		return tmp;
 	}
-
+	
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.gameobjects.GameObject#pumpEvents(battleship.EventManager)
+	 */
 	@Override
 	public void pumpEvents(EventManager em)
 	{

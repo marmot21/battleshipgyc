@@ -11,10 +11,10 @@ import battleship.EventManager;
 
 /**
  * The grid which handles ships and bombing etc.
- * @author Obi
  * @author Amec
- *
+ * @author Obi
  */
+
 public class Playfield extends GameObject
 {
 	static public Dimension mGridSize;//TODO:see if we can get this to be non-static - if need be
@@ -22,33 +22,22 @@ public class Playfield extends GameObject
 	public List<GameObject> mObj = new ArrayList<GameObject>();
 	
 	/**
-	 * A constructor which creates a grid without a name
-	 * @param rect The position of the grid and its dimensions in squares
-	 * @param dim The dimensions of each grid square
-	 */
-	public Playfield(Rectangle rect, Dimension dim)
-	{
-		this.mBounds = new Rectangle(rect.x, rect.y, rect.width*dim.width, rect.height*dim.height);
-		mGridSize = dim;
-		mGameObjEventMgr = new EventManager();
-	}
-
-	/**
 	 * 
 	 * @param sName The name of the grid
-	 * @param rect The position of the grid and its dimensions in squares
+	 * @param bounds The position of the grid and its dimensions in squares
 	 * @param dim The dimensions of each grid square
 	 */
-	public Playfield(String sName, Rectangle rect, Dimension dim)
+	public Playfield(String sName, Rectangle bounds, Dimension dim)
 	{
-		this.mBounds = new Rectangle(rect.x, rect.y, rect.width*dim.width, rect.height*dim.height);
+		this.mBounds = new Rectangle(bounds.x, bounds.y, bounds.width*dim.width, bounds.height*dim.height);
 		mGridSize = dim;
 		mName = sName;
 		mGameObjEventMgr = new EventManager();
 	}
 	
 	/**
-	 * Updates all child objects - ships etc. 
+	 * (non-Javadoc)
+	 * @see battleship.gameobjects.GameObject#update()
 	 */
 	@Override
 	public void update()
@@ -57,12 +46,20 @@ public class Playfield extends GameObject
 			go.update();
 	}
 	
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.gameobjects.GameObject#render()
+	 */
 	@Override
 	public void render()
 	{
 		
 	}
 	
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.gameobjects.GameObject#paint(java.awt.Graphics)
+	 */
 	@Override
 	public void paint(Graphics g)
 	{
@@ -79,6 +76,10 @@ public class Playfield extends GameObject
 			go.paint(g);//draw the ships etc.
 	}
 	
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.gameobjects.GameObject#getEvents()
+	 */
 	@Override
 	public EventManager getEvents()//output of events
 	{
@@ -97,7 +98,10 @@ public class Playfield extends GameObject
 		return tmp;
 	}
 
-	
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.gameobjects.GameObject#pumpEvents(battleship.EventManager)
+	 */
 	@Override
 	public void pumpEvents(EventManager em)
 	{
@@ -109,7 +113,8 @@ public class Playfield extends GameObject
 	 * Returns the size of the individual grid blocks
 	 * @return Dimension Object
 	 */
-	public static Dimension getgridSize() {
+	public static Dimension getgridSize()
+	{
 		return mGridSize;
 	}
 }

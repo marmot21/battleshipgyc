@@ -77,7 +77,7 @@ public class Battleship extends GameObject
 	}
 	
 	/**
-	 * Long constuctor is long.
+	 * Long constructor is long.
 	 * @param name The name of the Battleship.
 	 * @param bounds The bounds of the Battleship.
 	 * @param img The image of the Battleship.
@@ -175,15 +175,15 @@ public class Battleship extends GameObject
 					}
 					else if(STATE == SHIPS.FOLLOW && !mStatusScreen.contains(me.getPoint()))
 					{ //if the ship was dragged outside of the grid then return it to its prev. pos.
-						mBounds.x = mPrevPos.mX;
-						mBounds.y = mPrevPos.mY;
+						mBounds.x = mPrevPos.mPos.x;
+						mBounds.y = mPrevPos.mPos.y;
 						STATE = mPrevPos.mSTATE;
 						mGameObjEventMgr.add(new Event("repaint"));
 					}
 					else if(STATE == SHIPS.NORMAL)
 					{
-						mPrevPos.mX = mBounds.x;
-						mPrevPos.mY = mBounds.y;
+						mPrevPos.mPos.x = mBounds.x;
+						mPrevPos.mPos.y = mBounds.y;
 						mPrevPos.mSTATE = STATE;
 					}
 				}
@@ -193,8 +193,8 @@ public class Battleship extends GameObject
 					{
 						mMouse.x = me.getX() - mBounds.x;
 						mMouse.y = me.getY() - mBounds.y;
-						mPrevPos.mX = mBounds.x;
-						mPrevPos.mY = mBounds.y;
+						mPrevPos.mPos.x = mBounds.x;
+						mPrevPos.mPos.y = mBounds.y;
 						mPrevPos.mSTATE = STATE;
 						STATE = SHIPS.FOLLOW;
 					}
