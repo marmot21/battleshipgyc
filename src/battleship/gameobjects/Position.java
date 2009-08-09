@@ -12,7 +12,7 @@ import battleship.gameobjects.Battleship.SHIPS;
 
 public class Position
 {
-	public Point mPos;
+	public Point mPos = new Point();
 	public SHIPS mSTATE;
 	
 	/**
