@@ -65,9 +65,10 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 				public void componentMoved(ComponentEvent e)
 				{
 					Rectangle rect = new Rectangle (geo.getLocationOnScreen().x, geo.getLocationOnScreen().y, 
-							geo.getLocationOnScreen().x+mDim.width, geo.getLocationOnScreen().x + mDim.height);
+							mDim.width, mDim.height);
 					if(!(new Rectangle(0,0,screenSize.width,screenSize.height)).contains(rect)) {
 						offScreen = true;
+						System.out.println("Off Screen");
 					}
 					else if(offScreen) {
 						mInputEventMgr.add(new Event("repaint"));
