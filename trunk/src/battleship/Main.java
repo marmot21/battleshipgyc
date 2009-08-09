@@ -1,22 +1,7 @@
 package battleship;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
@@ -37,11 +22,14 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	private static final long serialVersionUID = 1L;
 	private static int FPS = 60, SLEEP = 1000/FPS;
 	public static boolean DEBUG = false;
+	
 	private BufferStrategy mStrategy;
 	public static Dimension mDim = new Dimension(800, 600);
 	private FiniteStateMachine mFSM = new FiniteStateMachine();
 	private EventManager mEventMgr = new EventManager();
 	private EventManager mInputEventMgr = new EventManager();
+	private boolean offScreen = false;
+	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	
 	/**
 	 * Default constructor
@@ -76,7 +64,16 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		    {
 				public void componentMoved(ComponentEvent e)
 				{
-					mInputEventMgr.add(new Event("repaint"));
+					Rectangle rect = new Rectangle (geo.getLocationOnScreen().x, geo.getLocationOnScreen().y, 
+							geo.getLocationOnScreen().x+mDim.width, geo.getLocationOnScreen().x + mDim.height);
+					if(!(new Rectangle(0,0,screenSize.width,screenSize.height)).contains(rect)) {
+						offScreen = true;
+					}
+					else if(offScreen) {
+						mInputEventMgr.add(new Event("repaint"));
+						offScreen = false;
+						System.out.println("Redrawing");
+					}	
 				}
 		    }
 		);
