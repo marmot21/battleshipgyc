@@ -3,7 +3,6 @@ package battleship;
 /**
  * A simple wrapper for events.
  * @author Amec
- * 
  */
 
 public class Event

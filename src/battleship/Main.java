@@ -29,7 +29,7 @@ import battleship.states.MenuState;
 /**
  * The main class for Battleship. Sets up everything etc.
  * @author Amec
- *
+ * @author Obi
  */
 
 public class Main extends Canvas implements Runnable, MouseMotionListener, MouseListener, MouseWheelListener, KeyListener
@@ -60,7 +60,6 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		geo.pack();
 		geo.setVisible(true);
 		geo.addWindowListener
-		
 		(
 			new WindowAdapter()
 			{
@@ -70,19 +69,19 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 				}
 			}
 		);
-		//
-		geo.addComponentListener(new ComponentAdapter()
-	    {
-		public void componentMoved(ComponentEvent e)
-		{
-			mInputEventMgr.add(new Event("repaint"));
-		} // end componentMoved()
-
-	    } // end inner class
-			       );
+		
+		geo.addComponentListener
+		(
+			new ComponentAdapter()
+		    {
+				public void componentMoved(ComponentEvent e)
+				{
+					mInputEventMgr.add(new Event("repaint"));
+				}
+		    }
+		);
 
 		requestFocus();
-		this.addFocusListener(new FocusListener());
 		
 		/*
 		 * Creates a bufferstrategy with 1 extra buffer
@@ -96,6 +95,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		addMouseListener(this);
 		addMouseWheelListener(this);
 		addKeyListener(this);
+		addFocusListener(new FocusListener());
 
 		//Add states
 		mFSM.addState(new GenericState());
@@ -107,11 +107,16 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		t.start();
 	}
 	
-	class FocusListener extends FocusAdapter{//TODO: get it to redraw when when it goes of screen too
-	    public void focusGained(FocusEvent fe){
+	class FocusListener extends FocusAdapter //TODO: get it to redraw when when it goes of screen too
+	{
+	    public void focusGained(FocusEvent fe)
+	    {
 	    	mInputEventMgr.add(new Event("repaint"));
 	    }
-	    public void focusLost(FocusEvent fe){
+	    
+	    public void focusLost(FocusEvent fe)
+	    {
+	    	
 	    }
 	  }
 
@@ -119,6 +124,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	/**
 	 * Gee, I wonder what this does.
 	 * Don't know Mr. P
+	 * I'm black.
 	 * @param args
 	 */
 	public static void main(String[] args)

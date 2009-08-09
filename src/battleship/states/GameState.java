@@ -13,12 +13,13 @@ import battleship.gameobjects.Battleship;
 import battleship.gameobjects.Button;
 import battleship.gameobjects.GameObject;
 import battleship.gameobjects.Playfield;
+
 /**
- * 
+ * The game state.
  * @author Amec
- * @author Daniel
- *
+ * @author Obi
  */
+
 public class GameState extends State
 {
 	/**
@@ -35,18 +36,30 @@ public class GameState extends State
 		mStateEventMgr.add(new Event("repaint"));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#enterState()
+	 */
 	@Override
 	public void enterState()
 	{
 		
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#exitState()
+	 */
 	@Override
 	public void exitState()
 	{
 		
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#run()
+	 */
 	@Override
 	public void run()
 	{
@@ -54,6 +67,10 @@ public class GameState extends State
 			go.update();
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#paint(java.awt.Graphics)
+	 */
 	@Override
 	public void paint(Graphics g)
 	{
@@ -62,7 +79,11 @@ public class GameState extends State
 		for(GameObject go : mObj) 
 			go.paint(g);
 	}
-
+	
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#getEvents()
+	 */
 	@Override
 	public EventManager getEvents()//output of events
 	{
@@ -81,6 +102,10 @@ public class GameState extends State
 		return tmp;
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#pumpEvents(battleship.EventManager)
+	 */
 	@Override
 	public void pumpEvents(EventManager em)//Input of events
 	{

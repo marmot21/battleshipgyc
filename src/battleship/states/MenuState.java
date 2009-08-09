@@ -11,13 +11,17 @@ import battleship.gameobjects.Button;
 import battleship.gameobjects.GameImage;
 import battleship.gameobjects.GameObject;
 
+/**
+ * Menu State~
+ * @author Amec
+ * @author Obi
+ */
+
 public class MenuState extends State
 {
 	/**
 	 * Default constructor
 	 * Adds buttons and main title
-	 * @author Obi
-	 * @author Amec
 	 */
 	public MenuState()
 	{
@@ -28,18 +32,30 @@ public class MenuState extends State
 		mObj.add(new GameImage("MainTitle", new Rectangle((800-635)/2, 64, 1, 1), GameObject.loadImage("res/img/GameTitle.png")));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#enterState()
+	 */
 	@Override
 	public void enterState()
 	{
 		mStateEventMgr.add(new Event("repaint"));
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#exitState()
+	 */
 	@Override
 	public void exitState()
 	{
 		
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#run()
+	 */
 	@Override
 	public void run()
 	{
@@ -47,6 +63,10 @@ public class MenuState extends State
 			go.update();//call 'update' of child objects
 	}
 	
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#paint(java.awt.Graphics)
+	 */
 	@Override
 	public void paint(Graphics g)
 	{
@@ -56,6 +76,10 @@ public class MenuState extends State
 			go.paint(g);
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#getEvents()
+	 */
 	@Override
 	public EventManager getEvents()
 	{
@@ -74,6 +98,10 @@ public class MenuState extends State
 		return tmp;
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @see battleship.states.State#pumpEvents(battleship.EventManager)
+	 */
 	@Override
 	public void pumpEvents(EventManager em)
 	{
