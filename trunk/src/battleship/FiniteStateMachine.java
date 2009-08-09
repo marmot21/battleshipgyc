@@ -82,14 +82,14 @@ public class FiniteStateMachine
 	/**
 	 * Pumps all events to FSM, where it is tested whether
 	 * a change of state is required.
-	 * @param eventMgr The EventManager to be tested againts.
+	 * @param eventMgr The EventManager to be tested against.
 	 */
 	public void pumpEvents(EventManager eventMgr)
 	{
 		for(int i = 0; i < eventMgr.size(); i++)
 		{
 			if(eventMgr.get(i).mEvent.equals("setState"))
-			{
+			{//if current event is a change state then change it and consume event
 				setState((String)eventMgr.get(i).mParam);
 				eventMgr.consume(i);
 			}

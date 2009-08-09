@@ -13,6 +13,12 @@ import battleship.gameobjects.GameObject;
 
 public class MenuState extends State
 {
+	/**
+	 * Default constructor
+	 * Adds buttons and main title
+	 * @author Obi
+	 * @author Amec
+	 */
 	public MenuState()
 	{
 		mName = "MenuState";
@@ -38,7 +44,7 @@ public class MenuState extends State
 	public void run()
 	{
 		for(GameObject go : mObj)
-			go.update();
+			go.update();//call 'update' of child objects
 	}
 	
 	@Override
