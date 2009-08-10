@@ -11,6 +11,10 @@
   *  Create a new thread, t
   *  Start aforementioned thread
   *  Set the current state to "Menu"
+  *  Add FocusListener
+   *  When focus is gained - add redraw event
+  *  Add ComponentListener
+   *  When window re-enters screen add redraw event
 
 *While thread 't' is running:*
   *  Flush events of input events
