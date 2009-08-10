@@ -19,7 +19,13 @@ import battleship.EventManager;
 
 public abstract class GameObject
 {
+	/**
+	 * The bounds of the object
+	 */
 	public Rectangle mBounds = new Rectangle(); //the bounds of the object
+	/**
+	 * The name of the object
+	 */
 	public String mName = ""; //name, used to identify
 	protected EventManager mGameObjEventMgr;
 	

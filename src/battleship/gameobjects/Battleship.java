@@ -89,30 +89,18 @@ public class Battleship extends GameObject
 		mImgH = img2;
 	}
 	
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#update()
-	 */
 	@Override
 	public void update()
 	{
 		
 	}
-	
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#render()
-	 */
+
 	@Override
 	public void render()
 	{
 		
 	}
-	
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#paint(java.awt.Graphics)
-	 */
+
 	@Override
 	public void paint(Graphics g)
 	{
@@ -123,10 +111,6 @@ public class Battleship extends GameObject
 			g.drawImage(mImgV, mBounds.x, mBounds.y, null);
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#getEvents()
-	 */
 	@Override
 	public EventManager getEvents()
 	{
@@ -143,10 +127,6 @@ public class Battleship extends GameObject
 		return tmp;
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#pumpEvents(battleship.EventManager)
-	 */
 	@Override
 	public void pumpEvents(EventManager em)
 	{
@@ -163,7 +143,7 @@ public class Battleship extends GameObject
 				}
 				else if(em.get(i).mEvent.equals("mouseReleased"))
 				{
-					if(STATE == SHIPS.FOLLOW && mStatusScreen.contains(me.getPoint()))
+					if(STATE == SHIPS.FOLLOW && mStatusScreen.contains(mBounds))
 					{
 						STATE = SHIPS.NORMAL;
 						//snap it to the grid
@@ -173,7 +153,7 @@ public class Battleship extends GameObject
 							mInits.remove(this);
 						mGameObjEventMgr.add(new Event("repaint"));
 					}
-					else if(STATE == SHIPS.FOLLOW && !mStatusScreen.contains(me.getPoint()))
+					else if(STATE == SHIPS.FOLLOW && !mStatusScreen.contains(mBounds))
 					{ //if the ship was dragged outside of the grid then return it to its prev. pos.
 						mBounds.x = mPrevPos.mPos.x;
 						mBounds.y = mPrevPos.mPos.y;

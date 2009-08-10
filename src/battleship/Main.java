@@ -78,7 +78,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		geo.addComponentListener
 		(
 			new ComponentAdapter()
-		    {
+		    {//Listens for the window moving
 				public void componentMoved(ComponentEvent e)
 				{
 					Rectangle rect = new Rectangle (geo.getLocationOnScreen().x, geo.getLocationOnScreen().y, 
