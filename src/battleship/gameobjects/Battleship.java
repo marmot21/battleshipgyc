@@ -30,7 +30,7 @@ public class Battleship extends GameObject
 	public SHIPS STATE = SHIPS.NORMAL;
 	public BufferedImage mImgH, mImgV;
 	private Point mMouse = new Point();
-	protected static Rectangle mStatusScreen = new Rectangle(24, 240+24, 241+24, 241+240+24);
+	protected static Rectangle mStatusScreen = new Rectangle(24, 240+24, 240, 240);
 	protected static Position mPrevPos = new Position();
 	protected static ArrayList<Battleship> mInits = new ArrayList<Battleship>();
 	private boolean mRotated = false;
