@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 
 import battleship.Event;
 import battleship.EventManager;
+import battleship.FiniteStateMachine;
 import battleship.Main;
 import battleship.gameobjects.Battleship;
 import battleship.gameobjects.Button;
@@ -22,6 +23,13 @@ import battleship.gameobjects.Playfield;
 
 public class GameState extends State
 {
+	protected enum STATE { //we don't want this to be changed by an outside source
+		SINGLE, sRUNING/*single player Running*/
+	}
+	/**
+	 * The current state
+	 */
+	protected STATE mSTATE; 
 	/**
 	 * Default constructor, does a few things:
 	 * 1. sets the name 2. Adds the targeting and status screens 3. Adds objects to screens
@@ -29,10 +37,27 @@ public class GameState extends State
 	public GameState()
 	{
 		mName = "GameState";
-		Playfield p = new Playfield("Status Screen", new Rectangle(24, 240+24, 10, 10), new Dimension(24, 24));
-		p.mObj.add(new Battleship("BS", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
-		mObj.add(new Playfield("Targeting Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24)));
-		mObj.add(p);
+		//Create the grids 
+		Playfield pStat = new Playfield("Status Screen", new Rectangle(24, 240+24, 10, 10), new Dimension(24, 24));
+		Playfield pTrg = new Playfield("Targeting Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24));
+		
+		//Add ships to the Status Screen
+		pStat.mObj.add(new Battleship("BS", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
+		
+		//Add the Fuzzy logic thing to the Targeting screen
+		pTrg.mFuSM = new FiniteStateMachine();
+		pTrg.mFuSM.addState(new GenericState());
+		pTrg.mFuSM.addState(new UserState());
+		pTrg.mFuSM.addState(new AIBombState());
+		
+		//Add the grids to this state
+		mObj.add(pTrg);
+		mObj.add(pStat);
+		
+		//Add the buttons
+		mObj.add(new Button("StartGame", new Rectangle(300+210+32, 50, 1,1), GameObject.loadImage("res/img/BeginGame.png")));
+		mObj.add(new Button("EndGame", new Rectangle(300, 50, 1,1), GameObject.loadImage("res/img/EndGame.png")));
+		//Repaint
 		mStateEventMgr.add(new Event("repaint"));
 	}
 
@@ -130,6 +155,7 @@ public class GameState extends State
 				else if(em.get(i).mParam.equals("Single"))
 				{
 					//insert single specific stuff here
+					mSTATE = STATE.SINGLE;
 					mStateEventMgr.add(new Event("repaint"));
 					em.consume(i);
 				}
@@ -137,9 +163,18 @@ public class GameState extends State
 			else if(em.get(i).mEvent.equals("buttonClicked"))
 			{
 				Button b = (Button)em.get(i).mParam;
-				if(b.mName.equals("TestButton"))
+				if(b.mName.equals("EndGame"))
 				{
 					mStateEventMgr.add(new Event("setState", "MenuState"));
+					em.consume(i);
+				}
+				if(b.mName.equals("StartGame") && mSTATE == STATE.SINGLE) {
+					mSTATE = STATE.sRUNING;
+					mStateEventMgr.add(new Event("setShips", "SET"));
+					//Removes the "Start game" button
+					mObj.remove(em.get(i).mParam);//TODO: work out better way - ie. "set invisible" atm it will still be gone when user starts new game - lol
+					mStateEventMgr.add(new Event("repaint"));//repaint
+					mStateEventMgr.add(new Event("BeginGame", "SinglePlayer"));//begin single player game
 					em.consume(i);
 				}
 			}

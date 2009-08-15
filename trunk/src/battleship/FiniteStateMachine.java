@@ -10,11 +10,18 @@ import battleship.states.State;
  * the game's logic in to separate 'states', each of
  * which has it's own unique code.
  * @author Amec
+ * @author OBi
  */
 
 public class FiniteStateMachine
 {
+	/**
+	 * A list of all the states
+	 */
 	private List<State> mStates = new ArrayList<State>();
+	/**
+	 * The current state
+	 */
 	private int mCurrentState = 0;
 	
 	/**
@@ -26,7 +33,7 @@ public class FiniteStateMachine
 	}
 	
 	/**
-	 * Adds state to mStates.
+	 * Adds the state to the State Machine 
 	 * @param state The state to be added.
 	 */
 	public void addState(State state)
@@ -48,17 +55,19 @@ public class FiniteStateMachine
 	 * State.mName of the current state. If the string does not
 	 * match, then nothing is changed.
 	 * @param str The string to check for equality.
+	 * @return True if state change was successful
 	 */
-	private void setState(String str)
+	private boolean setState(String str)
 	{
 		for(int i = 0; i < mStates.size(); i++)
 		{
 			if(mStates.get(i).mName.equals(str))
 			{
 				setState(i);
-				i = mStates.size();
+				return true;
 			}
 		}
+		return false;
 	}
 	
 	/**
@@ -88,8 +97,11 @@ public class FiniteStateMachine
 		{
 			if(eventMgr.get(i).mEvent.equals("setState"))
 			{//if current event is a change state then change it and consume event
-				setState((String)eventMgr.get(i).mParam);
-				eventMgr.consume(i);
+				if(setState((String)eventMgr.get(i).mParam)) {
+					if(Main.DEBUG)
+						System.out.println("state event consumed " + eventMgr.get(i).mParam.toString());
+					eventMgr.consume(i);
+				}
 			}
 		}
 		getState().pumpEvents(eventMgr); //pump events to current state

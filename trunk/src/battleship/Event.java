@@ -3,12 +3,19 @@ package battleship;
 /**
  * A simple wrapper for events.
  * @author Amec
+ * @author OBi
  */
 
 public class Event
 {
-	public String mEvent; //the actual event name
-	public Object mParam; //the object passed as parameters
+	/**
+	 * the actual event name
+	 */
+	public String mEvent;
+	/**
+	 * the object passed as parameters
+	 */
+	public Object mParam;
 	
 	/**
 	 * Default constructor

@@ -2,11 +2,14 @@ package battleship.states;
 
 import java.awt.Graphics;
 
+import battleship.Event;
 import battleship.EventManager;
+import battleship.gameobjects.GameObject;
 
 /**
  * Generic State...
  * @author Amec
+ * @author OBi
  *
  */
 
@@ -67,7 +70,19 @@ public class GenericState extends State
 	@Override
 	public EventManager getEvents()
 	{
-		return new EventManager();
+		for(GameObject go : mObj)
+			mStateEventMgr.addAll(go.getEvents());
+		EventManager tmp = null;
+		try
+		{
+			tmp = mStateEventMgr.clone();
+			mStateEventMgr.clear();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
+		return tmp;
 	}
 
 	/**
@@ -75,8 +90,16 @@ public class GenericState extends State
 	 * @see battleship.states.State#pumpEvents(battleship.EventManager)
 	 */
 	@Override
-	public void pumpEvents(EventManager iem)
+	public void pumpEvents(EventManager em)
 	{
-		
-	}
+		for(int i = 0; i < em.size(); i++)
+		{
+			if(em.get(i).mEvent.startsWith("BeginGame")) {
+				if(em.get(i).mParam.equals("SinglePlayer")){
+					mStateEventMgr.add(new Event("setState", "UserState"));
+					em.consume(i);
+				}
+			}
+		}//end for loop
+	}//end PumpEvents
 }
