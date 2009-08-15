@@ -44,7 +44,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	public static Dimension mDim = new Dimension(800, 600);
 	private FiniteStateMachine mFSM = new FiniteStateMachine();
 	private EventManager mEventMgr = new EventManager();
-	private EventManager mInputEventMgr = new EventManager();
+	private EventManager mInputEventMgr = new EventManager();//event manager used internally
 	private boolean offScreen = false;
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	

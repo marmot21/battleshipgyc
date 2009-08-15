@@ -49,7 +49,8 @@ public class MenuState extends State
 	@Override
 	public void exitState()
 	{
-		
+		for(GameObject go : mObj)
+			go.reInit();
 	}
 
 	/**

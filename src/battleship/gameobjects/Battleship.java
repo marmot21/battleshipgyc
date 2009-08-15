@@ -20,7 +20,7 @@ public class Battleship extends GameObject
 {
 	public enum SHIPS
 	{
-		NORMAL, FOLLOW, INIT //Doesn't use init yet :(
+		NORMAL, FOLLOW, INIT, SET //Doesn't use init yet :(
 	}/*
 	Normal - ship not moving
 	Follow - ship following mouse
@@ -132,7 +132,11 @@ public class Battleship extends GameObject
 	{
 		for(int i = 0; i < em.size(); i++)
 		{
-			if(em.get(i).mEvent.startsWith("mouse"))
+			if(em.get(i).mEvent.startsWith("setShips")) {
+				if(em.get(i).mParam.equals("SET"))
+					STATE = SHIPS.SET;
+			}
+			else if(em.get(i).mEvent.startsWith("mouse") && STATE != SHIPS.SET)
 			{
 				MouseEvent me = (MouseEvent) em.get(i).mParam;
 				if(em.get(i).mEvent.equals("mouseDragged") && STATE == SHIPS.FOLLOW) 
@@ -199,5 +203,11 @@ public class Battleship extends GameObject
 				}
 			}
 		}
+	}
+
+	@Override
+	public void reInit() {
+		// TODO Auto-generated method stub
+		
 	}
 }

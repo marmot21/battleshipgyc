@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-
 import battleship.Event;
 import battleship.EventManager;
 
@@ -61,7 +60,7 @@ public class Button extends GameObject
 	}
 
 	/**
-	 * (non-Javadoc)
+	 * Sets the subimage of the button
 	 * @see battleship.gameobjects.GameObject#render()
 	 */
 	@Override
@@ -180,15 +179,28 @@ public class Button extends GameObject
 							render();
 							mGameObjEventMgr.add(new Event("repaint"));
 						}
-						else
+						else//this method is never called because the state will be "Active"
 						{
 							STATE = BUTTON.NORMAL;
 							render();
 							mGameObjEventMgr.add(new Event("repaint"));
 						}
 					}
-				}
-			}
-		}
+					else if(STATE == BUTTON.ACTIVE) {
+						if(!mBounds.contains(me.getPoint())) {
+							STATE = BUTTON.NORMAL;
+							render();
+							mGameObjEventMgr.add(new Event("repaint"));
+						}
+					}
+				}//end mouse event
+			}//end if mouse event
+		}//end for loop
+	}//end pump events
+
+	@Override
+	public void reInit() {
+		STATE = BUTTON.NORMAL;
+		render();
 	}
-}
+}//end class

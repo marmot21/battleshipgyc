@@ -27,6 +27,9 @@ public abstract class GameObject
 	 * The name of the object
 	 */
 	public String mName = ""; //name, used to identify
+	/**
+	 * The Event Manager for the given state
+	 */
 	protected EventManager mGameObjEventMgr;
 	
 	/**
@@ -67,7 +70,10 @@ public abstract class GameObject
 		}
 		return tempImage;
 	}
-	
+	/**
+	 * Used to reinitialise objects where necessary
+	 */
+	abstract public void reInit();
 	
 	public abstract void update();
 	
