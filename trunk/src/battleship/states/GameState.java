@@ -42,7 +42,8 @@ public class GameState extends State
 		Playfield pTrg = new Playfield("Targeting Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24));
 		
 		//Add ships to the Status Screen
-		pStat.mObj.add(new Battleship("BS", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
+		pStat.mObj.add(new Battleship("BS1", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
+		pStat.mObj.add(new Battleship("BS2", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
 		
 		//Add the Fuzzy logic thing to the Targeting screen
 		pTrg.mFuSM = new FiniteStateMachine();
@@ -78,7 +79,7 @@ public class GameState extends State
 	@Override
 	public void exitState()
 	{
-		
+		mStateEventMgr.add(new Event("deleteState", this));
 	}
 
 	/**
@@ -171,8 +172,6 @@ public class GameState extends State
 				if(b.mName.equals("StartGame") && mSTATE == STATE.SINGLE) {
 					mSTATE = STATE.sRUNING;
 					mStateEventMgr.add(new Event("setShips", "SET"));
-					//Removes the "Start game" button
-					mObj.remove(em.get(i).mParam);//TODO: work out better way - ie. "set invisible" atm it will still be gone when user starts new game - lol
 					mStateEventMgr.add(new Event("repaint"));//repaint
 					mStateEventMgr.add(new Event("BeginGame", "SinglePlayer"));//begin single player game
 					em.consume(i);

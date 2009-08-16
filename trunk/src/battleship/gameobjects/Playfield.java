@@ -30,7 +30,7 @@ public class Playfield extends GameObject
 	 * Z is the status of the ship at that position
 	 */
 	public int Grid[][][] = new int[10][10][1];
-	private Point mXY = new Point(-1, -1);
+	private static Point mXY = new Point(-1, -1);
 	private boolean mTargetArrows = false;
 	/**
 	 * Fuzzy State Machine
@@ -123,10 +123,11 @@ public class Playfield extends GameObject
 	if(mFuSM != null)//checks if it is necessary to do all this
 		 for(int i = 0; i < em.size(); i++)
 		 { 
-			 if(em.get(i).mEvent.startsWith("setField")) {
+			 if(em.get(i).mEvent.startsWith("setField"))
+			 {
 				 if(em.get(i).mParam.equals("TargetArrows"))
 					 mTargetArrows = true;
-				 else if(em.get(i).equals("Normal"))
+				 else if(em.get(i).mParam.equals("Normal"))
 					 mTargetArrows = false;
 				 em.consume(i);
 			 }
@@ -166,9 +167,14 @@ public class Playfield extends GameObject
 	{
 		return mGridSize;
 	}
+	public static Point getgridPoint()
+	{
+		return mXY;
+	}
 
 	@Override
 	public void reInit() {
-		// TODO Auto-generated method stub
+		for(GameObject go : mObj)
+			go.reInit();
 	}
 }

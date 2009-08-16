@@ -25,12 +25,13 @@ public class Battleship extends GameObject
 	Normal - ship not moving
 	Follow - ship following mouse
 	Init - ship in initial position
+	SET - Game started, ships can't move
 	*/
 	
-	public SHIPS STATE = SHIPS.NORMAL;
+	public SHIPS STATE = SHIPS.INIT;
 	public BufferedImage mImgH, mImgV;
 	private Point mMouse = new Point();
-	protected static Rectangle mStatusScreen = new Rectangle(24, 240+24, 240, 240);
+	public static Rectangle mStatusScreen = new Rectangle(24, 240+24, 240, 240);
 	protected static Position mPrevPos = new Position();
 	protected static ArrayList<Battleship> mInits = new ArrayList<Battleship>();
 	private boolean mRotated = false;
@@ -53,7 +54,7 @@ public class Battleship extends GameObject
 	{
 		super(name, bounds);
 		mGameObjEventMgr = new EventManager();
-		this.mBounds.x = mInits.size()*30+400;
+		this.mBounds.x = mInits.size()*70+400;
 		this.mBounds.y = ((mInits.size()-mInits.size()%2)/2)*26;
 		mInits.add(this);
 	}
@@ -71,7 +72,7 @@ public class Battleship extends GameObject
 		bounds.width = mImgV.getWidth();
 		bounds.height = mImgV.getHeight();
 		mGameObjEventMgr = new EventManager();
-		this.mBounds.x = mInits.size()*30+400;
+		this.mBounds.x = mInits.size()*70+400;
 		this.mBounds.y = ((mInits.size()-mInits.size()%2)/2)*26;
 		mInits.add(this);
 	}
@@ -164,7 +165,7 @@ public class Battleship extends GameObject
 						STATE = mPrevPos.mSTATE;
 						mGameObjEventMgr.add(new Event("repaint"));
 					}
-					else if(STATE == SHIPS.NORMAL)
+					else if(STATE == SHIPS.NORMAL && !mStatusScreen.contains(mBounds))
 					{
 						mPrevPos.mPos.x = mBounds.x;
 						mPrevPos.mPos.y = mBounds.y;
@@ -207,7 +208,7 @@ public class Battleship extends GameObject
 
 	@Override
 	public void reInit() {
-		// TODO Auto-generated method stub
+		STATE = SHIPS.NORMAL;
 		
 	}
 }

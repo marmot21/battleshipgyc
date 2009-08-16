@@ -71,6 +71,8 @@ public abstract class GameObject
 		return tempImage;
 	}
 	/**
+	 * @deprecated Used before I decided to delete the state and make a new one.
+	 * 
 	 * Used to reinitialise objects where necessary
 	 */
 	abstract public void reInit();
