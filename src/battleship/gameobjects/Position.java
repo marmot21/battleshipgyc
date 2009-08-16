@@ -12,7 +12,13 @@ import battleship.gameobjects.Battleship.SHIPS;
 
 public class Position
 {
+	/**
+	 * The previous position of the ship
+	 */
 	public Point mPos = new Point();
+	/**
+	 * The previous state of the ship
+	 */
 	public SHIPS mSTATE;
 	
 	/**

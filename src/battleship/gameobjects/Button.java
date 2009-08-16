@@ -19,7 +19,7 @@ public class Button extends GameObject
 	
 	public static enum BUTTON
 	{
-		NORMAL, HOVER, PRESSED, ACTIVE
+		NORMAL, HOVER, PRESSED, ACTIVE, INVISIBLE
 	}
 	
 	public BUTTON STATE = BUTTON.NORMAL;
@@ -56,7 +56,8 @@ public class Button extends GameObject
 	@Override
 	public void paint(Graphics g)
 	{
-		g.drawImage(mDrawImg, mBounds.x, mBounds.y, null);
+		if(STATE != BUTTON.INVISIBLE)
+			g.drawImage(mDrawImg, mBounds.x, mBounds.y, null);
 	}
 
 	/**
@@ -123,7 +124,15 @@ public class Button extends GameObject
 	{
 		for(int i = 0; i < em.size(); i++)
 		{
-			if(em.get(i).mEvent.startsWith("mouse"))
+			if(em.get(i).mEvent.equals("B"+mName)) {
+				if(em.get(i).mParam.equals("inVisible"))
+					STATE = BUTTON.INVISIBLE;
+				else if(em.get(i).mParam.equals("visible"))
+					STATE = BUTTON.NORMAL;
+				mGameObjEventMgr.add(new Event("repaint"));
+				em.consume(i);
+			}
+			else if(em.get(i).mEvent.startsWith("mouse"))
 			{
 				MouseEvent me = (MouseEvent) em.get(i).mParam;
 				if(em.get(i).mEvent.equals("mouseMoved") || em.get(i).mEvent.equals("mouseDragged"))
@@ -161,7 +170,7 @@ public class Button extends GameObject
 				}
 				else if(em.get(i).mEvent.equals("mousePressed") && me.getButton() == MouseEvent.BUTTON1)
 				{
-					if(mBounds.contains(me.getPoint()))
+					if(mBounds.contains(me.getPoint()) && STATE != BUTTON.INVISIBLE)
 					{
 						STATE = BUTTON.PRESSED;
 						render();

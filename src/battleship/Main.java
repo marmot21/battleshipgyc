@@ -44,7 +44,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	public static Dimension mDim = new Dimension(800, 600);
 	private FiniteStateMachine mFSM = new FiniteStateMachine();
 	private EventManager mEventMgr = new EventManager();
-	private EventManager mInputEventMgr = new EventManager();//event manager used internally
+	private EventManager mInputEventMgr = new EventManager();//event manager used internally for input events, mouse etc.
 	private boolean offScreen = false;
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	
@@ -114,7 +114,6 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		//Add states
 		mFSM.addState(new GenericState());
 		mFSM.addState(new MenuState());
-		mFSM.addState(new GameState());
 		
 		//Start the main thread
 		Thread t = new Thread(this);
@@ -152,6 +151,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	public void run()
 	{
 		mEventMgr.add(new Event("setState", "MenuState")); //enter the Menu state
+		mFSM.removeState("GenericState");//removes the generic state from the FSM
 		boolean paint;
 		while(true)
 		{
@@ -173,6 +173,12 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 				else if(mEventMgr.get(i).mEvent.equals("repaint"))
 				{
 					paint = true;
+					mEventMgr.consume(i);
+				}
+				else if(mEventMgr.get(i).mEvent.equals("addState"))
+				{
+					if(mEventMgr.get(i).mParam.equals("GameState"))
+						mFSM.addState(new GameState());
 					mEventMgr.consume(i);
 				}
 			}

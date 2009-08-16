@@ -42,6 +42,35 @@ public class FiniteStateMachine
 	}
 	
 	/**
+	 * Removes the state from the State Machine
+	 * @param state The state to be removed
+	 */
+	private void removeState(int state)
+	{
+		mStates.remove(state);
+	}
+	
+	/**
+	 * Removes the state from the State Machine
+	 * @param str The name of the state to be removed
+	 */
+	public void removeState(String str)
+	{
+		for(int i=0; i<mStates.size(); i++)
+			if(mStates.get(i).mName==str)
+				removeState(i);
+	}
+	
+	/**
+	 * Removes the state from the State Machine
+	 * @param state The state to be removed
+	 */
+	public void removeState(State state)
+	{
+		mStates.remove(state);
+	}
+	
+	/**
 	 * Returns the current state.
 	 * @return
 	 */
@@ -57,13 +86,13 @@ public class FiniteStateMachine
 	 * @param str The string to check for equality.
 	 * @return True if state change was successful
 	 */
-	private boolean setState(String str)
+	private boolean setState(String str, EventManager eventMgr)
 	{
 		for(int i = 0; i < mStates.size(); i++)
 		{
 			if(mStates.get(i).mName.equals(str))
 			{
-				setState(i);
+				setState(i,eventMgr);
 				return true;
 			}
 		}
@@ -75,11 +104,12 @@ public class FiniteStateMachine
 	 * @param stateNum 	The number of which state the
 	 * 					current state is changed to. 
 	 */
-	private void setState(int stateNum)
+	private void setState(int stateNum, EventManager eventMgr)
 	{
 		if(Main.DEBUG)
 			System.out.println("Exiting State: " + getState().mName); //debugging purposes, remove later
 		getState().exitState();
+		eventMgr.addAll(getState().getEvents());
 		mCurrentState = stateNum;
 		if(Main.DEBUG)
 			System.out.println("Entering State: " + getState().mName); //debugging purposes, remove later
@@ -95,14 +125,22 @@ public class FiniteStateMachine
 	{
 		for(int i = 0; i < eventMgr.size(); i++)
 		{
-			if(eventMgr.get(i).mEvent.equals("setState"))
+			if(eventMgr.get(i).mEvent.equals("deletState"))
+			{//if current event is a delete state then delete it and consume event
+				if(mCurrentState < mStates.indexOf((State)eventMgr.get(i).mParam))
+					mCurrentState--;
+				removeState((State)eventMgr.get(i).mParam);
+				eventMgr.consume(i);
+			}
+			else if(eventMgr.get(i).mEvent.equals("setState"))
 			{//if current event is a change state then change it and consume event
-				if(setState((String)eventMgr.get(i).mParam)) {
+				if(setState((String)eventMgr.get(i).mParam, eventMgr)) {
 					if(Main.DEBUG)
 						System.out.println("state event consumed " + eventMgr.get(i).mParam.toString());
 					eventMgr.consume(i);
 				}
 			}
+			
 		}
 		getState().pumpEvents(eventMgr); //pump events to current state
 	}

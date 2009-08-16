@@ -4,10 +4,13 @@
 package battleship.states;
 
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 
 import battleship.Event;
 import battleship.EventManager;
+import battleship.gameobjects.Battleship;
 import battleship.gameobjects.GameObject;
+import battleship.gameobjects.Playfield;
 
 /**
  * Handles the user dropping bombs etc
@@ -25,12 +28,13 @@ public class UserState extends State {
 
 	@Override
 	public void enterState() {
-		mStateEventMgr.add(new Event("setField", "TargetArrows"));
+		mStateEventMgr.add(new Event("setField", "TargetArrows"));//Draw targeting lines
+		mStateEventMgr.add(new Event("BStartGame", "inVisible"));//set button "StartGame" to invisible
 	}
 
 	@Override
 	public void exitState() {
-		mStateEventMgr.add(new Event("setField", "Normal"));
+		
 	}
 
 	@Override
@@ -58,6 +62,17 @@ public class UserState extends State {
 
 	@Override
 	public void pumpEvents(EventManager em) {
+		for(int i=0; i<em.size(); i++) {
+			if(em.get(i).mEvent.startsWith("mouse"))
+			{
+				MouseEvent me = (MouseEvent) em.get(i).mParam;
+				if(em.get(i).mEvent.equals("mousePressed")
+						&& Battleship.mStatusScreen.contains(me.getPoint()))
+				{
+					//Playfield.getgridPoint()
+				}
+			}
+		}
 		for(GameObject go : mObj) {
 			go.update(); //pass on events to children
 		}

@@ -110,6 +110,7 @@ public class MenuState extends State
 		{
 			if(em.get(i).mEvent.equals("buttonClicked"))
 			{
+				mStateEventMgr.add(new Event("addState", "GameState"));
 				Button b = (Button)em.get(i).mParam;	
 				if(b.mName.equals("HostGame"))
 				{
