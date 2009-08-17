@@ -14,6 +14,7 @@ import battleship.gameobjects.Battleship;
 import battleship.gameobjects.Button;
 import battleship.gameobjects.GameObject;
 import battleship.gameobjects.Playfield;
+import battleship.server.Server;
 
 /**
  * The game state.
@@ -21,10 +22,10 @@ import battleship.gameobjects.Playfield;
  * @author Obi
  */
 
-public class GameState extends State
+public class GameState extends State //implements Server
 {
 	protected enum STATE { //we don't want this to be changed by an outside source
-		SINGLE, sRUNING/*single player Running*/
+		SINGLE, sRUNING, HOST, hRUNNING
 	}
 	/**
 	 * The current state
@@ -141,9 +142,10 @@ public class GameState extends State
 			{
 				if(em.get(i).mParam.equals("Host"))
 				{
-					//insert host specific stuff here
-					mStateEventMgr.add(new Event("setState", "MenuState"));
-					mStateEventMgr.add(new Event("error", "Hosting not implemented"));
+					//Start the server
+					new Server().start();
+					//mServer.addNetworkListener(this);
+					mSTATE = STATE.HOST;
 					em.consume(i);
 				}
 				else if(em.get(i).mParam.equals("Join"))
@@ -181,4 +183,21 @@ public class GameState extends State
 		for(GameObject go : mObj)
 			go.pumpEvents(em);
 	}
+
+	/*@Override
+	public void sockOpen() {
+		System.out.println("open called");
+	}
+
+	@Override
+	public void messageReceived(Event e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sockClose() {
+		// TODO Auto-generated method stub
+		
+	}*/
 }
