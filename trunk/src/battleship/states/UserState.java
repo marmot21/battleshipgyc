@@ -10,7 +10,6 @@ import battleship.Event;
 import battleship.EventManager;
 import battleship.gameobjects.Battleship;
 import battleship.gameobjects.GameObject;
-import battleship.gameobjects.Playfield;
 
 /**
  * Handles the user dropping bombs etc
