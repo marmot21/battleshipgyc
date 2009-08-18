@@ -6,29 +6,30 @@ import java.util.Vector;
 
 import battleship.Event;
 
-//public interface Server {
+public interface Server {
+
+	public void sockOpen(); 
+	public void sockClose();
+	public void messageReceived(Event e);
+	public void error(Event e);
 	
-//	public void sockOpen(); 
-	//public void sockClose();
-//	public void messageReceived(Event e);
-//}
-public class Server extends Thread
+public class cServer extends Thread
 {
 	ServerSocket servSock=null;
 	ClientGroup group;
-	static Vector<Server> listener;
+	static Vector<Server> listener = new Vector<Server>();
 	
 	/**
 	 * Constructor
 	 * Uses port 25142 - random one that works at school
 	 */
-	public Server()
+	public cServer()
 	{
 		try
 		{
 			servSock=new ServerSocket(25142); //create socket
-			//for(Server go : listener)
-				//go.sockOpen();
+			for(Server go : listener)
+				go.sockOpen();
 		} 
 		catch (Exception e)
 		{	
@@ -72,4 +73,5 @@ public class Server extends Thread
 		catch (Exception e){};
 		servSock=null;
 	}
+}
 }
