@@ -22,7 +22,7 @@ import battleship.server.Server;
  * @author Obi
  */
 
-public class GameState extends State //implements Server
+public class GameState extends State implements Server
 {
 	protected enum STATE { //we don't want this to be changed by an outside source
 		SINGLE, sRUNING, HOST, hRUNNING
@@ -31,6 +31,9 @@ public class GameState extends State //implements Server
 	 * The current state
 	 */
 	protected STATE mSTATE; 
+	
+	protected static cServer mServer;
+	
 	/**
 	 * Default constructor, does a few things:
 	 * 1. sets the name 2. Adds the targeting and status screens 3. Adds objects to screens
@@ -142,9 +145,10 @@ public class GameState extends State //implements Server
 			{
 				if(em.get(i).mParam.equals("Host"))
 				{
+					cServer.addNetworkListener(this);
 					//Start the server
-					new Server().start();
-					//mServer.addNetworkListener(this);
+					mServer = new cServer();
+					mServer.start();
 					mSTATE = STATE.HOST;
 					em.consume(i);
 				}
@@ -184,7 +188,7 @@ public class GameState extends State //implements Server
 			go.pumpEvents(em);
 	}
 
-	/*@Override
+	@Override
 	public void sockOpen() {
 		System.out.println("open called");
 	}
@@ -199,5 +203,11 @@ public class GameState extends State //implements Server
 	public void sockClose() {
 		// TODO Auto-generated method stub
 		
-	}*/
+	}
+
+	@Override
+	public void error(Event e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
