@@ -23,10 +23,12 @@ public abstract class GameObject
 	 * The bounds of the object
 	 */
 	public Rectangle mBounds = new Rectangle(); //the bounds of the object
+	
 	/**
 	 * The name of the object
 	 */
 	public String mName = ""; //name, used to identify
+	
 	/**
 	 * The Event Manager for the given state
 	 */
@@ -70,12 +72,6 @@ public abstract class GameObject
 		}
 		return tempImage;
 	}
-	/**
-	 * @deprecated Used before I decided to delete the state and make a new one.
-	 * 
-	 * Used to reinitialise objects where necessary
-	 */
-	abstract public void reInit();
 	
 	public abstract void update();
 	

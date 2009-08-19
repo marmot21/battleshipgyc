@@ -96,11 +96,4 @@ public class GameImage extends GameObject
 	{
 		
 	}
-
-	@Override
-	public void reInit() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
