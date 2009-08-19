@@ -58,9 +58,9 @@ public class GameState extends State implements Server, Client
 		//Add the Fuzzy logic thing to the Targeting screen
 		pTrg.mFuSM = new FiniteStateMachine();
 		pTrg.mFuSM.addState(new GenericState());
-		pTrg.mFuSM.addState(new UserState());
+		pTrg.mFuSM.addState(new UserState(mEventMgr));
 		pTrg.mFuSM.addState(new AIBombState());
-		
+		pTrg.mFuSM.mName = "FuSM";
 		//Add the grids to this state
 		mObj.add(pTrg);
 		mObj.add(pStat);
@@ -159,11 +159,11 @@ public class GameState extends State implements Server, Client
 					mEventMgr.add(new Event("repaint"));//repaint
 					if(mSTATE == STATE.SINGLE){
 						mSTATE = STATE.sRUNING;
-						mEventMgr.add(new Event("BeginGame", "SinglePlayer"));//begin single player game
+						mEventMgr.add(new Event("setState", "UserState", "FuSM"));//begin single player game
 					}
 					if(mSTATE == STATE.HOST){
 						mSTATE = STATE.hRUNNING;
-						mEventMgr.add(new Event("BeginGame", "MulitPlayer"));//begin militplayer
+						mEventMgr.add(new Event("setState", "UserState", "FuSM"));//begin militplayer
 					}
 					mEventMgr.consume(i);
 				}

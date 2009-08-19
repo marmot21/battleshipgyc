@@ -116,7 +116,8 @@ public class Battleship extends GameObject
 	{
 		for(int i = 0; i < mEventMgr.size(); i++)
 		{
-			if(mEventMgr.get(i).mEvent.startsWith("setShips")) {
+			if(mEventMgr.get(i).mEvent.equals("setShips"))
+			{
 				if(mEventMgr.get(i).mParam.equals("SET"))
 					STATE = SHIPS.SET;
 			}
