@@ -10,6 +10,7 @@ import battleship.Event;
 import battleship.EventManager;
 import battleship.FiniteStateMachine;
 import battleship.Main;
+import battleship.client.Client;
 import battleship.gameobjects.Battleship;
 import battleship.gameobjects.Button;
 import battleship.gameobjects.GameObject;
@@ -22,7 +23,7 @@ import battleship.server.Server;
  * @author Obi
  */
 
-public class GameState extends State implements Server
+public class GameState extends State implements Server, Client
 {
 	protected enum STATE { //we don't want this to be changed by an outside source
 		SINGLE, sRUNING, HOST, hRUNNING
@@ -33,6 +34,7 @@ public class GameState extends State implements Server
 	protected STATE mSTATE; 
 	
 	protected static cServer mServer;
+	protected static cClient mClient;
 	
 	/**
 	 * Default constructor, does a few things:
@@ -169,6 +171,23 @@ public class GameState extends State implements Server
 					em.consume(i);
 				}
 			}
+			else if (em.get(i).mEvent.equals("socket")) 
+			{
+				if(em.get(i).mParam.equals("Open"))
+				{
+					cClient.addClientListener(this);
+					mClient = new cClient();
+					mClient.start();
+					mSTATE = STATE.hRUNNING;
+				}
+			}
+			else if(em.get(i).mEvent.equals("client"))
+			{
+				if(em.get(i).mParam.equals("Connected"))
+				{
+					cClient.logon("192.168.1.85");
+				}
+			}
 			else if(em.get(i).mEvent.equals("buttonClicked"))
 			{
 				Button b = (Button)em.get(i).mParam;
@@ -177,11 +196,17 @@ public class GameState extends State implements Server
 					mStateEventMgr.add(new Event("setState", "MenuState"));
 					em.consume(i);
 				}
-				if(b.mName.equals("StartGame") && mSTATE == STATE.SINGLE) {
-					mSTATE = STATE.sRUNING;
+				if(b.mName.equals("StartGame")) {
 					mStateEventMgr.add(new Event("setShips", "SET"));
 					mStateEventMgr.add(new Event("repaint"));//repaint
-					mStateEventMgr.add(new Event("BeginGame", "SinglePlayer"));//begin single player game
+					if(mSTATE == STATE.SINGLE){
+						mSTATE = STATE.sRUNING;
+						mStateEventMgr.add(new Event("BeginGame", "SinglePlayer"));//begin single player game
+					}
+					if(mSTATE == STATE.HOST){
+						mSTATE = STATE.hRUNNING;
+						mStateEventMgr.add(new Event("BeginGame", "MulitPlayer"));//begin militplayer
+					}
 					em.consume(i);
 				}
 			}
@@ -192,7 +217,7 @@ public class GameState extends State implements Server
 
 	@Override
 	public void sockOpen() {
-		mStateEventMgr.add(new Event("socket", "open"));
+		mStateEventMgr.add(new Event("socket", "Open"));
 	}
 
 	@Override
@@ -203,7 +228,7 @@ public class GameState extends State implements Server
 
 	@Override
 	public void sockClose() {
-		mStateEventMgr.add(new Event("socket", "close"));
+		mStateEventMgr.add(new Event("socket", "Close"));
 		
 	}
 
@@ -211,5 +236,16 @@ public class GameState extends State implements Server
 	public void error(Event e) {
 		mStateEventMgr.add(e);
 		
+	}
+
+	@Override
+	public void connected() {
+		mStateEventMgr.add(new Event("client", "Connected"));
+		
+	}
+
+	@Override
+	public void clientMsg(Event e) {
+		mStateEventMgr.add(e);
 	}
 }

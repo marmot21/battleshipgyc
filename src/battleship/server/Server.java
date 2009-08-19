@@ -6,6 +6,12 @@ import java.util.Vector;
 
 import battleship.Event;
 
+/**
+ * Server which the other player connects to.
+ * Make must add the network listener - under cServer.
+ * @author Obi
+ *
+ */
 public interface Server {
 
 	public void sockOpen(); 
