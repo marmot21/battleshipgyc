@@ -115,7 +115,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		mFSM.mName = "Main";
 		mFSM.addState(new GenericState());
 		mFSM.addState(new MenuState(mEventMgr));
-		mFSM.addState(new GameState(mEventMgr));
+		//mFSM.addState(new GameState(mEventMgr));
 		
 		//Start the main thread
 		Thread t = new Thread(this);
@@ -152,6 +152,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	 */
 	public void run()
 	{
+		
 		mEventMgr.add(new Event("setState", "MenuState", "Main")); //enter the Menu state
 		mFSM.removeState("GenericState");//removes the generic state from the FSM
 		boolean paint;

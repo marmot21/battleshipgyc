@@ -81,7 +81,7 @@ public class GameState extends State implements Server, Client
 	@Override
 	public void exitState()
 	{
-		//mEventMgr.add(new Event("removeState", mName, "Main"));
+		mEventMgr.add(new Event("removeState", mName, "Main"));
 		mServer = null;
 	}
 

@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent;
 import battleship.Event;
 import battleship.EventManager;
 import battleship.gameobjects.Battleship;
-import battleship.gameobjects.GameObject;
 
 /**
  * Handles the user dropping bombs etc

@@ -33,8 +33,9 @@ public class Playfield extends GameObject
 	private static Point mXY = new Point(-1, -1);
 	private boolean mTargetArrows = false;
 	/**
-	 * Fuzzy State Machine
-	 * Used by the targeting window only
+	 * Fuzzy State Machine.
+	 * Used by the targeting window only.
+	 * Used as a FSM in multiplayer mode
 	 */
 	public FiniteStateMachine mFuSM = null;
 	

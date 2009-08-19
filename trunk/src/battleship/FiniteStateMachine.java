@@ -3,7 +3,6 @@ package battleship;
 import java.util.ArrayList;
 import java.util.List;
 
-import battleship.states.GameState;
 import battleship.states.State;
 
 /**
@@ -83,7 +82,10 @@ public class FiniteStateMachine
 	 */
 	public State getState()
 	{
-		return mStates.get(mCurrentState);
+		//(mStates.size() > this.mCurrentState)
+			return mStates.get(mCurrentState);
+		
+		//return null;
 	}
 	
 	/**
@@ -132,8 +134,8 @@ public class FiniteStateMachine
 				//if current event is a delete state then delete it and consume event
 				if(eventMgr.get(i).mEvent.equals("removeState"))
 				{
-					//if(mCurrentState < mStates.indexOf((State)eventMgr.get(i).mParam))
-					//	mCurrentState--;
+					//if(mCurrentState < mStates.indexOf((String)eventMgr.get(i).mParam))
+						//mCurrentState--;//assuming that the surrent state is removed
 					//removeState((State)eventMgr.get(i).mParam);
 					removeState((String)eventMgr.get(i).mParam);
 					eventMgr.consume(i);
