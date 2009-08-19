@@ -19,20 +19,21 @@ public class Button extends GameObject
 	
 	public static enum BUTTON
 	{
-		NORMAL, HOVER, PRESSED, ACTIVE, INVISIBLE
+		NORMAL, HOVER, PRESSED, ACTIVE
 	}
 	
 	public BUTTON STATE = BUTTON.NORMAL;
+	
+	public boolean visibility = true;
 	
 	/**
 	 * Constructor when storing the button later
 	 * @param name The name of the Button - for reference
 	 * @param bounds The bounds of the button
 	 */
-	public Button(String name, Rectangle bounds)
+	public Button(String name, Rectangle bounds, EventManager mEventMgr)
 	{
-		super(name, bounds);
-		mGameObjEventMgr = new EventManager();
+		super(name, bounds, mEventMgr);
 	}
 	
 	/**
@@ -41,22 +42,17 @@ public class Button extends GameObject
 	 * @param bounds The bounds of the button
 	 * @param img The image of the button
 	 */
-	public Button(String name, Rectangle bounds, BufferedImage img)
+	public Button(String name, Rectangle bounds, EventManager mEventMgr, BufferedImage img)
 	{
-		super(name, bounds);
+		super(name, bounds, mEventMgr);
 		mImg = img;
 		render();
-		mGameObjEventMgr = new EventManager();
 	}
-	
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#paint(java.awt.Graphics)
-	 */
+
 	@Override
 	public void paint(Graphics g)
 	{
-		if(STATE != BUTTON.INVISIBLE)
+		if(visibility)
 			g.drawImage(mDrawImg, mBounds.x, mBounds.y, null);
 	}
 
@@ -85,57 +81,41 @@ public class Button extends GameObject
 		}
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#update()
-	 */
 	@Override
-	public void update()
+	public void run()
 	{
 		
 	}
 	
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#getEvents()
-	 */
 	@Override
-	public EventManager getEvents()
+	public void processEvents()
 	{
-		EventManager tmp = null;
-		try
+		for(int i = 0; i < mEventMgr.size(); i++)
 		{
-			tmp = mGameObjEventMgr.clone();
-			mGameObjEventMgr.clear();
-		}
-		catch(CloneNotSupportedException e)
-		{
-			e.printStackTrace();
-		}
-		return tmp;
-	}
-	
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#pumpEvents(battleship.EventManager)
-	 */
-	@Override
-	public void pumpEvents(EventManager em)
-	{
-		for(int i = 0; i < em.size(); i++)
-		{
-			if(em.get(i).mEvent.equals("B"+mName)) {
-				if(em.get(i).mParam.equals("inVisible"))
-					STATE = BUTTON.INVISIBLE;
-				else if(em.get(i).mParam.equals("visible"))
-					STATE = BUTTON.NORMAL;
-				mGameObjEventMgr.add(new Event("repaint"));
-				em.consume(i);
-			}
-			else if(em.get(i).mEvent.startsWith("mouse"))
+			if(mEventMgr.get(i).mTarget.equals(mName))
 			{
-				MouseEvent me = (MouseEvent) em.get(i).mParam;
-				if(em.get(i).mEvent.equals("mouseMoved") || em.get(i).mEvent.equals("mouseDragged"))
+				if(mEventMgr.get(i).mEvent.equals("visibility"))
+				{
+					if(mEventMgr.get(i).mParam.equals(new Boolean(true)))
+					{
+						visibility = true;
+					}
+					else if(mEventMgr.get(i).mParam.equals(new Boolean(false)))
+					{
+						visibility = false;
+					}
+					else if(mEventMgr.get(i).mParam.equals("toggle"))
+					{
+						visibility = !visibility;
+					}
+				}
+				mEventMgr.add(new Event("repaint"));
+				mEventMgr.consume(i);
+			}
+			else if(mEventMgr.get(i).mEvent.startsWith("mouse"))
+			{
+				MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
+				if(mEventMgr.get(i).mEvent.equals("mouseMoved") || mEventMgr.get(i).mEvent.equals("mouseDragged"))
 				{
 					if(mBounds.contains(me.getPoint()))
 					{
@@ -143,13 +123,13 @@ public class Button extends GameObject
 						{
 							STATE = BUTTON.HOVER;
 							render();
-							mGameObjEventMgr.add(new Event("repaint"));
+							mEventMgr.add(new Event("repaint"));
 						}
 						else if(STATE == BUTTON.ACTIVE)
 						{
 							STATE = BUTTON.PRESSED;
 							render();
-							mGameObjEventMgr.add(new Event("repaint"));
+							mEventMgr.add(new Event("repaint"));
 						}
 					}
 					else
@@ -158,48 +138,48 @@ public class Button extends GameObject
 						{
 							STATE = BUTTON.NORMAL;
 							render();
-							mGameObjEventMgr.add(new Event("repaint"));
+							mEventMgr.add(new Event("repaint"));
 						}
 						else if(STATE == BUTTON.PRESSED)
 						{
 							STATE = BUTTON.ACTIVE;
 							render();
-							mGameObjEventMgr.add(new Event("repaint"));
+							mEventMgr.add(new Event("repaint"));
 						}
 					}
 				}
-				else if(em.get(i).mEvent.equals("mousePressed") && me.getButton() == MouseEvent.BUTTON1)
+				else if(mEventMgr.get(i).mEvent.equals("mousePressed") && me.getButton() == MouseEvent.BUTTON1)
 				{
-					if(mBounds.contains(me.getPoint()) && STATE != BUTTON.INVISIBLE)
+					if(mBounds.contains(me.getPoint()))
 					{
 						STATE = BUTTON.PRESSED;
 						render();
-						mGameObjEventMgr.add(new Event("repaint"));
+						mEventMgr.add(new Event("repaint"));
 					}
 				}
-				else if(em.get(i).mEvent.equals("mouseReleased") && me.getButton() == MouseEvent.BUTTON1)
+				else if(mEventMgr.get(i).mEvent.equals("mouseReleased") && me.getButton() == MouseEvent.BUTTON1)
 				{
 					if(STATE == BUTTON.PRESSED)
 					{
 						if(mBounds.contains(me.getPoint()))
 						{
-							mGameObjEventMgr.add(new Event("buttonClicked", (Object)this));
+							mEventMgr.add(new Event("buttonClicked", mName));
 							STATE = BUTTON.HOVER;
 							render();
-							mGameObjEventMgr.add(new Event("repaint"));
+							mEventMgr.add(new Event("repaint"));
 						}
 						else//this method is never called because the state will be "Active"
 						{
 							STATE = BUTTON.NORMAL;
 							render();
-							mGameObjEventMgr.add(new Event("repaint"));
+							mEventMgr.add(new Event("repaint"));
 						}
 					}
 					else if(STATE == BUTTON.ACTIVE) {
 						if(!mBounds.contains(me.getPoint())) {
 							STATE = BUTTON.NORMAL;
 							render();
-							mGameObjEventMgr.add(new Event("repaint"));
+							mEventMgr.add(new Event("repaint"));
 						}
 					}
 				}//end mouse event

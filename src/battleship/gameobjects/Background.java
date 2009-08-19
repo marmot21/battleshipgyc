@@ -22,19 +22,10 @@ public class Background extends GameObject
 	{
 		super(s, r);
 		mImg = new BufferedImage(Main.mDim.width, Main.mDim.height, BufferedImage.OPAQUE);
-		mGameObjEventMgr = new EventManager();
 		int n = 10 + (int)(Math.random()*10);
 		for(int i = 0; i < n; i++)
 			clouds.add(new Cloud());
 		render();
-	}
-	
-	@Override
-	public EventManager getEvents()
-	{
-		for(int i = 0; i < clouds.size(); i++)
-			mGameObjEventMgr.addAll(clouds.get(i).getEvents());
-		return mGameObjEventMgr;
 	}
 	
 	@Override
@@ -43,12 +34,6 @@ public class Background extends GameObject
 		g.drawImage(mImg, 0, 0, null);
 		for(int i = 0; i < clouds.size(); i++)
 			clouds.get(i).paint(g);
-	}
-	
-	@Override
-	public void pumpEvents(EventManager em)
-	{
-		
 	}
 	
 	@Override
@@ -63,10 +48,16 @@ public class Background extends GameObject
 	}
 	
 	@Override
-	public void update()
+	public void run()
 	{
 		for(int i = 0; i < clouds.size(); i++)
-			clouds.get(i).update();
+			clouds.get(i).run();
+	}
+	
+	@Override
+	public void processEvents()
+	{
+		
 	}
 }
 
@@ -80,7 +71,7 @@ class Cloud extends GameObject
 	}
 	
 	@Override
-	public void update()
+	public void run()
 	{
 		mRect.x++;
 	}
@@ -93,19 +84,13 @@ class Cloud extends GameObject
 	}
 
 	@Override
-	public EventManager getEvents()
-	{
-		return null;
-	}
-
-	@Override
-	public void pumpEvents(EventManager em)
+	public void render()
 	{
 		
 	}
-
+	
 	@Override
-	public void render()
+	public void processEvents()
 	{
 		
 	}

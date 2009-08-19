@@ -44,12 +44,12 @@ public class Playfield extends GameObject
 	 * @param bounds The position of the grid and its dimensions in squares
 	 * @param dim The dimensions of each grid square
 	 */
-	public Playfield(String sName, Rectangle bounds, Dimension dim)
+	public Playfield(String sName, Rectangle bounds, EventManager mEventMgr, Dimension dim)
 	{
 		this.mBounds = new Rectangle(bounds.x, bounds.y, bounds.width*dim.width, bounds.height*dim.height);
 		mGridSize = dim;
+		this.mEventMgr = mEventMgr;
 		mName = sName;
-		mGameObjEventMgr = new EventManager();
 	}
 	
 	/**
@@ -57,11 +57,10 @@ public class Playfield extends GameObject
 	 * @see battleship.gameobjects.GameObject#update()
 	 */
 	@Override
-	public void update()
+	public void run()
 	{
-		for(GameObject go : mObj) {
-			go.update();
-		}
+		for(int i = 0; i < mObj.size(); i++)
+			mObj.get(i).run();
 		if(mFuSM != null)
 			mFuSM.getState().run();
 	}
@@ -91,71 +90,52 @@ public class Playfield extends GameObject
 			g.setColor(new Color(0, 0, 255, 128));//Hor line
 			g.fillRect(24, mXY.y*mGridSize.height, mBounds.width, mGridSize.height);
 		}
-		for(GameObject go : mObj)
-			go.paint(g);//draw the ships etc.
+		for(int i = 0; i < mObj.size(); i++)
+			mObj.get(i).paint(g);
 		if(mFuSM != null)
 			mFuSM.getState().paint(g);
 	}
-
+	
 	@Override
-	public EventManager getEvents()//output of events
+	public void processEvents()
 	{
-		for(GameObject go : mObj)
-			mGameObjEventMgr.addAll(go.getEvents());
-		if(mFuSM != null)
-			mGameObjEventMgr.addAll(mFuSM.getState().getEvents());//add the events from the FuSM
-		EventManager tmp = null;
-		try
+		if(mFuSM != null)//checks if it is necessary to do all this
 		{
-			tmp = mGameObjEventMgr.clone();
-			mGameObjEventMgr.clear();
-		}
-		catch(CloneNotSupportedException e)
-		{
-			e.printStackTrace();
-		}
-		return tmp;
-	}
-
-	@Override
-	public void pumpEvents(EventManager em)
-	{
-	if(mFuSM != null)//checks if it is necessary to do all this
-		 for(int i = 0; i < em.size(); i++)
-		 { 
-			 if(em.get(i).mEvent.startsWith("setField"))
-			 {
-				 if(em.get(i).mParam.equals("TargetArrows"))
-					 mTargetArrows = true;
-				 else if(em.get(i).mParam.equals("Normal"))
-					 mTargetArrows = false;
-				 em.consume(i);
-			 }
-			 else if(em.get(i).mEvent.startsWith("mouse"))
-			 {
-				 MouseEvent me = (MouseEvent) em.get(i).mParam;
-				 if(em.get(i).mEvent.equals("mouseMoved") || em.get(i).mEvent.equals("mouseDragged")) 
+			 for(int i = 0; i < mEventMgr.size(); i++)
+			 { 
+				 if(mEventMgr.get(i).mEvent.startsWith("setField"))
 				 {
-					 if(mBounds.contains(me.getPoint()))
-					 { 
-						 mXY.x = me.getX()/mGridSize.width - mBounds.x/mGridSize.width;   
-						 mXY.y = me.getY()/mGridSize.height - mBounds.y/mGridSize.height;
-						 mGameObjEventMgr.add(new Event("repaint"));
-					 }
-					 else
+					 if(mEventMgr.get(i).mParam.equals("TargetArrows"))
+						 mTargetArrows = true;
+					 else if(mEventMgr.get(i).mParam.equals("Normal"))
+						 mTargetArrows = false;
+					 mEventMgr.consume(i);
+				 }
+				 else if(mEventMgr.get(i).mEvent.startsWith("mouse"))
+				 {
+					 MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
+					 if(mEventMgr.get(i).mEvent.equals("mouseMoved") || mEventMgr.get(i).mEvent.equals("mouseDragged")) 
 					 {
-						 mXY.x = -1;
-						 mXY.y = -1;
-					 } 
+						 if(mBounds.contains(me.getPoint()))
+						 { 
+							 mXY.x = me.getX()/mGridSize.width - mBounds.x/mGridSize.width;   
+							 mXY.y = me.getY()/mGridSize.height - mBounds.y/mGridSize.height;
+							 mEventMgr.add(new Event("repaint"));
+						 }
+						 else
+						 {
+							 mXY.x = -1;
+							 mXY.y = -1;
+						 } 
+					 }
 				 }
 			 }
 		 }
 		
-		for(GameObject go : mObj)
-			go.pumpEvents(em); //pass on events to children - ships
-		//System.out.println("pumbing events");
+		for(int i = 0; i < mObj.size(); i++)
+			mObj.get(i).processEvents();
 		if(mFuSM != null){
-			mFuSM.pumpEvents(em); //pass on events to the FuSM
+			mFuSM.processEvents(mEventMgr); //pass on events to the FuSM
 		}
 	}
 	

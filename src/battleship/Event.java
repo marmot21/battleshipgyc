@@ -11,11 +11,21 @@ public class Event
 	/**
 	 * the actual event name
 	 */
-	public String mEvent;
+	public String mEvent = "";
 	/**
 	 * the object passed as parameters
 	 */
-	public Object mParam;
+	public Object mParam = null;
+	
+	/**
+	 * The target object
+	 */
+	public String mTarget = "";
+	
+	/**
+	 * 
+	 */
+	public boolean mToRemove = false;
 	
 	/**
 	 * Default constructor
@@ -43,5 +53,12 @@ public class Event
 	{
 		mEvent = str;
 		mParam = obj;
+	}
+	
+	public Event(String str, Object obj, String target)
+	{
+		mEvent = str;
+		mParam = obj;
+		mTarget = target;
 	}
 }

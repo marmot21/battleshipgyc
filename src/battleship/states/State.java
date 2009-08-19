@@ -16,7 +16,7 @@ public abstract class State
 {
 	public String mName = ""; //Name of the object
 	protected List<GameObject> mObj = new ArrayList<GameObject>(); //All the objects which the state controls
-	protected EventManager mStateEventMgr = new EventManager();//Handle for the event manager
+	protected EventManager mEventMgr = new EventManager();//Handle for the event manager
 	
 	/**
 	 * The method called when entering a state
@@ -39,15 +39,5 @@ public abstract class State
 	 */
 	public abstract void paint(Graphics g);
 	
-	/**
-	 * Revives all the events
-	 * @param em The event manager
-	 */
-	public abstract void pumpEvents(EventManager em);
-	
-	/**
-	 * Returns all the events which the state has generated
-	 * @return EventManager Object
-	 */
-	public abstract EventManager getEvents();
+	public abstract void processEvents();
 }

@@ -24,51 +24,38 @@ public class MenuState extends State
 	 * Default constructor
 	 * Adds buttons and main title
 	 */
-	public MenuState()
+	public MenuState(EventManager mEventMgr)
 	{
 		mName = "MenuState";
+		this.mEventMgr = mEventMgr;
 		mObj.add(new Background("BG", new Rectangle(0, 0, Main.mDim.width, 300)));
-		mObj.add(new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1), GameObject.loadImage("res/img/HostGame.png")));
-		mObj.add(new Button("JoinGame", new Rectangle((800-210)/2, 256+128, 1, 1), GameObject.loadImage("res/img/JoinGame.png")));
-		mObj.add(new Button("SinglePlayer", new Rectangle((800-210)/2+210+32, 256+128, 1, 1), GameObject.loadImage("res/img/SinglePlayer.png")));
-		mObj.add(new GameImage("MainTitle", new Rectangle((800-635)/2, 64, 1, 1), GameObject.loadImage("res/img/GameTitle.png")));
+		mObj.add(new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1), mEventMgr, GameObject.loadImage("res/img/HostGame.png")));
+		mObj.add(new Button("JoinGame", new Rectangle((800-210)/2, 256+128, 1, 1), mEventMgr, GameObject.loadImage("res/img/JoinGame.png")));
+		mObj.add(new Button("SinglePlayer", new Rectangle((800-210)/2+210+32, 256+128, 1, 1), mEventMgr, GameObject.loadImage("res/img/SinglePlayer.png")));
+		mObj.add(new GameImage("MainTitle", new Rectangle((800-635)/2, 64, 1, 1), mEventMgr, GameObject.loadImage("res/img/GameTitle.png")));
+		mEventMgr.add(new Event("repaint"));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.states.State#enterState()
-	 */
 	@Override
 	public void enterState()
 	{
-		mStateEventMgr.add(new Event("repaint"));
+		mEventMgr.add(new Event("repaint"));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.states.State#exitState()
-	 */
 	@Override
 	public void exitState()
 	{
 		
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.states.State#run()
-	 */
 	@Override
 	public void run()
 	{
 		for(GameObject go : mObj)
-			go.update();//call 'update' of child objects
+			go.run();//call 'update' of child objects
+		processEvents();
 	}
 	
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.states.State#paint(java.awt.Graphics)
-	 */
 	@Override
 	public void paint(Graphics g)
 	{
@@ -78,60 +65,33 @@ public class MenuState extends State
 			go.paint(g);
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.states.State#getEvents()
-	 */
 	@Override
-	public EventManager getEvents()
+	public void processEvents()
 	{
-		for(GameObject go : mObj)
-			mStateEventMgr.addAll(go.getEvents());
-		EventManager tmp = null;
-		try
+		for(int i = 0; i < mEventMgr.size(); i++)
 		{
-			tmp = mStateEventMgr.clone();
-			mStateEventMgr.clear();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			e.printStackTrace();
-		}
-		return tmp;
-	}
-
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.states.State#pumpEvents(battleship.EventManager)
-	 */
-	@Override
-	public void pumpEvents(EventManager em)
-	{
-		for(int i = 0; i < em.size(); i++)
-		{
-			if(em.get(i).mEvent.equals("buttonClicked"))
+			if(mEventMgr.get(i).mEvent.equals("buttonClicked"))
 			{
-				mStateEventMgr.add(new Event("addState", "GameState"));
-				Button b = (Button)em.get(i).mParam;	
-				if(b.mName.equals("HostGame"))
+				//mEventMgr.add(new Event("addState", new GameState(mEventMgr)));
+				if(mEventMgr.get(i).mParam.equals("HostGame"))
 				{
-					mStateEventMgr.add(new Event("setState", "GameState"));
-					mStateEventMgr.add(new Event("mode", "Host"));
+					mEventMgr.add(new Event("setState", "GameState", "Main"));
+					mEventMgr.add(new Event("mode", "Host"));
 				}
-				else if(b.mName.equals("JoinGame"))
+				else if(mEventMgr.get(i).mParam.equals("JoinGame"))
 				{
-					mStateEventMgr.add(new Event("setState", "GameState"));
-					mStateEventMgr.add(new Event("mode", "Join"));
+					mEventMgr.add(new Event("setState", "GameState", "Main"));
+					mEventMgr.add(new Event("mode", "Join"));
 				}
-				else if(b.mName.equals("SinglePlayer"))
+				else if(mEventMgr.get(i).mParam.equals("SinglePlayer"))
 				{
-					mStateEventMgr.add(new Event("setState", "GameState"));
-					mStateEventMgr.add(new Event("mode", "Single"));
+					mEventMgr.add(new Event("setState", "GameState", "Main"));
+					mEventMgr.add(new Event("mode", "Single"));
 				}
-				em.consume(i);
+				mEventMgr.consume(i);
 			}
 		}
-		for(GameObject go : mObj)
-			go.pumpEvents(em);
+		for(int i = 0; i < mObj.size(); i++)
+			mObj.get(i).processEvents();
 	}
 }
