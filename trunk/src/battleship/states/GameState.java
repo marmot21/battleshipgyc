@@ -84,6 +84,8 @@ public class GameState extends State implements Server
 	public void exitState()
 	{
 		mStateEventMgr.add(new Event("deleteState", this));
+		mServer = null;
+		
 	}
 
 	/**
@@ -190,7 +192,7 @@ public class GameState extends State implements Server
 
 	@Override
 	public void sockOpen() {
-		System.out.println("open called");
+		mStateEventMgr.add(new Event("socket", "open"));
 	}
 
 	@Override
@@ -201,13 +203,13 @@ public class GameState extends State implements Server
 
 	@Override
 	public void sockClose() {
-		// TODO Auto-generated method stub
+		mStateEventMgr.add(new Event("socket", "close"));
 		
 	}
 
 	@Override
 	public void error(Event e) {
-		// TODO Auto-generated method stub
+		mStateEventMgr.add(e);
 		
 	}
 }
