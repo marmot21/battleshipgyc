@@ -29,9 +29,9 @@ public class GameImage extends GameObject
 	 * @param name The name used for reference
 	 * @param bounds The bounds of the object - x and y should be non-zero - unless used within another image
 	 */
-	public GameImage(String name, Rectangle bounds)
+	public GameImage(String name, Rectangle bounds, EventManager mEventMgr)
 	{
-		super(name, bounds);
+		super(name, bounds, mEventMgr);
 	}
 	
 	/**
@@ -40,59 +40,32 @@ public class GameImage extends GameObject
 	 * @param bounds The bounds of the object - x and y should be non-zero - unless used within another image
 	 * @param img The image to be used
 	 */
-	public GameImage(String name, Rectangle bounds, BufferedImage img)
+	public GameImage(String name, Rectangle bounds, EventManager mEventMgr, BufferedImage img)
 	{
-		super(name, bounds);
+		super(name, bounds, mEventMgr);
 		mImg = img;
 	}
-
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#getEvents()
-	 */
-	@Override
-	public EventManager getEvents()
-	{
-		
-		return null;
-	}
 	
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#paint(java.awt.Graphics)
-	 */
 	@Override
 	public void paint(Graphics g)
 	{
 		g.drawImage(mImg, mBounds.x, mBounds.y, null);
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#pumpEvents(battleship.EventManager)
-	 */
-	@Override
-	public void pumpEvents(EventManager em)
-	{
-
-	}
-
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#render()
-	 */
 	@Override
 	public void render()
 	{
 	
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see battleship.gameobjects.GameObject#update()
-	 */
 	@Override
-	public void update()
+	public void run()
+	{
+		
+	}
+	
+	@Override
+	public void processEvents()
 	{
 		
 	}

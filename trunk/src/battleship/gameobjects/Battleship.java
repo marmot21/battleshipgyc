@@ -50,10 +50,9 @@ public class Battleship extends GameObject
 	 * @param name The name of the Battleship.
 	 * @param bounds The bounds of the Battleship.
 	 */
-	public Battleship(String name, Rectangle bounds)
+	public Battleship(String name, Rectangle bounds, EventManager mEventMgr)
 	{
-		super(name, bounds);
-		mGameObjEventMgr = new EventManager();
+		super(name, bounds, mEventMgr);
 		this.mBounds.x = mInits.size()*70+400;
 		this.mBounds.y = ((mInits.size()-mInits.size()%2)/2)*26;
 		mInits.add(this);
@@ -65,13 +64,12 @@ public class Battleship extends GameObject
 	 * @param bounds The bounds of the Battleship.
 	 * @param img The image of the Battleship.
 	 */
-	public Battleship(String name, Rectangle bounds, BufferedImage img)
+	public Battleship(String name, Rectangle bounds, EventManager mEventMgr, BufferedImage img)
 	{
-		super(name, bounds);
+		super(name, bounds, mEventMgr);
 		mImgV = img;
 		bounds.width = mImgV.getWidth();
 		bounds.height = mImgV.getHeight();
-		mGameObjEventMgr = new EventManager();
 		this.mBounds.x = mInits.size()*70+400;
 		this.mBounds.y = ((mInits.size()-mInits.size()%2)/2)*26;
 		mInits.add(this);
@@ -84,14 +82,15 @@ public class Battleship extends GameObject
 	 * @param img The image of the Battleship.
 	 * @param img2 The rotated image of the Battleship.
 	 */
-	public Battleship(String name, Rectangle bounds, BufferedImage img, BufferedImage img2)
+	public Battleship(String name, Rectangle bounds, EventManager mEventMgr, BufferedImage img, BufferedImage img2)
 	{
-		this(name, bounds, img);
+		this(name, bounds, mEventMgr);
+		mImgV = img;
 		mImgH = img2;
 	}
 	
 	@Override
-	public void update()
+	public void run()
 	{
 		
 	}
@@ -111,42 +110,26 @@ public class Battleship extends GameObject
 		else
 			g.drawImage(mImgV, mBounds.x, mBounds.y, null);
 	}
-
+	
 	@Override
-	public EventManager getEvents()
+	public void processEvents()
 	{
-		EventManager tmp = null;
-		try
+		for(int i = 0; i < mEventMgr.size(); i++)
 		{
-			tmp = mGameObjEventMgr.clone();
-			mGameObjEventMgr.clear();
-		}
-		catch(CloneNotSupportedException e)
-		{
-			e.printStackTrace();
-		}
-		return tmp;
-	}
-
-	@Override
-	public void pumpEvents(EventManager em)
-	{
-		for(int i = 0; i < em.size(); i++)
-		{
-			if(em.get(i).mEvent.startsWith("setShips")) {
-				if(em.get(i).mParam.equals("SET"))
+			if(mEventMgr.get(i).mEvent.startsWith("setShips")) {
+				if(mEventMgr.get(i).mParam.equals("SET"))
 					STATE = SHIPS.SET;
 			}
-			else if(em.get(i).mEvent.startsWith("mouse") && STATE != SHIPS.SET)
+			else if(mEventMgr.get(i).mEvent.startsWith("mouse") && STATE != SHIPS.SET)
 			{
-				MouseEvent me = (MouseEvent) em.get(i).mParam;
-				if(em.get(i).mEvent.equals("mouseDragged") && STATE == SHIPS.FOLLOW) 
+				MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
+				if(mEventMgr.get(i).mEvent.equals("mouseDragged") && STATE == SHIPS.FOLLOW) 
 				{//if ship is being dragged then follow mouse
 					mBounds.x = me.getX() - mMouse.x;
 					mBounds.y = me.getY() - mMouse.y;
-					mGameObjEventMgr.add(new Event("repaint"));
+					mEventMgr.add(new Event("repaint"));
 				}
-				else if(em.get(i).mEvent.equals("mouseReleased"))
+				else if(mEventMgr.get(i).mEvent.equals("mouseReleased"))
 				{
 					if(STATE == SHIPS.FOLLOW && mStatusScreen.contains(mBounds))
 					{
@@ -156,14 +139,14 @@ public class Battleship extends GameObject
 						mBounds.x = mBounds.x/24*24;
 						if(mPrevPos.mSTATE == SHIPS.INIT)
 							mInits.remove(this);
-						mGameObjEventMgr.add(new Event("repaint"));
+						mEventMgr.add(new Event("repaint"));
 					}
 					else if(STATE == SHIPS.FOLLOW && !mStatusScreen.contains(mBounds))
 					{ //if the ship was dragged outside of the grid then return it to its prev. pos.
 						mBounds.x = mPrevPos.mPos.x;
 						mBounds.y = mPrevPos.mPos.y;
 						STATE = mPrevPos.mSTATE;
-						mGameObjEventMgr.add(new Event("repaint"));
+						mEventMgr.add(new Event("repaint"));
 					}
 					else if(STATE == SHIPS.NORMAL && !mStatusScreen.contains(mBounds))
 					{
@@ -172,7 +155,7 @@ public class Battleship extends GameObject
 						mPrevPos.mSTATE = STATE;
 					}
 				}
-				else if(em.get(i).mEvent.equals("mousePressed"))
+				else if(mEventMgr.get(i).mEvent.equals("mousePressed"))
 				{
 					if((STATE == SHIPS.INIT || STATE == SHIPS.NORMAL) && mBounds.contains(me.getPoint()))
 					{
@@ -184,7 +167,7 @@ public class Battleship extends GameObject
 						STATE = SHIPS.FOLLOW;
 					}
 				}
-				else if(em.get(i).mEvent.equals("mouseWheelMoved")) //rotate ship
+				else if(mEventMgr.get(i).mEvent.equals("mouseWheelMoved")) //rotate ship
 				{
 					if(STATE == SHIPS.FOLLOW)
 					{
@@ -199,7 +182,7 @@ public class Battleship extends GameObject
 							mBounds.width = mImgV.getWidth();
 							mBounds.height = mImgV.getHeight();
 						}
-						mGameObjEventMgr.add(new Event("repaint"));
+						mEventMgr.add(new Event("repaint"));
 					}	
 				}
 			}

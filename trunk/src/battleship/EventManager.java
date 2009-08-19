@@ -8,7 +8,7 @@ import java.util.Vector;
  * @author Amec
  */
 
-public class EventManager implements Cloneable
+public class EventManager
 {
 	private List<Event> mEvents = new Vector<Event>(); //Vector is thread-safe
 	
@@ -51,7 +51,7 @@ public class EventManager implements Cloneable
 	{
 		for(int i = 0; i < mEvents.size(); i++)
 		{
-			if(mEvents.get(i).mEvent.startsWith("mouse") || mEvents.get(i).mEvent.startsWith("key"))
+			if(mEvents.get(i).mEvent.startsWith("mouse") || mEvents.get(i).mEvent.startsWith("key") || mEvents.get(i).mToRemove)
 				mEvents.remove(i);
 		}
 	}
@@ -62,7 +62,7 @@ public class EventManager implements Cloneable
 	 */
 	public synchronized void consume(int eventNum)
 	{
-		mEvents.remove(eventNum);
+		mEvents.get(eventNum).mToRemove = true;
 	}
 	
 	/**
@@ -88,18 +88,6 @@ public class EventManager implements Cloneable
 	public synchronized void print()
 	{
 		for(Event e : mEvents)
-			System.out.println(e.mEvent);
-	}
-	
-	/**
-	 * Returns a copy of the EventManager
-	 * @return
-	 */
-	@Override
-	public EventManager clone() throws CloneNotSupportedException
-	{
-		EventManager tmp = new EventManager();
-		tmp.addAll(this);
-		return tmp;
+			System.out.println(e.mEvent + ", " + e.mParam + ", " + e.mTarget);
 	}
 }

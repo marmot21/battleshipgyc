@@ -39,28 +39,10 @@ public class AIBombState extends State {
 	}
 
 	/* (non-Javadoc)
-	 * @see battleship.states.State#getEvents()
-	 */
-	@Override
-	public EventManager getEvents() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
 	 * @see battleship.states.State#paint(java.awt.Graphics)
 	 */
 	@Override
 	public void paint(Graphics g) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see battleship.states.State#pumpEvents(battleship.EventManager)
-	 */
-	@Override
-	public void pumpEvents(EventManager em) {
 		// TODO Auto-generated method stub
 
 	}
@@ -72,6 +54,12 @@ public class AIBombState extends State {
 	public void run() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void processEvents() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
