@@ -205,10 +205,4 @@ public class Battleship extends GameObject
 			}
 		}
 	}
-
-	@Override
-	public void reInit() {
-		STATE = SHIPS.NORMAL;
-		
-	}
 }

@@ -171,10 +171,4 @@ public class Playfield extends GameObject
 	{
 		return mXY;
 	}
-
-	@Override
-	public void reInit() {
-		for(GameObject go : mObj)
-			go.reInit();
-	}
 }

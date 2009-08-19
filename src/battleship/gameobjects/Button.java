@@ -206,10 +206,4 @@ public class Button extends GameObject
 			}//end if mouse event
 		}//end for loop
 	}//end pump events
-
-	@Override
-	public void reInit() {
-		STATE = BUTTON.NORMAL;
-		render();
-	}
 }//end class

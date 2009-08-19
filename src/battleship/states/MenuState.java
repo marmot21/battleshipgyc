@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import battleship.Event;
 import battleship.EventManager;
 import battleship.Main;
+import battleship.gameobjects.Background;
 import battleship.gameobjects.Button;
 import battleship.gameobjects.GameImage;
 import battleship.gameobjects.GameObject;
@@ -26,6 +27,7 @@ public class MenuState extends State
 	public MenuState()
 	{
 		mName = "MenuState";
+		mObj.add(new Background("BG", new Rectangle(0, 0, Main.mDim.width, 300)));
 		mObj.add(new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1), GameObject.loadImage("res/img/HostGame.png")));
 		mObj.add(new Button("JoinGame", new Rectangle((800-210)/2, 256+128, 1, 1), GameObject.loadImage("res/img/JoinGame.png")));
 		mObj.add(new Button("SinglePlayer", new Rectangle((800-210)/2+210+32, 256+128, 1, 1), GameObject.loadImage("res/img/SinglePlayer.png")));
@@ -49,8 +51,7 @@ public class MenuState extends State
 	@Override
 	public void exitState()
 	{
-		for(GameObject go : mObj)
-			go.reInit();
+		
 	}
 
 	/**
