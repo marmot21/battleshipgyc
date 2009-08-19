@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import battleship.EventManager;
 import battleship.Main;
 
 public class Background extends GameObject

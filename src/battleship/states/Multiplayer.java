@@ -6,16 +6,16 @@ package battleship.states;
 import java.awt.Graphics;
 
 /**
- * @author Daniel
+ * @author Obi
  *
  */
-public class AIBombState extends State {
+public class Multiplayer extends State {
 
 	/**
-	 * Default constructor
+	 * 
 	 */
-	public AIBombState() {
-		mName = "AIBombState";
+	public Multiplayer() {
+		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)
@@ -46,18 +46,21 @@ public class AIBombState extends State {
 	}
 
 	/* (non-Javadoc)
+	 * @see battleship.states.State#processEvents()
+	 */
+	@Override
+	public void processEvents() {
+		// TODO Auto-generated method stub
+
+	}
+
+	/* (non-Javadoc)
 	 * @see battleship.states.State#run()
 	 */
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public void processEvents() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

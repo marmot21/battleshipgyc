@@ -27,21 +27,21 @@ public interface Client{
 	
 public class cClient extends Thread
 {
-	static Vector<Client> listener = new Vector<Client>();
-	static Socket sock;
-	static BufferedReader bReader;
-	static PrintWriter pWriter;
-	static String theHost="localHost";
-	String name;
-	int thePort=5926;		//The communications port on the server.
+	private static Vector<Client> listener = new Vector<Client>();
+	private static Socket sock;
+	private static BufferedReader bReader;
+	private static PrintWriter pWriter;
+	private static String theHost="localHost";
+	private String name;
+	private int thePort=5926;		//The communications port on the server.
 
 	
-	static Thread chatThread = null;
+	private static Thread chatThread = null;
 	//java.awt.List chatList;
 
 
 	
-	public boolean output(String str) 
+	private boolean output(String str) 
 	{
 		try 
 		{
@@ -92,7 +92,7 @@ public class cClient extends Thread
 			} catch (Exception e) 
 			{
 				for(Client go : listener)
-					go.error(new Event("sockError","unable to connect"));
+					go.error(new Event("error","Unable to connect"));
 				sock = null;
 			}
 			try{ Thread.sleep( 100 ); } catch(InterruptedException e){};
@@ -118,7 +118,8 @@ public class cClient extends Thread
 
 					if(cmd.equals("logout")) 
 					{
-						
+						for(Client go : listener)
+							go.clientMsg(new Event("client", val));
 					}
 					else
 					if(cmd.equals("login")) 
