@@ -134,8 +134,10 @@ public class Playfield extends GameObject
 		
 		for(int i = 0; i < mObj.size(); i++)
 			mObj.get(i).processEvents();
-		if(mFuSM != null){
+		if(mFuSM != null)
+		{
 			mFuSM.processEvents(mEventMgr); //pass on events to the FuSM
+			mFuSM.getState().processEvents();
 		}
 	}
 	

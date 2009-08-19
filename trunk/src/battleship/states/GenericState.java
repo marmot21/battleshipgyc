@@ -44,8 +44,8 @@ public class GenericState extends State
 	}
 
 	@Override
-	public void processEvents() {
-		// TODO Auto-generated method stub
+	public void processEvents()
+	{
 		
 	}
 }

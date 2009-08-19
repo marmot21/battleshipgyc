@@ -153,7 +153,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	public void run()
 	{
 		mEventMgr.add(new Event("setState", "MenuState", "Main")); //enter the Menu state
-		//mFSM.removeState("GenericState");//removes the generic state from the FSM
+		mFSM.removeState("GenericState");//removes the generic state from the FSM
 		boolean paint;
 		while(true)
 		{
@@ -164,7 +164,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 			mFSM.getState().run(); //update current state
 			mFSM.processEvents(mEventMgr);
 			mFSM.getState().processEvents();
-			mEventMgr.print();
+			//mEventMgr.print();
 			for(int i = 0; i < mEventMgr.size(); i++)
 			{
 				if(mEventMgr.get(i).mEvent.equals("error"))
@@ -206,10 +206,6 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		}
 	}
 	
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.Canvas#update(java.awt.Graphics)
-	 */
 	@Override
 	public void update(Graphics g)
 	{
@@ -217,110 +213,66 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		paint(g);
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
-	 */
 	@Override
 	public void mouseDragged(MouseEvent arg0)
 	{
 		mInputEventMgr.add(new Event("mouseDragged", arg0));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
-	 */
 	@Override
 	public void mouseMoved(MouseEvent arg0)
 	{
 		mInputEventMgr.add(new Event("mouseMoved", arg0));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-	 */
 	@Override
 	public void mouseClicked(MouseEvent arg0)
 	{
 		mInputEventMgr.add(new Event("mouseClicked", arg0));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-	 */
 	@Override
 	public void mouseEntered(MouseEvent arg0)
 	{
 		mInputEventMgr.add(new Event("mouseEntered", arg0));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-	 */
 	@Override
 	public void mouseExited(MouseEvent arg0)
 	{
 		mInputEventMgr.add(new Event("mouseExited", arg0));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-	 */
 	@Override
 	public void mousePressed(MouseEvent arg0)
 	{
 		mInputEventMgr.add(new Event("mousePressed", arg0));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-	 */
 	@Override
 	public void mouseReleased(MouseEvent arg0)
 	{
 		mInputEventMgr.add(new Event("mouseReleased", arg0));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
-	 */
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent arg0)
 	{
 		mInputEventMgr.add(new Event("mouseWheelMoved", arg0));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
-	 */
 	@Override
 	public void keyPressed(KeyEvent arg0)
 	{
 		mInputEventMgr.add(new Event("keyPressed", arg0));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
-	 */
 	@Override
 	public void keyReleased(KeyEvent arg0)
 	{	
 		mInputEventMgr.add(new Event("keyReleased", arg0));
 	}
 
-	/**
-	 * (non-Javadoc)
-	 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
-	 */
 	@Override
 	public void keyTyped(KeyEvent arg0)
 	{

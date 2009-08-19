@@ -21,14 +21,17 @@ public class UserState extends State {
 	/**
 	 * Default Constructor
 	 */
-	public UserState() {
+	public UserState(EventManager mEventMgr)
+	{
 		mName = "UserState";
+		this.mEventMgr = mEventMgr;
 	}
 
 	@Override
-	public void enterState() {
+	public void enterState()
+	{
 		mEventMgr.add(new Event("setField", "TargetArrows"));//Draw targeting lines
-		mEventMgr.add(new Event("visibility", false, "BStartGame"));//set button "StartGame" to invisible
+		mEventMgr.add(new Event("visibility", false, "StartGame"));//set button "StartGame" to invisible
 	}
 
 	@Override
@@ -42,12 +45,16 @@ public class UserState extends State {
 
 	}
 
-	public void pumpEvents(EventManager em) {
-		for(int i=0; i<em.size(); i++) {
-			if(em.get(i).mEvent.startsWith("mouse"))
+
+	@Override
+	public void processEvents()
+	{
+		for(int i=0; i < mEventMgr.size(); i++)
+		{
+			if(mEventMgr.get(i).mEvent.startsWith("mouse"))
 			{
-				MouseEvent me = (MouseEvent) em.get(i).mParam;
-				if(em.get(i).mEvent.equals("mousePressed")
+				MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
+				if(mEventMgr.get(i).mEvent.equals("mousePressed")
 						&& Battleship.mStatusScreen.contains(me.getPoint()))
 				{
 					//Playfield.getgridPoint()
@@ -61,11 +68,4 @@ public class UserState extends State {
 		// TODO Auto-generated method stub
 
 	}
-
-	@Override
-	public void processEvents() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
