@@ -44,6 +44,7 @@ public class EventManager
 		return mEvents.get(eventNum);
 	}
 	
+	
 	/**
 	 * 'Flushes' the EventManager of all one time events.
 	 */
@@ -62,7 +63,8 @@ public class EventManager
 	 */
 	public synchronized void consume(int eventNum)
 	{
-		mEvents.get(eventNum).mToRemove = true;
+		//mEvents.get(eventNum).mToRemove = true;
+		mEvents.remove(eventNum);
 	}
 	
 	/**

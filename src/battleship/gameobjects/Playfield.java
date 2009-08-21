@@ -21,7 +21,7 @@ import battleship.FiniteStateMachine;
 
 public class Playfield extends GameObject
 {
-	static public Dimension mGridSize;//TODO:see if we can get this to be non-static - if need be
+	public Dimension mGridSize;//TODO:see if we can get this to be non-static - if need be
 	//All the ships and bombs etc in the grid
 	public List<GameObject> mObj = new ArrayList<GameObject>();
 	/**
@@ -30,7 +30,7 @@ public class Playfield extends GameObject
 	 * Z is the status of the ship at that position
 	 */
 	public int Grid[][][] = new int[10][10][1];
-	private static Point mXY = new Point(-1, -1);
+	private Point mXY = new Point(-1, -1);
 	private boolean mTargetArrows = false;
 	/**
 	 * Fuzzy State Machine.
@@ -142,16 +142,16 @@ public class Playfield extends GameObject
 		}
 	}
 	
-	/**
+	/*
 	 * Returns the size of the individual grid blocks
 	 * @return Dimension Object
 	 */
-	public static Dimension getgridSize()
-	{
-		return mGridSize;
-	}
-	public static Point getgridPoint()
-	{
-		return mXY;
-	}
+	//public static Dimension getgridSize()
+	//{
+	//	return mGridSize;
+	//}
+	//public static Point getgridPoint()
+	//{
+	//	return mXY;
+	//}
 }

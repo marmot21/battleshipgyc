@@ -73,6 +73,8 @@ public class FiniteStateMachine
 	 */
 	public void removeState(State state)
 	{
+		State st = 	mStates.get(get(state));
+		st = null;
 		mStates.remove(state);
 	}
 	
@@ -82,10 +84,22 @@ public class FiniteStateMachine
 	 */
 	public State getState()
 	{
-		//(mStates.size() > this.mCurrentState)
 			return mStates.get(mCurrentState);
-		
-		//return null;
+	}
+	
+	/**
+	 * Returns a int place holder for the state
+	 * @param state
+	 * The state
+	 * @return
+	 * Index of the state. -1 if not found.
+	 */
+	protected int get(State state)
+	{
+		for(int i=0; i<mStates.size(); i++)
+			if(mStates.get(i).equals(state))
+				return i;
+		return -1;
 	}
 	
 	/**
