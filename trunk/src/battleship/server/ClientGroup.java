@@ -21,6 +21,7 @@ public class ClientGroup extends Thread
 		ClientThread tempThread;
 		tempThread = new ClientThread(sock, this);
 		chatGroup.addElement(tempThread);
+		tempThread.setName("ClientHdl");
 		tempThread.start();
 	}
 	
@@ -71,8 +72,8 @@ public class ClientGroup extends Thread
 				sendMessage(client.getAlias(), client.getAlias(), "granted");
 				if(!client.getAlias().equals("host"))
 					sendMessage(client.getAlias(), "joined");
-				//sendMessage(client.getAlias()+"||"+client.getAlias()+" has entered the room.", cmd);
-				//sendMessage(calcList(), "list");
+				sendMessage(client.getAlias()+"||"+client.getAlias()+" has entered the room.", cmd);
+				sendMessage(calcList(), "list");
 				return true;
 			}
 			if(cmd.equals("logout")) 	// "logout" = one of the clients is disconnecting.

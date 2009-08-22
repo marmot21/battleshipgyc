@@ -172,6 +172,7 @@ public class GameState extends State implements Server, Client
 					mPrint.add("Socket open, waiting for local client...");
 					cClient.addClientListener(this);
 					mClient = new cClient();
+					mClient.setName("Client");
 					mClient.start();
 					cClient.login("127.0.0.1", "host");
 					mSTATE = STATE.hRUNNING;

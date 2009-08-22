@@ -119,6 +119,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		
 		//Start the main thread
 		Thread t = new Thread(this);
+		t.setName("BattleShip-Main");
 		t.start();
 	}
 	

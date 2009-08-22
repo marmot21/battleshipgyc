@@ -127,6 +127,7 @@ public class Playfield extends GameObject
 				 }
 				 else if(mEventMgr.get(i).mEvent.startsWith("setField"))
 				 {
+					 System.out.println("arrows");
 					 if(mEventMgr.get(i).mParam.equals("TargetArrows"))
 						 mTargetArrows = true;
 					 else if(mEventMgr.get(i).mParam.equals("Normal"))
