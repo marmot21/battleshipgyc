@@ -3,6 +3,7 @@
  */
 package battleship.states;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.StringTokenizer;
@@ -86,12 +87,12 @@ public class Multiplayer extends State implements Client
 		return buf.toString();
 	}
 	
-	private int[][][] convertString(String str)
+	static int[][][] convertString(String str)
 	{
 		StringTokenizer st = new StringTokenizer(str,"&");
 		String tmp;
 		int[][][] grid = new int[10][10][2];
-		for(int i = 0; i<st.countTokens(); i++)
+		for(int i = 0; i<=st.countTokens(); i++)
 		{
 			tmp = st.nextToken();
 			grid[(int)tmp.charAt(0)-48][(int)tmp.charAt(1)-48][(int)tmp.charAt(2)-48] = (int)tmp.charAt(3)-48;
@@ -126,8 +127,11 @@ public class Multiplayer extends State implements Client
 
 	@Override
 	public void paint(Graphics g) {
-		// TODO Auto-generated method stub
-
+		g.setColor(Color.GREEN);
+		if(mSTATE == STATE.CURRENT)
+			g.drawString("Your Turn", 400, 400);
+		else //if(mSTATE == STATE.OTHER)
+			g.drawString("Opponents Turn", 400, 400);
 	}
 
 
@@ -140,13 +144,16 @@ public class Multiplayer extends State implements Client
 			{
 				setGrid();
 				cClient.sendMessage(convertArray());
+				if(mSTATE==STATE.WAIT)
+					mEventMgr.add(new Event("setField", "TargetArrows"));
 				mEventMgr.consume(i);
 			}
 			else if(mEventMgr.get(i).mEvent.equals("grid"))
 			{
 				//Draw targeting lines
+				mSTATE = STATE.CURRENT;
 				if(GameState.getMSTATE() == GameState.STATE.hMULTI)
-				mEventMgr.add(new Event("setField", "TargetArrows"));
+					mEventMgr.add(new Event("setField", "TargetArrows"));
 				mOGrid = (int[][][])mEventMgr.get(i).mParam;
 				mEventMgr.consume(i);
 			}
@@ -170,7 +177,7 @@ public class Multiplayer extends State implements Client
 					{
 						mSTATE = STATE.OTHER;
 						mEventMgr.add(new Event("addBomb", mPGrid));
-						mEventMgr.add(new Event("setField", "Normal"));
+						//mEventMgr.add(new Event("setField", "Normal"));
 						cClient.sendMessage("turn");
 						if(mOGrid[p.x][p.y][0] == 0)
 							mPGrid[p.x][p.y][1] = 1;
@@ -208,11 +215,8 @@ public class Multiplayer extends State implements Client
 
 	@Override
 	public void shipsRecieve(String str) {
-		mSTATE = STATE.RECEIVED;
-		System.out.println("message recieved "+str);
 		if(str.startsWith("grid"))
-			mEventMgr.add(new Event("grid", convertString(str.substring(4))));
-		else
-			mEventMgr.add(new Event("clientMessage", str));
+			mSTATE = STATE.RECEIVED;
+		System.out.println("message recieved "+str);
 	}
 }
