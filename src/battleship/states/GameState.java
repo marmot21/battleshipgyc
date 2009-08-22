@@ -199,6 +199,7 @@ public class GameState extends State implements Server, Client
 					mPrint.add("Someone joined the game!");
 					mEventMgr.add(new Event("visibility", true, "StartGame"));
 				}
+				//they left the game
 				else if(mEventMgr.get(i).mParam.equals("clientlogout"))
 				{
 					mPrint.add("Your opponent left the game :(");
@@ -295,7 +296,10 @@ public class GameState extends State implements Server, Client
 
 	@Override
 	public void shipsRecieve(String str) {
-		//TODO:events are added in multiplayer for this call
+		if(str.startsWith("grid"))
+			mEventMgr.add(new Event("grid", Multiplayer.convertString(str.substring(4))));
+		else
+			mEventMgr.add(new Event("clientMessage", str));
 	}
 
 	/**
