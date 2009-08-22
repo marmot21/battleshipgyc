@@ -67,9 +67,19 @@ public class Multiplayer extends State implements Client
 		for(int iX = 0; iX<10; iX++){
 			for(int iY = 0; iY<10; iY++){
 				if(mPGrid[iX][iY][0]!=0)
-					buf.append(iX+iY+0+mPGrid[iX][iY][0]+"&");
+				{
+					buf.append(iX);
+					buf.append(iY);
+					buf.append(0);
+					buf.append(mPGrid[iX][iY][0]+"&");
+				}
 				if(mPGrid[iX][iY][1]!=0)
-					buf.append(iX+iY+1+mPGrid[iX][iY][1]+"&");
+				{
+					buf.append(iX);
+					buf.append(iY);
+					buf.append(1);
+					buf.append(mPGrid[iX][iY][0]+"&");
+				}
 			}
 		}
 		if (buf.length() >0 ) buf.setLength(buf.length()-1);
@@ -84,7 +94,7 @@ public class Multiplayer extends State implements Client
 		for(int i = 0; i<st.countTokens(); i++)
 		{
 			tmp = st.nextToken();
-			grid[tmp.charAt(0)][tmp.charAt(1)][tmp.charAt(2)] = (int)tmp.charAt(3);
+			grid[(int)tmp.charAt(0)-48][(int)tmp.charAt(1)-48][(int)tmp.charAt(2)-48] = (int)tmp.charAt(3)-48;
 		}
 		return grid;
 	}
@@ -130,6 +140,7 @@ public class Multiplayer extends State implements Client
 			{
 				setGrid();
 				cClient.sendMessage(convertArray());
+				mEventMgr.consume(i);
 			}
 			else if(mEventMgr.get(i).mEvent.equals("grid"))
 			{
@@ -137,13 +148,15 @@ public class Multiplayer extends State implements Client
 				if(GameState.getMSTATE() == GameState.STATE.hMULTI)
 				mEventMgr.add(new Event("setField", "TargetArrows"));
 				mOGrid = (int[][][])mEventMgr.get(i).mParam;
+				mEventMgr.consume(i);
 			}
 			else if(mEventMgr.get(i).mEvent.equals("clientMessage"))
 			{
 				if(mEventMgr.get(i).mParam.equals("turn"))
 				{
-					mSTATE = STATE.OTHER;
-					mEventMgr.add(new Event("setField", "Toggle"));
+					mSTATE = STATE.CURRENT;
+					mEventMgr.add(new Event("setField", "TargetArrows"));
+					mEventMgr.consume(i);
 				}
 			}
 			else if(mEventMgr.get(i).mEvent.startsWith("mouse"))
@@ -153,14 +166,15 @@ public class Multiplayer extends State implements Client
 				{
 					//temp point
 					Point p = Playfield.getgridPoint();
-					if(p.x >=0 && p.y >= 0)
+					if(p.x >=0 && p.y >= 0 && mSTATE == STATE.CURRENT)
 					{
+						mSTATE = STATE.OTHER;
 						mEventMgr.add(new Event("addBomb", mPGrid));
 						mEventMgr.add(new Event("setField", "Normal"));
 						cClient.sendMessage("turn");
-						if(mPGrid[p.x][p.y][0] == 0)
+						if(mOGrid[p.x][p.y][0] == 0)
 							mPGrid[p.x][p.y][1] = 1;
-						else if(mPGrid[p.x][p.y][0] > 0)
+						else if(mOGrid[p.x][p.y][0] > 0)
 							mPGrid[p.x][p.y][1] = 2;
 					}
 				}
@@ -195,6 +209,7 @@ public class Multiplayer extends State implements Client
 	@Override
 	public void shipsRecieve(String str) {
 		mSTATE = STATE.RECEIVED;
+		System.out.println("message recieved "+str);
 		if(str.startsWith("grid"))
 			mEventMgr.add(new Event("grid", convertString(str.substring(4))));
 		else

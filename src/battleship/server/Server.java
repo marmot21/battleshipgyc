@@ -47,6 +47,7 @@ public class cServer extends Thread
 		}
 		System.out.println("Socket created. Waiting for clients.");
 		group=new ClientGroup();
+		group.setName("ClientGroup");
 		group.start();
 	}
 	
