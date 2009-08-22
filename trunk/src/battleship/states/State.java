@@ -15,8 +15,13 @@ import battleship.gameobjects.GameObject;
 public abstract class State
 {
 	public String mName = ""; //Name of the object
-	protected List<GameObject> mObj = new ArrayList<GameObject>(); //All the objects which the state controls
-	protected EventManager mEventMgr = new EventManager();//Handle for the event manager
+	protected List<GameObject> mObj = null;// = new ArrayList<GameObject>(); //All the objects which the state controls
+	protected EventManager mEventMgr = null;// = new EventManager();//Handle for the event manager
+	
+	public State() {
+		mObj = new ArrayList<GameObject>(); //All the objects which the state controls
+		mEventMgr = new EventManager();//Handle for the event manager
+	}
 	
 	/**
 	 * The method called when entering a state

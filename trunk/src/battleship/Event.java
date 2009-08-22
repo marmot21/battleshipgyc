@@ -55,6 +55,12 @@ public class Event
 		mParam = obj;
 	}
 	
+	/**
+	 * Constructor to use if you wish to define a destination object
+	 * @param str The event string
+	 * @param obj An object that is to be passed
+	 * @param target The target object that the event will be sent too
+	 */
 	public Event(String str, Object obj, String target)
 	{
 		mEvent = str;

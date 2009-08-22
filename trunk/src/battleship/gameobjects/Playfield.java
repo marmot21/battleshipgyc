@@ -21,7 +21,7 @@ import battleship.FiniteStateMachine;
 
 public class Playfield extends GameObject
 {
-	public Dimension mGridSize;//TODO:see if we can get this to be non-static - if need be
+	public static Dimension mGridSize;//TODO:see if we can get this to be non-static - if need be
 	//All the ships and bombs etc in the grid
 	public List<GameObject> mObj = new ArrayList<GameObject>();
 	/**
@@ -29,8 +29,8 @@ public class Playfield extends GameObject
 	 * X and Y are the grid position
 	 * Z is the status of the ship at that position
 	 */
-	public int Grid[][][] = new int[10][10][1];
-	private Point mXY = new Point(-1, -1);
+	public int mGrid[][][] = new int[10][10][2];
+	private static Point mXY = new Point(-1, -1);
 	private boolean mTargetArrows = false;
 	/**
 	 * Fuzzy State Machine.
@@ -85,11 +85,25 @@ public class Playfield extends GameObject
 			g.drawLine(mBounds.x, mBounds.y+i*mGridSize.height, mBounds.x+mBounds.width, mBounds.y+i*mGridSize.height);
 		}
 		if(mTargetArrows && mXY.x>=0 && mXY.y>=0){
-			g.setColor(new Color(255, 0, 0, 128));//Vert line
+			g.setColor(new Color(255, 0, 0, 128));//Vert line - red
 			g.fillRect(mXY.x*mGridSize.width+24, 0, mGridSize.width, mBounds.height);
 
-			g.setColor(new Color(0, 0, 255, 128));//Hor line
+			g.setColor(new Color(0, 0, 255, 128));//Hor line - blue
 			g.fillRect(24, mXY.y*mGridSize.height, mBounds.width, mGridSize.height);
+			
+			//Draw hits and dropped bombs
+			for(int iX = 0; iX<10; iX++)
+				for(int iY = 0; iY<10; iY++)
+					if(mGrid[iX][iY][1] == 1)
+					{
+						g.setColor(new Color(255,255,255,125));
+						g.fillRect(iX*mGridSize.width+24, iY*mGridSize.height, mGridSize.width, mGridSize.height);
+					}
+					else if(mGrid[iX][iY][1] == 2)
+					{
+						g.setColor(new Color(0,255,0,125));
+						g.fillRect(iX*mGridSize.width+24, iY*mGridSize.height, mGridSize.width, mGridSize.height);
+					}
 		}
 		for(int i = 0; i < mObj.size(); i++)
 			mObj.get(i).paint(g);
@@ -104,12 +118,21 @@ public class Playfield extends GameObject
 		{
 			 for(int i = 0; i < mEventMgr.size(); i++)
 			 { 
-				 if(mEventMgr.get(i).mEvent.startsWith("setField"))
+				 if(mEventMgr.get(i).mEvent.equals("addBomb"))
+				 {
+					 mGrid = (int[][][]) mEventMgr.get(i).mParam;
+					 System.out.println("bomb added");
+					 mEventMgr.add(new Event("repaint"));
+					 mEventMgr.consume(i);
+				 }
+				 else if(mEventMgr.get(i).mEvent.startsWith("setField"))
 				 {
 					 if(mEventMgr.get(i).mParam.equals("TargetArrows"))
 						 mTargetArrows = true;
 					 else if(mEventMgr.get(i).mParam.equals("Normal"))
 						 mTargetArrows = false;
+					 else if(mEventMgr.get(i).mParam.equals("Toggle"))
+						 mTargetArrows = !mTargetArrows;
 					 mEventMgr.consume(i);
 				 }
 				 else if(mEventMgr.get(i).mEvent.startsWith("mouse"))
@@ -119,12 +142,14 @@ public class Playfield extends GameObject
 					 {
 						 if(mBounds.contains(me.getPoint()))
 						 { 
+							 //set which grid square the mouse is in
 							 mXY.x = me.getX()/mGridSize.width - mBounds.x/mGridSize.width;   
 							 mXY.y = me.getY()/mGridSize.height - mBounds.y/mGridSize.height;
 							 mEventMgr.add(new Event("repaint"));
 						 }
 						 else
 						 {
+							 //mouse not over the grid
 							 mXY.x = -1;
 							 mXY.y = -1;
 						 } 
@@ -150,8 +175,8 @@ public class Playfield extends GameObject
 	//{
 	//	return mGridSize;
 	//}
-	//public static Point getgridPoint()
-	//{
-	//	return mXY;
-	//}
+	public static Point getgridPoint()
+	{
+		return mXY;
+	}
 }

@@ -50,35 +50,47 @@ public class ClientGroup extends Thread
 												//    - called by ClientThread directly
 		StringTokenizer st;
 										
-		if( str.startsWith("bye") )	// command to disconnect = "bye"
-		{
-			sendMessage(client.getAlias()+" has left the room.", "logout");
-			client=null;
-			cleanHouse();
-			return false;
-		}
+		//if( str.startsWith("bye") )	// command to disconnect = "bye"
+		//{
+		//	sendMessage(client.getAlias()+" has left the room.", "logout");
+		//	client=null;
+		//	cleanHouse();
+		//	return false;
+		//}
 		st = new StringTokenizer( str, "||");
 		if(st != null ) 
 		{
 			String cmd, val;
 			cmd = st.nextToken();
 			val = st.nextToken();
-			if(cmd.equals("login"))		// "login" = a new person is logging in. 
+			if(cmd.equals("request") && chatGroup.size() <= 2)		// "login" = a new person is logging in. 
 			{									// Set the alias, send a welcome message, and
 												// send everyone an updated list of Client names 		
+				System.out.println(chatGroup.size());
 				client.setAlias( val );
-				sendMessage(client.getAlias()+"||"+client.getAlias()+" has entered the room.", cmd);
-				sendMessage(calcList(), "list");
+				sendMessage(client.getAlias(), client.getAlias(), "granted");
+				if(!client.getAlias().equals("host"))
+					sendMessage(client.getAlias(), "joined");
+				//sendMessage(client.getAlias()+"||"+client.getAlias()+" has entered the room.", cmd);
+				//sendMessage(calcList(), "list");
 				return true;
 			}
 			if(cmd.equals("logout")) 	// "logout" = one of the clients is disconnecting.
 			{									// Inform everyone, and stop the connection.
-				sendMessage(client.getAlias()+" has left the room.", cmd);
+				sendMessage(client.getAlias(), "logout");
+				//sendMessage(client.getAlias()+" has left the room.", cmd);
 				client=null;
 				cleanHouse();
 				return false;
 			}
-			if(cmd.equals("say")) 		// send a message to the whole 'room'
+			if(cmd.equals("message"))
+			{
+				if(client.getAlias().equals("host"))
+					sendMessage(val, "client", cmd);
+				else
+					sendMessage(val, "host", cmd);
+			}
+			/*if(cmd.equals("say")) 		// send a message to the whole 'room'
 			{
 				sendMessage(client.getAlias()+" says: "+ val, cmd);
 				return true;
@@ -92,7 +104,7 @@ public class ClientGroup extends Thread
 			{									// but not everyone
 				sendMessage(client.getAlias()+" murmurs: "+val,st.nextToken(),cmd);
 				return true;
-			}
+			}*/
 		}
 		return true;
 	}
@@ -130,6 +142,7 @@ public class ClientGroup extends Thread
 	{
 		while( true ) 
 		{
+			//System.out.println(chatGroup.size());
 			try
 			{ 
 				sleep(100); 

@@ -23,6 +23,9 @@ public class cServer extends Thread
 {
 	ServerSocket servSock=null;
 	ClientGroup group;
+	/**
+	 * List of objects that are using this server
+	 */
 	static Vector<Server> listener = new Vector<Server>();
 	
 	/**
@@ -54,6 +57,7 @@ public class cServer extends Thread
 	
 	public void run()
 	{
+		setName("Server");
 		while (servSock!=null)
 		{
 			Socket tempSock;

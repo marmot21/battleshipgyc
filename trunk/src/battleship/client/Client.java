@@ -21,19 +21,22 @@ import battleship.Event;
 
 public interface Client{
 
+	String cName = null;
+	
 	public void error(Event e);
 	public void connected();
 	public void clientMsg(Event e);
+	public void shipsRecieve(String str);
 	
-public class cClient extends Thread
+public static class cClient extends Thread
 {
 	private static Vector<Client> listener = new Vector<Client>();
 	private static Socket sock;
 	private static BufferedReader bReader;
 	private static PrintWriter pWriter;
 	private static String theHost="localHost";
-	private String name;
-	private int thePort=5926;		//The communications port on the server.
+	private static String mName;
+	private static int thePort=25142;		//The communications port on the server.
 
 	
 	private static Thread chatThread = null;
@@ -41,7 +44,7 @@ public class cClient extends Thread
 
 
 	
-	private boolean output(String str) 
+	private static boolean output(String str) 
 	{
 		try 
 		{
@@ -58,15 +61,26 @@ public class cClient extends Thread
 		listener.add(obj);
 	}
 	
-	public static void logon(String host)
+	/**
+	 * Wrapper for output
+	 * @param str The message to send
+	 */
+	public static void sendMessage(String str)
+	{
+		output("message||"+str);
+	}
+	
+	public static void login(String host, String name)
 	{//Login to server
 		theHost=host;
+		mName = name;
 		chatThread = new Thread();
 		chatThread.start();
 	}
 	
 	public static void logout()
 	{
+		output("logout");
 		try 
 		{
 			bReader.close();
@@ -100,9 +114,7 @@ public class cClient extends Thread
 
 		if(chatThread!=null)
 		{//connect to the server
-			output("login||"+name);
-			for(Client go : listener)
-				go.connected();
+			output("request||"+mName);
 		}
 		while (sock != null && bReader != null && chatThread != null) 
 		{
@@ -119,20 +131,31 @@ public class cClient extends Thread
 					if(cmd.equals("logout")) 
 					{
 						for(Client go : listener)
-							go.clientMsg(new Event("client", val));
+							go.clientMsg(new Event("client", val+cmd));
 					}
 					else
-					if(cmd.equals("login")) 
+					if(cmd.equals("granted")) 
 					{
 						//outputArea.append(st.nextToken()+"\n");
+						for(Client go : listener)
+							go.connected();
 					}
-					else 
+					else if(cmd.equals("joined"))
 					{
+						for(Client go : listener)
+							go.clientMsg(new Event("client", cmd));
 						//outputArea.append( val + "\n" );
+					}
+					else if(cmd.equals("message"))
+					{
+						for(Client go : listener)
+							go.shipsRecieve(val);
 					}
 				}
 				else 
 				{
+					//for(Client go : listener)
+					//	go.clientMsg(new Event("client", str));
 					//outputArea.append(str + "\n");
 				}
 			} catch (IOException e) 
