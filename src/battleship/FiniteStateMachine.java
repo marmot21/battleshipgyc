@@ -157,6 +157,9 @@ public class FiniteStateMachine
 				//if current event is a change state then change it and consume event
 				else if(eventMgr.get(i).mEvent.equals("setState"))
 				{
+					//if(eventMgr.get(i).mTarget.equals("FuSM"))
+					//	System.out.println("state shange consumed FuSM: " + 
+					//			eventMgr.get(i).mParam);
 					if(setState((String)eventMgr.get(i).mParam))
 						eventMgr.consume(i);
 				}

@@ -4,63 +4,200 @@
 package battleship.states;
 
 import java.awt.Graphics;
+import java.awt.Point;
+import java.util.StringTokenizer;
+
+import battleship.Event;
+import battleship.EventManager;
+import battleship.client.Client;
+import battleship.gameobjects.Battleship;
+import battleship.gameobjects.Playfield;
 
 /**
- * @author Obi
+ * Handles the user dropping bombs etc
+ * @author OBi
  *
  */
-public class Multiplayer extends State {
+public class Multiplayer extends State implements Client
+{
+	/**
+	 * Grid used to store ship positions and if they have been bombed etc.
+	 * X and Y: the grid. 0-no ship, 1-battleship, 2-small ship
+	 * Z: The status of that ship. 0-normal, 1-bombed, 2-ship hit
+	 */
+	private static int[][][] mPGrid = new int[10][10][2];
+	private static int[][][] mOGrid = null;
+	
+	/**
+	 * Wait: waiting to receive the ship positions from the other user. 
+	 * Received: got the info from the other player. 
+	 * Current: the current user's turn. 
+	 * Other: the other player's turn. 
+	 */
+	private enum STATE {
+		WAIT, RECEIVED, CURRENT, OTHER
+	} 
+	
+	private STATE mSTATE = STATE.WAIT;
+	
+	/**
+	 * Default Constructor
+	 */
+	public Multiplayer(EventManager mEventMgr)
+	{
+		mName = "MultiPlayer";
+		this.mEventMgr = mEventMgr;
+	}
+
+	@Override
+	public void enterState()
+	{
+		mEventMgr.add(new Event("visibility", false, "StartGame"));//set button "StartGame" to invisible
+		cClient.addClientListener(this);//Receive events from the client
+		mEventMgr.add(new Event("setGrid"));
+	}
 
 	/**
-	 * 
+	 * Converts the grid into a string and vice-versa
+	 * @return the string of the array
 	 */
-	public Multiplayer() {
-		// TODO Auto-generated constructor stub
+	private String convertArray() {
+		StringBuffer buf = new StringBuffer();
+		buf.append("grid");
+		for(int iX = 0; iX<10; iX++){
+			for(int iY = 0; iY<10; iY++){
+				if(mPGrid[iX][iY][0]!=0)
+					buf.append(iX+iY+0+mPGrid[iX][iY][0]+"&");
+				if(mPGrid[iX][iY][1]!=0)
+					buf.append(iX+iY+1+mPGrid[iX][iY][1]+"&");
+			}
+		}
+		if (buf.length() >0 ) buf.setLength(buf.length()-1);
+		return buf.toString();
+	}
+	
+	private int[][][] convertString(String str)
+	{
+		StringTokenizer st = new StringTokenizer(str,"&");
+		String tmp;
+		int[][][] grid = new int[10][10][2];
+		for(int i = 0; i<st.countTokens(); i++)
+		{
+			tmp = st.nextToken();
+			grid[tmp.charAt(0)][tmp.charAt(1)][tmp.charAt(2)] = (int)tmp.charAt(3);
+		}
+		return grid;
+	}
+	
+	/**
+	 * Inputs the ship positions into the grid
+	 * @return true if no ships overlap each other - else false
+	 */
+	public static boolean setGrid()
+	{
+		mPGrid = new int[10][10][2];
+		for(Battleship go : Battleship.mShips)
+			for(int i = 0; i<go.mXY.size(); i++)
+				if(mPGrid[go.mXY.get(i).x][go.mXY.get(i).y][0] == 0)
+					mPGrid[go.mXY.get(i).x][go.mXY.get(i).y][0] = getShipType(go.mXY.size());
+				else
+					return false;
+		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see battleship.states.State#enterState()
-	 */
-	@Override
-	public void enterState() {
-		// TODO Auto-generated method stub
-
+	private static int getShipType(int size) {
+		return ((int)size%2)==0 ? 2 : 1;
 	}
 
-	/* (non-Javadoc)
-	 * @see battleship.states.State#exitState()
-	 */
 	@Override
 	public void exitState() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
-	/* (non-Javadoc)
-	 * @see battleship.states.State#paint(java.awt.Graphics)
-	 */
 	@Override
 	public void paint(Graphics g) {
 		// TODO Auto-generated method stub
 
 	}
 
-	/* (non-Javadoc)
-	 * @see battleship.states.State#processEvents()
-	 */
-	@Override
-	public void processEvents() {
-		// TODO Auto-generated method stub
 
+	@Override
+	public void processEvents()
+	{
+		for(int i=0; i < mEventMgr.size(); i++)
+		{
+			if(mEventMgr.get(i).mEvent.equals("setGrid"))
+			{
+				setGrid();
+				cClient.sendMessage(convertArray());
+			}
+			else if(mEventMgr.get(i).mEvent.equals("grid"))
+			{
+				//Draw targeting lines
+				if(GameState.getMSTATE() == GameState.STATE.hMULTI)
+				mEventMgr.add(new Event("setField", "TargetArrows"));
+				mOGrid = (int[][][])mEventMgr.get(i).mParam;
+			}
+			else if(mEventMgr.get(i).mEvent.equals("clientMessage"))
+			{
+				if(mEventMgr.get(i).mParam.equals("turn"))
+				{
+					mSTATE = STATE.OTHER;
+					mEventMgr.add(new Event("setField", "Toggle"));
+				}
+			}
+			else if(mEventMgr.get(i).mEvent.startsWith("mouse"))
+			{
+				//MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
+				if(mEventMgr.get(i).mEvent.equals("mousePressed"))
+				{
+					//temp point
+					Point p = Playfield.getgridPoint();
+					if(p.x >=0 && p.y >= 0)
+					{
+						mEventMgr.add(new Event("addBomb", mPGrid));
+						mEventMgr.add(new Event("setField", "Normal"));
+						cClient.sendMessage("turn");
+						if(mPGrid[p.x][p.y][0] == 0)
+							mPGrid[p.x][p.y][1] = 1;
+						else if(mPGrid[p.x][p.y][0] > 0)
+							mPGrid[p.x][p.y][1] = 2;
+					}
+				}
+			}
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see battleship.states.State#run()
-	 */
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
+	@Override
+	public void clientMsg(Event e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void connected() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void error(Event e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void shipsRecieve(String str) {
+		mSTATE = STATE.RECEIVED;
+		if(str.startsWith("grid"))
+			mEventMgr.add(new Event("grid", convertString(str.substring(4))));
+		else
+			mEventMgr.add(new Event("clientMessage", str));
+	}
 }

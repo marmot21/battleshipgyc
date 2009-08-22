@@ -87,7 +87,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 						offScreen = true;
 					}
 					else if(offScreen) 
-					{
+					{//When the window is moved back onto the screen it redraws
 						mInputEventMgr.add(new Event("repaint"));
 						offScreen = false;
 					}	
@@ -152,7 +152,6 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	 */
 	public void run()
 	{
-		
 		mEventMgr.add(new Event("setState", "MenuState", "Main")); //enter the Menu state
 		mFSM.removeState("GenericState");//removes the generic state from the FSM
 		boolean paint;

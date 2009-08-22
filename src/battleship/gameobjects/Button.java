@@ -163,7 +163,8 @@ public class Button extends GameObject
 					{
 						if(mBounds.contains(me.getPoint()))
 						{
-							mEventMgr.add(new Event("buttonClicked", mName));
+							if(visibility == true)
+								mEventMgr.add(new Event("buttonClicked", mName));
 							STATE = BUTTON.HOVER;
 							render();
 							mEventMgr.add(new Event("repaint"));
