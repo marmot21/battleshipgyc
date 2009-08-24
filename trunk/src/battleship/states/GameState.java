@@ -39,7 +39,7 @@ public class GameState extends State implements Server, Client
 	 */
 	public enum STATE
 	{
-		SINGLE, sRUNING, HOST, hRUNNING, hMULTI
+		SINGLE, sRUNING, HOST, hRUNNING, hMULTI, jMULTI
 	}
 	
 	/**
@@ -104,6 +104,7 @@ public class GameState extends State implements Server, Client
 		//mEventMgr.add(new Event("removeState", "UserState", "FuSM"));
 		//mEventMgr.add(new Event("removeState", "AIBombState", "FuSM"));
 		mObj.clear();
+		//mServer.finalize();
 		mServer = null;
 		mClient = null;
 	}
@@ -152,8 +153,20 @@ public class GameState extends State implements Server, Client
 				else if(mEventMgr.get(i).mParam.equals("Join"))
 				{
 					//insert join specific stuff here
-					mEventMgr.add(new Event("setState", "MenuState", "Main"));
-					mEventMgr.add(new Event("error", "Joining not implemented"));
+					//mEventMgr.add(new Event("setState", "MenuState", "Main"));
+					//mEventMgr.add(new Event("error", "Joining not implemented"));
+					//make sure there is no server running
+					mServer = null;
+					mClient = new cClient();
+					cClient.addClientListener(this);
+					mClient.setName("Client");
+					mClient.start();
+					mClient.login("127.0.0.1", "client");
+					//set button "StartGame" to invisible
+					mEventMgr.add(new Event("visibility", false, "StartGame"));
+					//output to screen
+					mPrint.add("Client started");
+					mSTATE = STATE.jMULTI;
 				}
 				else if(mEventMgr.get(i).mParam.equals("Single"))
 				{
@@ -174,7 +187,7 @@ public class GameState extends State implements Server, Client
 					mClient = new cClient();
 					mClient.setName("Client");
 					mClient.start();
-					cClient.login("127.0.0.1", "host");
+					mClient.login("127.0.0.1", "host");
 					mSTATE = STATE.hRUNNING;
 				}
 				mEventMgr.consume(i);

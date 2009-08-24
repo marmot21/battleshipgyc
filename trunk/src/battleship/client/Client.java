@@ -70,7 +70,7 @@ public static class cClient extends Thread
 		output("message||"+str);
 	}
 	
-	public static void login(String host, String name)
+	public void login(String host, String name)
 	{//Login to server
 		theHost=host;
 		mName = name;
@@ -106,7 +106,7 @@ public static class cClient extends Thread
 			} catch (Exception e) 
 			{
 				for(Client go : listener)
-					go.error(new Event("error","Unable to connect"));
+					go.error(new Event("error","connection"));
 				sock = null;
 			}
 			try{ Thread.sleep( 100 ); } catch(InterruptedException e){};
@@ -114,6 +114,7 @@ public static class cClient extends Thread
 
 		if(chatThread!=null)
 		{//connect to the server
+			System.out.println("message sent");
 			output("request||"+mName);
 		}
 		while (sock != null && bReader != null && chatThread != null) 

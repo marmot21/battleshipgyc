@@ -152,7 +152,8 @@ public class Multiplayer extends State implements Client
 			{
 				//Draw targeting lines
 				mSTATE = STATE.CURRENT;
-				if(GameState.getMSTATE() == GameState.STATE.hMULTI)
+				if(GameState.getMSTATE() == GameState.STATE.hMULTI ||
+						GameState.getMSTATE() ==  GameState.STATE.jMULTI)
 					mEventMgr.add(new Event("setField", "TargetArrows"));
 				mOGrid = (int[][][])mEventMgr.get(i).mParam;
 				mEventMgr.consume(i);
