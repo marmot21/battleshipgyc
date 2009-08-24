@@ -5,10 +5,11 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 
 import battleship.Event;
-import battleship.EventManager;
+import battleship.Events;
 import battleship.Main;
 import battleship.gameobjects.Background;
 import battleship.gameobjects.Button;
+import battleship.gameobjects.DialogueBox;
 import battleship.gameobjects.GameImage;
 import battleship.gameobjects.GameObject;
 
@@ -24,22 +25,22 @@ public class MenuState extends State
 	 * Default constructor
 	 * Adds buttons and main title
 	 */
-	public MenuState(EventManager mEventMgr)
+	public MenuState()
 	{
 		mName = "MenuState";
-		this.mEventMgr = mEventMgr;
 		mObj.add(new Background("BG", new Rectangle(0, 0, Main.mDim.width, 300)));
-		mObj.add(new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1), mEventMgr, GameObject.loadImage("res/img/HostGame.png")));
-		mObj.add(new Button("JoinGame", new Rectangle((800-210)/2, 256+128, 1, 1), mEventMgr, GameObject.loadImage("res/img/JoinGame.png")));
-		mObj.add(new Button("SinglePlayer", new Rectangle((800-210)/2+210+32, 256+128, 1, 1), mEventMgr, GameObject.loadImage("res/img/SinglePlayer.png")));
-		mObj.add(new GameImage("MainTitle", new Rectangle((800-635)/2, 64, 1, 1), mEventMgr, GameObject.loadImage("res/img/GameTitle.png")));
-		mEventMgr.add(new Event("repaint"));
+		mObj.add(new Button("HostGame", new Rectangle((800-210)/2-210-32, 256+128, 1, 1), GameObject.loadImage("res/img/HostGame.png")));
+		mObj.add(new Button("JoinGame", new Rectangle((800-210)/2, 256+128, 1, 1), GameObject.loadImage("res/img/JoinGame.png")));
+		mObj.add(new Button("SinglePlayer", new Rectangle((800-210)/2+210+32, 256+128, 1, 1), GameObject.loadImage("res/img/SinglePlayer.png")));
+		mObj.add(new GameImage("MainTitle", new Rectangle((800-635)/2, 64, 1, 1), GameObject.loadImage("res/img/GameTitle.png")));
+		mObj.add(new DialogueBox(new Rectangle(100, 200, 300, 400)));
+		Events.get().add(new Event("repaint"));
 	}
 
 	@Override
 	public void enterState()
 	{
-		mEventMgr.add(new Event("repaint"));
+		Events.get().add(new Event("repaint"));
 	}
 
 	@Override
@@ -68,27 +69,27 @@ public class MenuState extends State
 	@Override
 	public void processEvents()
 	{
-		for(int i = 0; i < mEventMgr.size(); i++)
+		for(int i = 0; i < Events.get().size(); i++)
 		{
-			if(mEventMgr.get(i).mEvent.equals("buttonClicked"))
+			if(Events.get().get(i).mEvent.equals("buttonClicked"))
 			{
-				mEventMgr.add(new Event("addState", new GameState(mEventMgr), "Main"));
-				if(mEventMgr.get(i).mParam.equals("HostGame"))
+				Events.get().add(new Event("addState", new GameState(), "Main"));
+				if(Events.get().get(i).mParam.equals("HostGame"))
 				{
-					mEventMgr.add(new Event("setState", "GameState", "Main"));
-					mEventMgr.add(new Event("mode", "Host"));
+					Events.get().add(new Event("setState", "GameState", "Main"));
+					Events.get().add(new Event("mode", "Host"));
 				}
-				else if(mEventMgr.get(i).mParam.equals("JoinGame"))
+				else if(Events.get().get(i).mParam.equals("JoinGame"))
 				{
-					mEventMgr.add(new Event("setState", "GameState", "Main"));
-					mEventMgr.add(new Event("mode", "Join"));
+					Events.get().add(new Event("setState", "GameState", "Main"));
+					Events.get().add(new Event("mode", "Join"));
 				}
-				else if(mEventMgr.get(i).mParam.equals("SinglePlayer"))
+				else if(Events.get().get(i).mParam.equals("SinglePlayer"))
 				{
-					mEventMgr.add(new Event("setState", "GameState", "Main"));
-					mEventMgr.add(new Event("mode", "Single"));
+					Events.get().add(new Event("setState", "GameState", "Main"));
+					Events.get().add(new Event("mode", "Single"));
 				}
-				mEventMgr.consume(i);
+				Events.get().remove(i);
 			}
 		}
 		for(int i = 0; i < mObj.size(); i++)

@@ -7,7 +7,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 import battleship.Event;
-import battleship.EventManager;
+import battleship.Events;
 import battleship.gameobjects.Playfield;
 
 /**
@@ -27,17 +27,16 @@ public class UserState extends State
 	/**
 	 * Default Constructor
 	 */
-	public UserState(EventManager mEventMgr)
+	public UserState()
 	{
 		mName = "UserState";
-		this.mEventMgr = mEventMgr;
 	}
 
 	@Override
 	public void enterState()
 	{
-		mEventMgr.add(new Event("setField", "TargetArrows"));//Draw targeting lines
-		mEventMgr.add(new Event("visibility", false, "StartGame"));//set button "StartGame" to invisible
+		Events.get().add(new Event("setField", "TargetArrows"));//Draw targeting lines
+		Events.get().add(new Event("visibility", false, "StartGame"));//set button "StartGame" to invisible
 	}
 
 	@Override
@@ -55,14 +54,14 @@ public class UserState extends State
 	@Override
 	public void processEvents()
 	{
-		for(int i=0; i < mEventMgr.size(); i++)
+		for(int i=0; i < Events.get().size(); i++)
 		{
-			if(mEventMgr.get(i).mEvent.startsWith("mouse"))
+			if(Events.get().get(i).mEvent.startsWith("mouse"))
 			{
 				//MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
-				if(mEventMgr.get(i).mEvent.equals("mousePressed"))
+				if(Events.get().get(i).mEvent.equals("mousePressed"))
 				{
-					mEventMgr.add(new Event("addBomb", mGrid));
+					Events.get().add(new Event("addBomb", mGrid));
 					//temp point
 					Point p = Playfield.getgridPoint();
 					if(p.x >=0 && p.y >= 0)

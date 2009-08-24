@@ -4,8 +4,6 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
-import battleship.EventManager;
-
 /**
  * A class used to store an image and its position/bounds
  * Used in MenuState to store the title image
@@ -29,9 +27,9 @@ public class GameImage extends GameObject
 	 * @param name The name used for reference
 	 * @param bounds The bounds of the object - x and y should be non-zero - unless used within another image
 	 */
-	public GameImage(String name, Rectangle bounds, EventManager mEventMgr)
+	public GameImage(String name, Rectangle bounds)
 	{
-		super(name, bounds, mEventMgr);
+		super(name, bounds);
 	}
 	
 	/**
@@ -40,9 +38,9 @@ public class GameImage extends GameObject
 	 * @param bounds The bounds of the object - x and y should be non-zero - unless used within another image
 	 * @param img The image to be used
 	 */
-	public GameImage(String name, Rectangle bounds, EventManager mEventMgr, BufferedImage img)
+	public GameImage(String name, Rectangle bounds, BufferedImage img)
 	{
-		super(name, bounds, mEventMgr);
+		super(name, bounds);
 		mImg = img;
 	}
 	

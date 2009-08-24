@@ -10,13 +10,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
@@ -24,7 +17,7 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import battleship.states.GameState;
+import battleship.networking.Network;
 import battleship.states.GenericState;
 import battleship.states.MenuState;
 
@@ -34,7 +27,7 @@ import battleship.states.MenuState;
  * @author Obi
  */
 
-public class Main extends Canvas implements Runnable, MouseMotionListener, MouseListener, MouseWheelListener, KeyListener
+public class Main extends Canvas implements Runnable
 {
 	private static final long serialVersionUID = 1L;
 	private static int FPS = 60, SLEEP = 1000/FPS;
@@ -43,8 +36,6 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	private BufferStrategy mStrategy;
 	public static Dimension mDim = new Dimension(800, 600);
 	private FiniteStateMachine mFSM = new FiniteStateMachine();
-	private EventManager mEventMgr = new EventManager();
-	private EventManager mInputEventMgr = new EventManager();//event manager used internally for input events, mouse etc.
 	private boolean offScreen = false;
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	
@@ -88,7 +79,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 					}
 					else if(offScreen) 
 					{//When the window is moved back onto the screen it redraws
-						mInputEventMgr.add(new Event("repaint"));
+						Events.get().add(new Event("repaint"));
 						offScreen = false;
 					}	
 				}
@@ -105,17 +96,15 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 		mStrategy = getBufferStrategy();
 		
 		//Add EventListeners
-		addMouseMotionListener(this);
-		addMouseListener(this);
-		addMouseWheelListener(this);
-		addKeyListener(this);
+		Input.get().init(this);
 		addFocusListener(new FocusListener());
 
 		//Add states
 		mFSM.mName = "Main";
 		mFSM.addState(new GenericState());
-		mFSM.addState(new MenuState(mEventMgr));
-		//mFSM.addState(new GameState(mEventMgr));
+		mFSM.addState(new MenuState());
+		
+		//Network.get().connect("localhost", 25142);
 		
 		//Start the main thread
 		Thread t = new Thread(this);
@@ -127,7 +116,7 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	{
 	    public void focusGained(FocusEvent fe)
 	    {
-	    	mInputEventMgr.add(new Event("repaint"));
+	    	Events.get().add(new Event("repaint"));
 	    }
 	    
 	    public void focusLost(FocusEvent fe)
@@ -153,36 +142,34 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	 */
 	public void run()
 	{
-		mEventMgr.add(new Event("setState", "MenuState", "Main")); //enter the Menu state
+		Events.get().add(new Event("setState", "MenuState", "Main")); //enter the Menu state
 		mFSM.removeState("GenericState");//removes the generic state from the FSM
 		boolean paint;
 		while(true)
 		{
 			paint = false;
-			mEventMgr.flush(); //get rid of old input events
-			mEventMgr.addAll(mInputEventMgr);
-			mInputEventMgr.clear();
+			Events.get().flush(); //get rid of old events
 			mFSM.getState().run(); //update current state
-			mFSM.processEvents(mEventMgr);
+			mFSM.processEvents();
 			mFSM.getState().processEvents();
 			//mEventMgr.print();
-			for(int i = 0; i < mEventMgr.size(); i++)
+			for(int i = 0; i < Events.get().size(); i++)
 			{
-				if(mEventMgr.get(i).mEvent.equals("error"))
+				if(Events.get().get(i).mEvent.equals("error"))
 				{
-					System.out.println(mEventMgr.get(i).mParam);
-					mEventMgr.consume(i);
+					System.out.println(Events.get().get(i).mParam);
+					Events.get().remove(i);
 				}
-				else if(mEventMgr.get(i).mEvent.equals("repaint"))
+				else if(Events.get().get(i).mEvent.equals("repaint"))
 				{
 					paint = true;
-					mEventMgr.consume(i);
+					Events.get().remove(i);
 				}
 			}
 			
-			for(int i = 0; i < mEventMgr.size(); i++)
+			for(int i = 0; i < Events.get().size(); i++)
 			{
-				if(mEventMgr.get(i).mEvent.equals("setState"))
+				if(Events.get().get(i).mEvent.equals("setState"))
 				{
 					paint = false;
 				}
@@ -212,71 +199,5 @@ public class Main extends Canvas implements Runnable, MouseMotionListener, Mouse
 	{
 		//overridden so it doesn't clear the screen
 		paint(g);
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent arg0)
-	{
-		mInputEventMgr.add(new Event("mouseDragged", arg0));
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent arg0)
-	{
-		mInputEventMgr.add(new Event("mouseMoved", arg0));
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0)
-	{
-		mInputEventMgr.add(new Event("mouseClicked", arg0));
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0)
-	{
-		mInputEventMgr.add(new Event("mouseEntered", arg0));
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0)
-	{
-		mInputEventMgr.add(new Event("mouseExited", arg0));
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0)
-	{
-		mInputEventMgr.add(new Event("mousePressed", arg0));
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0)
-	{
-		mInputEventMgr.add(new Event("mouseReleased", arg0));
-	}
-
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent arg0)
-	{
-		mInputEventMgr.add(new Event("mouseWheelMoved", arg0));
-	}
-
-	@Override
-	public void keyPressed(KeyEvent arg0)
-	{
-		mInputEventMgr.add(new Event("keyPressed", arg0));
-	}
-
-	@Override
-	public void keyReleased(KeyEvent arg0)
-	{	
-		mInputEventMgr.add(new Event("keyReleased", arg0));
-	}
-
-	@Override
-	public void keyTyped(KeyEvent arg0)
-	{
-		mInputEventMgr.add(new Event("keyTyped", arg0));
 	}
 }

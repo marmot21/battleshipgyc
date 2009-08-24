@@ -139,34 +139,34 @@ public class FiniteStateMachine
 	 * a change of state is required.
 	 * @param eventMgr The EventManager to be tested against.
 	 */
-	public void processEvents(EventManager eventMgr)
+	public void processEvents()
 	{
-		for(int i = 0; i < eventMgr.size(); i++)
+		for(int i = 0; i < Events.get().size(); i++)
 		{
-			if(eventMgr.get(i).mTarget.equals(mName))
+			if(Events.get().get(i).mTarget.equals(mName))
 			{
 				//if current event is a delete state then delete it and consume event
-				if(eventMgr.get(i).mEvent.equals("removeState"))
+				if(Events.get().get(i).mEvent.equals("removeState"))
 				{
 					//if(mCurrentState < mStates.indexOf((String)eventMgr.get(i).mParam))
 						//mCurrentState--;//assuming that the surrent state is removed
 					//removeState((State)eventMgr.get(i).mParam);
-					removeState((String)eventMgr.get(i).mParam);
-					eventMgr.consume(i);
+					removeState((String)Events.get().get(i).mParam);
+					Events.get().remove(i);
 				}
 				//if current event is a change state then change it and consume event
-				else if(eventMgr.get(i).mEvent.equals("setState"))
+				else if(Events.get().get(i).mEvent.equals("setState"))
 				{
 					//if(eventMgr.get(i).mTarget.equals("FuSM"))
 					//	System.out.println("state shange consumed FuSM: " + 
 					//			eventMgr.get(i).mParam);
-					if(setState((String)eventMgr.get(i).mParam))
-						eventMgr.consume(i);
+					if(setState((String)Events.get().get(i).mParam))
+						Events.get().remove(i);
 				}
-				else if(eventMgr.get(i).mEvent.equals("addState"))
+				else if(Events.get().get(i).mEvent.equals("addState"))
 				{
-					addState((State)eventMgr.get(i).mParam);
-					eventMgr.consume(i);
+					addState((State)Events.get().get(i).mParam);
+					Events.get().remove(i);
 				}
 			}
 		}
