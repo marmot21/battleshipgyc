@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import battleship.Event;
-import battleship.EventManager;
+import battleship.Events;
 import battleship.FiniteStateMachine;
 
 /**
@@ -45,11 +45,10 @@ public class Playfield extends GameObject
 	 * @param bounds The position of the grid and its dimensions in squares
 	 * @param dim The dimensions of each grid square
 	 */
-	public Playfield(String sName, Rectangle bounds, EventManager mEventMgr, Dimension dim)
+	public Playfield(String sName, Rectangle bounds, Dimension dim)
 	{
 		this.mBounds = new Rectangle(bounds.x, bounds.y, bounds.width*dim.width, bounds.height*dim.height);
 		mGridSize = dim;
-		this.mEventMgr = mEventMgr;
 		mName = sName;
 	}
 	
@@ -116,37 +115,37 @@ public class Playfield extends GameObject
 	{
 		if(mFuSM != null)//checks if it is necessary to do all this
 		{
-			 for(int i = 0; i < mEventMgr.size(); i++)
+			 for(int i = 0; i < Events.get().size(); i++)
 			 { 
-				 if(mEventMgr.get(i).mEvent.equals("addBomb"))
+				 if(Events.get().get(i).mEvent.equals("addBomb"))
 				 {
-					 mGrid = (int[][][]) mEventMgr.get(i).mParam;
+					 mGrid = (int[][][]) Events.get().get(i).mParam;
 					 System.out.println("bomb added");
-					 mEventMgr.add(new Event("repaint"));
-					 mEventMgr.consume(i);
+					 Events.get().add(new Event("repaint"));
+					 Events.get().remove(i);
 				 }
-				 else if(mEventMgr.get(i).mEvent.startsWith("setField"))
+				 else if(Events.get().get(i).mEvent.startsWith("setField"))
 				 {
 					 System.out.println("arrows");
-					 if(mEventMgr.get(i).mParam.equals("TargetArrows"))
+					 if(Events.get().get(i).mParam.equals("TargetArrows"))
 						 mTargetArrows = true;
-					 else if(mEventMgr.get(i).mParam.equals("Normal"))
+					 else if(Events.get().get(i).mParam.equals("Normal"))
 						 mTargetArrows = false;
-					 else if(mEventMgr.get(i).mParam.equals("Toggle"))
+					 else if(Events.get().get(i).mParam.equals("Toggle"))
 						 mTargetArrows = !mTargetArrows;
-					 mEventMgr.consume(i);
+					 Events.get().remove(i);
 				 }
-				 else if(mEventMgr.get(i).mEvent.startsWith("mouse"))
+				 else if(Events.get().get(i).mEvent.startsWith("mouse"))
 				 {
-					 MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
-					 if(mEventMgr.get(i).mEvent.equals("mouseMoved") || mEventMgr.get(i).mEvent.equals("mouseDragged")) 
+					 MouseEvent me = (MouseEvent) Events.get().get(i).mParam;
+					 if(Events.get().get(i).mEvent.equals("mouseMoved") || Events.get().get(i).mEvent.equals("mouseDragged")) 
 					 {
 						 if(mBounds.contains(me.getPoint()))
 						 { 
 							 //set which grid square the mouse is in
 							 mXY.x = me.getX()/mGridSize.width - mBounds.x/mGridSize.width;   
 							 mXY.y = me.getY()/mGridSize.height - mBounds.y/mGridSize.height;
-							 mEventMgr.add(new Event("repaint"));
+							 Events.get().add(new Event("repaint"));
 						 }
 						 else
 						 {
@@ -163,7 +162,7 @@ public class Playfield extends GameObject
 			mObj.get(i).processEvents();
 		if(mFuSM != null)
 		{
-			mFuSM.processEvents(mEventMgr); //pass on events to the FuSM
+			mFuSM.processEvents(); //pass on events to the FuSM
 			mFuSM.getState().processEvents();
 		}
 	}

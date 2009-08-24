@@ -1,7 +1,6 @@
 package battleship.gameobjects;
 
 import java.awt.Graphics;
-import java.awt.List;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -9,7 +8,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import battleship.Event;
-import battleship.EventManager;
+import battleship.Events;
+import battleship.Input;
 
 /**
  * Class to handle any ships etc
@@ -60,9 +60,9 @@ public class Battleship extends GameObject
 	 * @param name The name of the Battleship.
 	 * @param bounds The bounds of the Battleship.
 	 */
-	public Battleship(String name, Rectangle bounds, EventManager mEventMgr)
+	public Battleship(String name, Rectangle bounds)
 	{
-		super(name, bounds, mEventMgr);
+		super(name, bounds);
 		this.mBounds.x = mShips.size()*70+400-((mShips.size()/5)*350);
 		this.mBounds.y = ((mShips.size()-mShips.size()%5)/5)*26;
 		mShips.add(this);
@@ -74,9 +74,9 @@ public class Battleship extends GameObject
 	 * @param bounds The bounds of the Battleship.
 	 * @param img The image of the Battleship.
 	 */
-	public Battleship(String name, Rectangle bounds, EventManager mEventMgr, BufferedImage img)
+	public Battleship(String name, Rectangle bounds, BufferedImage img)
 	{
-		super(name, bounds, mEventMgr);
+		super(name, bounds);
 		mImgV = img;
 		bounds.width = mImgV.getWidth();
 		bounds.height = mImgV.getHeight();
@@ -92,9 +92,9 @@ public class Battleship extends GameObject
 	 * @param img The image of the Battleship.
 	 * @param img2 The rotated image of the Battleship.
 	 */
-	public Battleship(String name, Rectangle bounds, EventManager mEventMgr, BufferedImage img, BufferedImage img2)
+	public Battleship(String name, Rectangle bounds, BufferedImage img, BufferedImage img2)
 	{
-		this(name, bounds, mEventMgr);
+		this(name, bounds);
 		mImgV = img;
 		mImgH = img2;
 		mBounds.width = mImgV.getWidth();
@@ -133,81 +133,80 @@ public class Battleship extends GameObject
 	@Override
 	public void processEvents()
 	{
-		for(int i = 0; i < mEventMgr.size(); i++)
+		for(int i = 0; i < Events.get().size(); i++)
 		{
-			if(mEventMgr.get(i).mEvent.equals("setShips"))
+			if(Events.get().get(i).mEvent.equals("setShips"))
 			{
-				if(mEventMgr.get(i).mParam.equals("SET"))
+				if(Events.get().get(i).mParam.equals("SET"))
 					STATE = SHIPS.SET;
 				if(mShips.size() > 1)
 					if(mShips.get(mShips.size()-1).equals(this))
-						mEventMgr.consume(i);
+						Events.get().remove(i);
 			}
-			else if(mEventMgr.get(i).mEvent.startsWith("mouse") && STATE != SHIPS.SET)
+		}
+		if(STATE != SHIPS.SET)
+		{
+			if(Input.get().mouseIsPressed(MouseEvent.BUTTON1) && STATE == SHIPS.FOLLOW)
 			{
-				MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
-				if(mEventMgr.get(i).mEvent.equals("mouseDragged") && STATE == SHIPS.FOLLOW) 
-				{//if ship is being dragged then follow mouse
-					mBounds.x = me.getX() - mMouse.x;
-					mBounds.y = me.getY() - mMouse.y;
-					mEventMgr.add(new Event("repaint"));
-				}
-				else if(mEventMgr.get(i).mEvent.equals("mouseReleased"))
+				mBounds.x = Input.get().getMouse().x - mMouse.x;
+				mBounds.y = Input.get().getMouse().y - mMouse.y;
+				Events.get().add(new Event("repaint"));
+			}
+			else if(!Input.get().mouseIsPressed(MouseEvent.BUTTON1))
+			{
+				if(STATE == SHIPS.FOLLOW && mStatusScreen.contains(mBounds))
 				{
-					if(STATE == SHIPS.FOLLOW && mStatusScreen.contains(mBounds))
-					{
-						STATE = SHIPS.NORMAL;
-						//snap it to the grid
-						mBounds.y = mBounds.y/24*24;
-						mBounds.x = mBounds.x/24*24;
+					STATE = SHIPS.NORMAL;
+					//snap it to the grid
+					mBounds.y = mBounds.y/24*24;
+					mBounds.x = mBounds.x/24*24;
 
-						int iWidth = (mBounds.width+10)/Playfield.mGridSize.width;
-						int iHeight = (mBounds.height+10)/Playfield.mGridSize.height;
-						mXY.clear();
-						if(isLarger(iWidth,iHeight))//i.e. is horizontal
-							for(int j = 0; j<(larger(iWidth,iHeight)); j++)
-								mXY.add(new Point((mBounds.x+12+Playfield.mGridSize.width*j)/Playfield.mGridSize.width - mStatusScreen.x/Playfield.mGridSize.width,
-										(mBounds.y+12)/Playfield.mGridSize.height - mStatusScreen.y/Playfield.mGridSize.height));
-						else//i.e. is vertical
-							for(int j = 0; j<(larger(iWidth,iHeight)); j++)
-								mXY.add(new Point((mBounds.x+12)/Playfield.mGridSize.width - mStatusScreen.x/Playfield.mGridSize.width,
-										(mBounds.y+12+Playfield.mGridSize.height*j)/Playfield.mGridSize.height - mStatusScreen.y/Playfield.mGridSize.height));
-						
-						System.out.println("Ship position:");
-						for(Point go : mXY)
-							System.out.println("x: "+go.x+" y: "+go.y);
-						
-						//if(mPrevPos.mSTATE == SHIPS.INIT)
-						//	mShips.remove(this);
-						mEventMgr.add(new Event("repaint"));
-					}
-					else if(STATE == SHIPS.FOLLOW && !mStatusScreen.contains(mBounds))
-					{ //if the ship was dragged outside of the grid then return it to its prev. pos.
-						mBounds.x = mPrevPos.mPos.x;
-						mBounds.y = mPrevPos.mPos.y;
-						STATE = mPrevPos.mSTATE;
-						mEventMgr.add(new Event("repaint"));
-					}
-					else if(STATE == SHIPS.NORMAL && !mStatusScreen.contains(mBounds))
-					{
-						mPrevPos.mPos.x = mBounds.x;
-						mPrevPos.mPos.y = mBounds.y;
-						mPrevPos.mSTATE = STATE;
-					}
+					int iWidth = (mBounds.width+10)/Playfield.mGridSize.width;
+					int iHeight = (mBounds.height+10)/Playfield.mGridSize.height;
+					mXY.clear();
+					if(isLarger(iWidth,iHeight))//i.e. is horizontal
+						for(int j = 0; j<(larger(iWidth,iHeight)); j++)
+							mXY.add(new Point((mBounds.x+12+Playfield.mGridSize.width*j)/Playfield.mGridSize.width - mStatusScreen.x/Playfield.mGridSize.width,
+									(mBounds.y+12)/Playfield.mGridSize.height - mStatusScreen.y/Playfield.mGridSize.height));
+					else//i.e. is vertical
+						for(int j = 0; j<(larger(iWidth,iHeight)); j++)
+							mXY.add(new Point((mBounds.x+12)/Playfield.mGridSize.width - mStatusScreen.x/Playfield.mGridSize.width,
+									(mBounds.y+12+Playfield.mGridSize.height*j)/Playfield.mGridSize.height - mStatusScreen.y/Playfield.mGridSize.height));
+					
+					System.out.println("Ship position:");
+					for(Point go : mXY)
+						System.out.println("x: "+go.x+" y: "+go.y);
+					
+					//if(mPrevPos.mSTATE == SHIPS.INIT)
+					//	mShips.remove(this);
+					Events.get().add(new Event("repaint"));
 				}
-				else if(mEventMgr.get(i).mEvent.equals("mousePressed"))
+				else if(STATE == SHIPS.FOLLOW && !mStatusScreen.contains(mBounds))
+				{ //if the ship was dragged outside of the grid then return it to its prev. pos.
+					mBounds.x = mPrevPos.mPos.x;
+					mBounds.y = mPrevPos.mPos.y;
+					STATE = mPrevPos.mSTATE;
+					Events.get().add(new Event("repaint"));
+				}
+				else if(STATE == SHIPS.NORMAL && !mStatusScreen.contains(mBounds))
 				{
-					if((STATE == SHIPS.INIT || STATE == SHIPS.NORMAL) && mBounds.contains(me.getPoint()))
+					mPrevPos.mPos.x = mBounds.x;
+					mPrevPos.mPos.y = mBounds.y;
+					mPrevPos.mSTATE = STATE;
+				}
+				else if(Input.get().mouseIsPressed(MouseEvent.BUTTON1))
+				{
+					if((STATE == SHIPS.INIT || STATE == SHIPS.NORMAL) && mBounds.contains(Input.get().getMouse()))
 					{
-						mMouse.x = me.getX() - mBounds.x;
-						mMouse.y = me.getY() - mBounds.y;
+						mMouse.x = Input.get().getMouse().x - mBounds.x;
+						mMouse.y = Input.get().getMouse().y - mBounds.y;
 						mPrevPos.mPos.x = mBounds.x;
 						mPrevPos.mPos.y = mBounds.y;
 						mPrevPos.mSTATE = STATE;
 						STATE = SHIPS.FOLLOW;
 					}
 				}
-				else if(mEventMgr.get(i).mEvent.equals("mouseWheelMoved")) //rotate ship
+				else if(Input.get().mouseIsPressed(MouseEvent.BUTTON3)) //rotate ship
 				{
 					if(STATE == SHIPS.FOLLOW)
 					{
@@ -222,7 +221,7 @@ public class Battleship extends GameObject
 							mBounds.width = mImgV.getWidth();
 							mBounds.height = mImgV.getHeight();
 						}
-						mEventMgr.add(new Event("repaint"));
+						Events.get().add(new Event("repaint"));
 					}	
 				}
 			}

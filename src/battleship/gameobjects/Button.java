@@ -4,8 +4,10 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+
 import battleship.Event;
-import battleship.EventManager;
+import battleship.Events;
+import battleship.Input;
 
 /**
  * A GameObject used to draw custom buttons etc.
@@ -31,9 +33,9 @@ public class Button extends GameObject
 	 * @param name The name of the Button - for reference
 	 * @param bounds The bounds of the button
 	 */
-	public Button(String name, Rectangle bounds, EventManager mEventMgr)
+	public Button(String name, Rectangle bounds)
 	{
-		super(name, bounds, mEventMgr);
+		super(name, bounds);
 	}
 	
 	/**
@@ -42,9 +44,9 @@ public class Button extends GameObject
 	 * @param bounds The bounds of the button
 	 * @param img The image of the button
 	 */
-	public Button(String name, Rectangle bounds, EventManager mEventMgr, BufferedImage img)
+	public Button(String name, Rectangle bounds, BufferedImage img)
 	{
-		super(name, bounds, mEventMgr);
+		super(name, bounds);
 		mImg = img;
 		render();
 	}
@@ -90,101 +92,96 @@ public class Button extends GameObject
 	@Override
 	public void processEvents()
 	{
-		for(int i = 0; i < mEventMgr.size(); i++)
+		for(int i = 0; i < Events.get().size(); i++)
 		{
-			if(mEventMgr.get(i).mTarget.equals(mName))
+			if(Events.get().get(i).mTarget.equals(mName))
 			{
-				if(mEventMgr.get(i).mEvent.equals("visibility"))
+				if(Events.get().get(i).mEvent.equals("visibility"))
 				{
-					if(mEventMgr.get(i).mParam.equals(new Boolean(true)))
+					if(Events.get().get(i).mParam.equals(new Boolean(true)))
 					{
 						visibility = true;
 					}
-					else if(mEventMgr.get(i).mParam.equals(new Boolean(false)))
+					else if(Events.get().get(i).mParam.equals(new Boolean(false)))
 					{
 						visibility = false;
 					}
-					else if(mEventMgr.get(i).mParam.equals("toggle"))
+					else if(Events.get().get(i).mParam.equals("toggle"))
 					{
 						visibility = !visibility;
 					}
 				}
-				mEventMgr.add(new Event("repaint"));
-				mEventMgr.consume(i);
+				Events.get().add(new Event("repaint"));
+				Events.get().remove(i);
 			}
-			else if(mEventMgr.get(i).mEvent.startsWith("mouse"))
+		}
+		if(mBounds.contains(Input.get().getMouse()))
+		{
+			if(STATE == BUTTON.NORMAL)
 			{
-				MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
-				if(mEventMgr.get(i).mEvent.equals("mouseMoved") || mEventMgr.get(i).mEvent.equals("mouseDragged"))
+				STATE = BUTTON.HOVER;
+				render();
+				Events.get().add(new Event("repaint"));
+			}
+			else if(STATE == BUTTON.ACTIVE)
+			{
+				STATE = BUTTON.PRESSED;
+				render();
+				Events.get().add(new Event("repaint"));
+			}
+		}
+		else
+		{
+			if(STATE == BUTTON.HOVER)
+			{
+				STATE = BUTTON.NORMAL;
+				render();
+				Events.get().add(new Event("repaint"));
+			}
+			else if(STATE == BUTTON.PRESSED)
+			{
+				STATE = BUTTON.ACTIVE;
+				render();
+				Events.get().add(new Event("repaint"));
+			}
+		}
+		if(Input.get().mouseIsPressed(MouseEvent.BUTTON1))
+		{
+			if(mBounds.contains(Input.get().getMouse()))
+			{
+				STATE = BUTTON.PRESSED;
+				render();
+				Events.get().add(new Event("repaint"));
+			}
+		}
+		else
+		{
+			if(STATE == BUTTON.PRESSED)
+			{
+				if(mBounds.contains(Input.get().getMouse()))
 				{
-					if(mBounds.contains(me.getPoint()))
-					{
-						if(STATE == BUTTON.NORMAL)
-						{
-							STATE = BUTTON.HOVER;
-							render();
-							mEventMgr.add(new Event("repaint"));
-						}
-						else if(STATE == BUTTON.ACTIVE)
-						{
-							STATE = BUTTON.PRESSED;
-							render();
-							mEventMgr.add(new Event("repaint"));
-						}
-					}
-					else
-					{
-						if(STATE == BUTTON.HOVER)
-						{
-							STATE = BUTTON.NORMAL;
-							render();
-							mEventMgr.add(new Event("repaint"));
-						}
-						else if(STATE == BUTTON.PRESSED)
-						{
-							STATE = BUTTON.ACTIVE;
-							render();
-							mEventMgr.add(new Event("repaint"));
-						}
-					}
+					if(visibility == true)
+						Events.get().add(new Event("buttonClicked", mName));
+					STATE = BUTTON.HOVER;
+					render();
+					Events.get().add(new Event("repaint"));
 				}
-				else if(mEventMgr.get(i).mEvent.equals("mousePressed") && me.getButton() == MouseEvent.BUTTON1)
+				else
 				{
-					if(mBounds.contains(me.getPoint()))
-					{
-						STATE = BUTTON.PRESSED;
-						render();
-						mEventMgr.add(new Event("repaint"));
-					}
+					STATE = BUTTON.NORMAL;
+					render();
+					Events.get().add(new Event("repaint"));
 				}
-				else if(mEventMgr.get(i).mEvent.equals("mouseReleased") && me.getButton() == MouseEvent.BUTTON1)
+			}
+			else if(STATE == BUTTON.ACTIVE)
+			{
+				if(!mBounds.contains(Input.get().getMouse()))
 				{
-					if(STATE == BUTTON.PRESSED)
-					{
-						if(mBounds.contains(me.getPoint()))
-						{
-							if(visibility == true)
-								mEventMgr.add(new Event("buttonClicked", mName));
-							STATE = BUTTON.HOVER;
-							render();
-							mEventMgr.add(new Event("repaint"));
-						}
-						else//this method is never called because the state will be "Active"
-						{
-							STATE = BUTTON.NORMAL;
-							render();
-							mEventMgr.add(new Event("repaint"));
-						}
-					}
-					else if(STATE == BUTTON.ACTIVE) {
-						if(!mBounds.contains(me.getPoint())) {
-							STATE = BUTTON.NORMAL;
-							render();
-							mEventMgr.add(new Event("repaint"));
-						}
-					}
-				}//end mouse event
-			}//end if mouse event
-		}//end for loop
-	}//end pump events
-}//end class
+					STATE = BUTTON.NORMAL;
+					render();
+					Events.get().add(new Event("repaint"));
+				}
+			}
+		}
+	}
+}

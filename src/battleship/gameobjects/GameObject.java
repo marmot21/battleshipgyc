@@ -8,8 +8,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import battleship.EventManager;
-
 /**
  * Abstract class used to define standards for
  * painting etc.
@@ -30,11 +28,6 @@ public abstract class GameObject
 	public String mName = ""; //name, used to identify
 	
 	/**
-	 * The Event Manager for the given state
-	 */
-	protected EventManager mEventMgr;
-	
-	/**
 	 * Default constructor
 	 */
 	public GameObject()
@@ -52,14 +45,7 @@ public abstract class GameObject
 		this.mName = name;
 		this.mBounds = bounds;
 	}
-	
-	public GameObject(String name, Rectangle bounds, EventManager mEventMgr)
-	{
-		this.mName = name;
-		this.mBounds = bounds;
-		this.mEventMgr = mEventMgr;
-	}
-	
+
 	/**
 	 * static method to load images easily
 	 * @param path The path to the image
@@ -99,9 +85,4 @@ public abstract class GameObject
 	 * used for processing events
 	 */
 	public abstract void processEvents();
-	
-	public void setEventManager(EventManager mEventMgr)
-	{
-		this.mEventMgr = mEventMgr;
-	}
 }
