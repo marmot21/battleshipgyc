@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import battleship.Event;
-import battleship.Events;
+import battleship.EventManager;
 import battleship.FiniteStateMachine;
 import battleship.Main;
 import battleship.client.Client;
@@ -56,49 +56,50 @@ public class GameState extends State implements Server, Client
 	 * Default constructor, does a few things:
 	 * 1. sets the name 2. Adds the targeting and status screens 3. Adds objects to screens
 	 */
-	public GameState()
+	public GameState(EventManager mEventMgr)
 	{
 		super();
 		//Initialise variables
 		mServer = null;
 		mClient = null;
 		mName = "GameState";
+		this.mEventMgr = mEventMgr;
 		
 		//Create the grids 
-		Playfield pStat = new Playfield("Status Screen", new Rectangle(24, 240+24, 10, 10), new Dimension(24, 24));
-		Playfield pTrg = new Playfield("Targeting Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24));
+		Playfield pStat = new Playfield("Status Screen", new Rectangle(24, 240+24, 10, 10), mEventMgr, new Dimension(24, 24));
+		Playfield pTrg = new Playfield("Targeting Screen", new Rectangle(24, 0, 10, 10), mEventMgr, new Dimension(24, 24));
 		
 		//Add ships to the Status Screen
-		pStat.mObj.add(new Battleship("BS1", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
-		pStat.mObj.add(new Battleship("BS2", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
+		pStat.mObj.add(new Battleship("BS1", new Rectangle(0, 0, 49, 24), mEventMgr, GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
+		pStat.mObj.add(new Battleship("BS2", new Rectangle(0, 0, 49, 24), mEventMgr, GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
 		
 		//Add the Fuzzy logic thing to the Targeting screen
 		pTrg.mFuSM = new FiniteStateMachine();
 		pTrg.mFuSM.addState(new GenericState());
-		pTrg.mFuSM.addState(new UserState());
-		pTrg.mFuSM.addState(new Multiplayer());
+		pTrg.mFuSM.addState(new UserState(mEventMgr));
+		pTrg.mFuSM.addState(new Multiplayer(mEventMgr));
 		pTrg.mFuSM.mName = "FuSM";
 		//Add the grids to this state
 		mObj.add(pTrg);
 		mObj.add(pStat);
 		
 		//Add the buttons
-		mObj.add(new Button("StartGame", new Rectangle(300+210+32, 50, 1,1), GameObject.loadImage("res/img/BeginGame.png")));
-		mObj.add(new Button("EndGame", new Rectangle(300, 50, 1,1), GameObject.loadImage("res/img/EndGame.png")));
+		mObj.add(new Button("StartGame", new Rectangle(300+210+32, 50, 1,1), mEventMgr, GameObject.loadImage("res/img/BeginGame.png")));
+		mObj.add(new Button("EndGame", new Rectangle(300, 50, 1,1), mEventMgr, GameObject.loadImage("res/img/EndGame.png")));
 		//Repaint
-		Events.get().add(new Event("repaint"));
+		this.mEventMgr.add(new Event("repaint"));
 	}
 
 	@Override
 	public void enterState()
 	{
-		Events.get().add(new Event("repaint"));
+		mEventMgr.add(new Event("repaint"));
 	}
 
 	@Override
 	public void exitState()
 	{
-		Events.get().add(new Event("removeState", mName, "Main"));
+		mEventMgr.add(new Event("removeState", mName, "Main"));
 		Battleship.mShips.clear();
 		//mEventMgr.add(new Event("removeState", "UserState", "FuSM"));
 		//mEventMgr.add(new Event("removeState", "AIBombState", "FuSM"));
@@ -132,11 +133,11 @@ public class GameState extends State implements Server, Client
 	@Override
 	public void processEvents()
 	{
-		for(int i = 0; i < Events.get().size(); i++)
+		for(int i = 0; i < mEventMgr.size(); i++)
 		{
-			if(Events.get().get(i).mEvent.equals("mode"))
+			if(mEventMgr.get(i).mEvent.equals("mode"))
 			{
-				if(Events.get().get(i).mParam.equals("Host"))
+				if(mEventMgr.get(i).mParam.equals("Host"))
 				{
 					cServer.addNetworkListener(this);
 					//Start the server
@@ -145,11 +146,11 @@ public class GameState extends State implements Server, Client
 					//set the state
 					mSTATE = STATE.HOST;
 					//set button "StartGame" to invisible
-					Events.get().add(new Event("visibility", false, "StartGame"));
+					mEventMgr.add(new Event("visibility", false, "StartGame"));
 					//add thing to output
 					mPrint.add("Server started.");
 				}
-				else if(Events.get().get(i).mParam.equals("Join"))
+				else if(mEventMgr.get(i).mParam.equals("Join"))
 				{
 					//insert join specific stuff here
 					//mEventMgr.add(new Event("setState", "MenuState", "Main"));
@@ -162,24 +163,24 @@ public class GameState extends State implements Server, Client
 					mClient.start();
 					mClient.login("127.0.0.1", "client");
 					//set button "StartGame" to invisible
-					Events.get().add(new Event("visibility", false, "StartGame"));
+					mEventMgr.add(new Event("visibility", false, "StartGame"));
 					//output to screen
 					mPrint.add("Client started");
 					mSTATE = STATE.jMULTI;
 				}
-				else if(Events.get().get(i).mParam.equals("Single"))
+				else if(mEventMgr.get(i).mParam.equals("Single"))
 				{
 					//insert single specific stuff here
 					System.out.println("Fuzzy logic being developed");
-					Events.get().add(new Event("setState", "MenuState", "Main"));
+					mEventMgr.add(new Event("setState", "MenuState", "Main"));
 					//mSTATE = STATE.SINGLE;
 					//mEventMgr.add(new Event("repaint"));
 				}
-				Events.get().remove(i);
+				mEventMgr.consume(i);
 			}
-			else if (Events.get().get(i).mEvent.equals("socket")) 
+			else if (mEventMgr.get(i).mEvent.equals("socket")) 
 			{
-				if(Events.get().get(i).mParam.equals("Open"))
+				if(mEventMgr.get(i).mParam.equals("Open"))
 				{//when socket is opened...
 					mPrint.add("Socket open, waiting for local client...");
 					cClient.addClientListener(this);
@@ -189,11 +190,11 @@ public class GameState extends State implements Server, Client
 					mClient.login("127.0.0.1", "host");
 					mSTATE = STATE.hRUNNING;
 				}
-				Events.get().remove(i);
+				mEventMgr.consume(i);
 			}
-			else if(Events.get().get(i).mEvent.equals("client"))
+			else if(mEventMgr.get(i).mEvent.equals("client"))
 			{
-				if(Events.get().get(i).mParam.equals("Connected"))
+				if(mEventMgr.get(i).mParam.equals("Connected"))
 				{
 				        InetAddress addr = null;
 						try {
@@ -204,51 +205,52 @@ public class GameState extends State implements Server, Client
 						mPrint.add("waiting for player to join game on ip: " + addr.getHostAddress());
 					else//other user
 						mPrint.add("joining game");
-					Events.get().add(new Event("repaint"));
+					mEventMgr.add(new Event("repaint"));
 				}
 				//if some has joined the game
-				else if(Events.get().get(i).mParam.equals("joined")){
+				else if(mEventMgr.get(i).mParam.equals("joined")){
 					mPrint.add("Someone joined the game!");
-					Events.get().add(new Event("visibility", true, "StartGame"));
+					mEventMgr.add(new Event("visibility", true, "StartGame"));
 				}
 				//they left the game
-				else if(Events.get().get(i).mParam.equals("clientlogout"))
+				else if(mEventMgr.get(i).mParam.equals("clientlogout"))
 				{
 					mPrint.add("Your opponent left the game :(");
 					mPrint.add("The Game will now exit");
-					Events.get().add(new Event("repaint"));
+					mEventMgr.add(new Event("repaint"));
 					System.exit(1);
 				}
-				Events.get().remove(i);
+				mEventMgr.consume(i);
 			}
-			else if(Events.get().get(i).mEvent.equals("buttonClicked"))
+			else if(mEventMgr.get(i).mEvent.equals("buttonClicked"))
 			{
-				if(Events.get().get(i).mParam.equals("EndGame"))
+				if(mEventMgr.get(i).mParam.equals("EndGame"))
 				{
-					Events.get().add(new Event("setState", "MenuState", "Main"));
-					Events.get().remove(i);
+					mEventMgr.add(new Event("setState", "MenuState", "Main"));
+					mEventMgr.consume(i);
 				}
 				//if start game is pressed
-				if(Events.get().get(i).mParam.equals("StartGame")) {
+				if(mEventMgr.get(i).mParam.equals("StartGame")) {
 					if(chkShips()){
 						//make ships non-movable
-						Events.get().add(new Event("setShips", "SET"));
-						Events.get().add(new Event("repaint"));//repaint
+						mEventMgr.add(new Event("setShips", "SET"));
+						mEventMgr.add(new Event("repaint"));//repaint
 						if(mSTATE == STATE.SINGLE){
 							mSTATE = STATE.sRUNING;
-							Events.get().add(new Event("setState", "UserState", "FuSM"));//begin single player game
+							mEventMgr.add(new Event("setState", "UserState", "FuSM"));//begin single player game
 						}
-						else if(mSTATE == STATE.hRUNNING){
+						else if(mSTATE == STATE.hRUNNING || mSTATE == STATE.jMULTI){
 							mSTATE = STATE.hMULTI;
-							Events.get().add(new Event("setState", "MultiPlayer", "FuSM"));//begin militplayer
+							mEventMgr.add(new Event("setState", "MultiPlayer", "FuSM"));//begin militplayer
 						}
+						cClient.sendMessage("gameStarted");
 					}
 					else
 					{
-						Events.get().add(new Event("repaint"));
+						mEventMgr.add(new Event("repaint"));
 						mPrint.add("Error, all ships must be on the grid, and be seperate");
 					}
-					Events.get().remove(i);
+					mEventMgr.consume(i);
 				}
 			}
 		}
@@ -274,7 +276,7 @@ public class GameState extends State implements Server, Client
 	
 	@Override
 	public void sockOpen() {
-		Events.get().add(new Event("socket", "Open"));
+		mEventMgr.add(new Event("socket", "Open"));
 	}
 
 	@Override
@@ -285,33 +287,33 @@ public class GameState extends State implements Server, Client
 
 	@Override
 	public void sockClose() {
-		Events.get().add(new Event("socket", "Close"));
+		mEventMgr.add(new Event("socket", "Close"));
 		
 	}
 
 	@Override
 	public void error(Event e) {
-		Events.get().add(e);
+		mEventMgr.add(e);
 		
 	}
 
 	@Override
 	public void connected() {
-		Events.get().add(new Event("client", "Connected"));
+		mEventMgr.add(new Event("client", "Connected"));
 		
 	}
 
 	@Override
 	public void clientMsg(Event e) {
-		Events.get().add(e);
+		mEventMgr.add(e);
 	}
 
 	@Override
 	public void shipsRecieve(String str) {
 		if(str.startsWith("grid"))
-			Events.get().add(new Event("grid", Multiplayer.convertString(str.substring(4))));
+			mEventMgr.add(new Event("grid", Multiplayer.convertString(str.substring(4))));
 		else
-			Events.get().add(new Event("clientMessage", str));
+			mEventMgr.add(new Event("clientMessage", str));
 	}
 
 	/**

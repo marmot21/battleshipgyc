@@ -9,8 +9,9 @@ import java.awt.Point;
 import java.util.StringTokenizer;
 
 import battleship.Event;
-import battleship.Events;
+import battleship.EventManager;
 import battleship.client.Client;
+import battleship.client.Client.cClient;
 import battleship.gameobjects.Battleship;
 import battleship.gameobjects.Playfield;
 
@@ -44,17 +45,18 @@ public class Multiplayer extends State implements Client
 	/**
 	 * Default Constructor
 	 */
-	public Multiplayer()
+	public Multiplayer(EventManager mEventMgr)
 	{
 		mName = "MultiPlayer";
+		this.mEventMgr = mEventMgr;
 	}
 
 	@Override
 	public void enterState()
 	{
-		Events.get().add(new Event("visibility", false, "StartGame"));//set button "StartGame" to invisible
+		mEventMgr.add(new Event("visibility", false, "StartGame"));//set button "StartGame" to invisible
 		cClient.addClientListener(this);//Receive events from the client
-		Events.get().add(new Event("setGrid"));
+		mEventMgr.add(new Event("setGrid"));
 	}
 
 	/**
@@ -137,46 +139,52 @@ public class Multiplayer extends State implements Client
 	@Override
 	public void processEvents()
 	{
-		for(int i=0; i < Events.get().size(); i++)
+		for(int i=0; i < mEventMgr.size(); i++)
 		{
-			if(Events.get().get(i).mEvent.equals("setGrid"))
+			if(mEventMgr.get(i).mEvent.equals("setGrid"))
 			{
 				setGrid();
 				cClient.sendMessage(convertArray());
 				if(mSTATE==STATE.WAIT)
-					Events.get().add(new Event("setField", "TargetArrows"));
-				Events.get().remove(i);
+					mEventMgr.add(new Event("setField", "TargetArrows"));
+				mEventMgr.consume(i);
 			}
-			else if(Events.get().get(i).mEvent.equals("grid"))
-			{
+			else if(mEventMgr.get(i).mEvent.equals("grid"))
+			{//Received a grid from the other player
 				//Draw targeting lines
-				mSTATE = STATE.CURRENT;
+				mSTATE = STATE.RECEIVED;
 				if(GameState.getMSTATE() == GameState.STATE.hMULTI ||
 						GameState.getMSTATE() ==  GameState.STATE.jMULTI)
-					Events.get().add(new Event("setField", "TargetArrows"));
-				mOGrid = (int[][][])Events.get().get(i).mParam;
-				Events.get().remove(i);
+					mEventMgr.add(new Event("setField", "TargetArrows"));
+				mOGrid = (int[][][])mEventMgr.get(i).mParam;
+				mEventMgr.consume(i);
 			}
-			else if(Events.get().get(i).mEvent.equals("clientMessage"))
+			else if(mEventMgr.get(i).mEvent.equals("clientMessage"))
 			{
-				if(Events.get().get(i).mParam.equals("turn"))
+				if(mEventMgr.get(i).mParam.equals("turn"))
 				{
 					mSTATE = STATE.CURRENT;
-					Events.get().add(new Event("setField", "TargetArrows"));
-					Events.get().remove(i);
+					mEventMgr.add(new Event("setField", "TargetArrows"));
+					mEventMgr.consume(i);
+				}
+				else if (mEventMgr.get(i).mParam.equals("gameStarted") && mSTATE != STATE.CURRENT)
+				{
+					cClient.sendMessage("turn");
+					mSTATE = STATE.OTHER;
+					mEventMgr.consume(i);
 				}
 			}
-			else if(Events.get().get(i).mEvent.startsWith("mouse"))
+			else if(mEventMgr.get(i).mEvent.startsWith("mouse"))
 			{
 				//MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
-				if(Events.get().get(i).mEvent.equals("mousePressed"))
+				if(mEventMgr.get(i).mEvent.equals("mousePressed"))
 				{
 					//temp point
 					Point p = Playfield.getgridPoint();
 					if(p.x >=0 && p.y >= 0 && mSTATE == STATE.CURRENT)
 					{
 						mSTATE = STATE.OTHER;
-						Events.get().add(new Event("addBomb", mPGrid));
+						mEventMgr.add(new Event("addBomb", mPGrid));
 						//mEventMgr.add(new Event("setField", "Normal"));
 						cClient.sendMessage("turn");
 						if(mOGrid[p.x][p.y][0] == 0)
