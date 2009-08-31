@@ -11,21 +11,21 @@ public class Event
 	/**
 	 * the actual event name
 	 */
-	public String mEvent = "";
+	public String m_Event = "";
 	/**
 	 * the object passed as parameters
 	 */
-	public Object mParam = null;
+	public Object m_Param = null;
 	
 	/**
 	 * The target object
 	 */
-	public String mTarget = "";
+	public String m_Target = "";
 	
 	/**
 	 * 
 	 */
-	public boolean mToRemove = false;
+	public boolean m_ToRemove = false;
 	
 	/**
 	 * Default constructor
@@ -41,7 +41,7 @@ public class Event
 	 */
 	public Event(String str)
 	{
-		mEvent = str;
+		m_Event = str;
 	}
 	
 	/**
@@ -51,8 +51,8 @@ public class Event
 	 */
 	public Event(String str, Object obj)
 	{
-		mEvent = str;
-		mParam = obj;
+		m_Event = str;
+		m_Param = obj;
 	}
 	
 	/**
@@ -63,8 +63,8 @@ public class Event
 	 */
 	public Event(String str, Object obj, String target)
 	{
-		mEvent = str;
-		mParam = obj;
-		mTarget = target;
+		m_Event = str;
+		m_Param = obj;
+		m_Target = target;
 	}
 }

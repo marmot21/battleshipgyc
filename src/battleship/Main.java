@@ -33,9 +33,9 @@ public class Main extends Canvas implements Runnable
 	private static int FPS = 60, SLEEP = 1000/FPS;
 	public static boolean DEBUG = false;
 	
-	private BufferStrategy mStrategy;
-	public static Dimension mDim = new Dimension(800, 600);
-	private FiniteStateMachine mFSM = new FiniteStateMachine();
+	private BufferStrategy m_Strategy;
+	public static Dimension m_Dim = new Dimension(800, 600);
+	private FiniteStateMachine m_FSM = new FiniteStateMachine();
 	private boolean offScreen = false;
 	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	
@@ -46,11 +46,11 @@ public class Main extends Canvas implements Runnable
 	{
 		final JFrame geo = new JFrame("Battleship");
 		JPanel panel = (JPanel)geo.getContentPane();
-		panel.setPreferredSize(mDim);
+		panel.setPreferredSize(m_Dim);
 		panel.setLayout(null);
 		panel.setBackground(Color.GRAY);
 		
-		setBounds(0, 0, mDim.width, mDim.height);
+		setBounds(0, 0, m_Dim.width, m_Dim.height);
 		panel.add(this);
 		//setIgnoreRepaint(true);
 		geo.pack();
@@ -73,7 +73,7 @@ public class Main extends Canvas implements Runnable
 				public void componentMoved(ComponentEvent e)
 				{
 					Rectangle rect = new Rectangle (geo.getLocationOnScreen().x, geo.getLocationOnScreen().y, 
-							mDim.width, mDim.height);
+							m_Dim.width, m_Dim.height);
 					if(!(new Rectangle(0,0,screenSize.width,screenSize.height)).contains(rect)) {
 						offScreen = true;
 					}
@@ -93,16 +93,16 @@ public class Main extends Canvas implements Runnable
 		 * mStrategy.show(); flips it
 		 */
 		createBufferStrategy(2);
-		mStrategy = getBufferStrategy();
+		m_Strategy = getBufferStrategy();
 		
 		//Add EventListeners
 		Input.get().init(this);
 		addFocusListener(new FocusListener());
 
 		//Add states
-		mFSM.mName = "Main";
-		mFSM.addState(new GenericState());
-		mFSM.addState(new MenuState());
+		m_FSM.m_Name = "Main";
+		m_FSM.addState(new GenericState());
+		m_FSM.addState(new MenuState());
 		
 		//Network.get().connect("localhost", 25142);
 		
@@ -143,24 +143,24 @@ public class Main extends Canvas implements Runnable
 	public void run()
 	{
 		Events.get().add(new Event("setState", "MenuState", "Main")); //enter the Menu state
-		mFSM.removeState("GenericState");//removes the generic state from the FSM
+		m_FSM.removeState("GenericState");//removes the generic state from the FSM
 		boolean paint;
 		while(true)
 		{
 			paint = false;
 			Events.get().flush(); //get rid of old events
-			mFSM.getState().run(); //update current state
-			mFSM.processEvents();
-			mFSM.getState().processEvents();
+			m_FSM.getState().run(); //update current state
+			m_FSM.processEvents();
+			m_FSM.getState().processEvents();
 			//mEventMgr.print();
 			for(int i = 0; i < Events.get().size(); i++)
 			{
-				if(Events.get().get(i).mEvent.equals("error"))
+				if(Events.get().get(i).m_Event.equals("error"))
 				{
-					System.out.println(Events.get().get(i).mParam);
+					System.out.println(Events.get().get(i).m_Param);
 					Events.get().remove(i);
 				}
-				else if(Events.get().get(i).mEvent.equals("repaint"))
+				else if(Events.get().get(i).m_Event.equals("repaint"))
 				{
 					paint = true;
 					Events.get().remove(i);
@@ -169,7 +169,7 @@ public class Main extends Canvas implements Runnable
 			
 			for(int i = 0; i < Events.get().size(); i++)
 			{
-				if(Events.get().get(i).mEvent.equals("setState"))
+				if(Events.get().get(i).m_Event.equals("setState"))
 				{
 					paint = false;
 				}
@@ -177,10 +177,10 @@ public class Main extends Canvas implements Runnable
 			
 			if(paint)
 			{
-				Graphics g = mStrategy.getDrawGraphics(); //get the graphics object to use
-				mFSM.getState().paint(g); //paint the current state
+				Graphics g = m_Strategy.getDrawGraphics(); //get the graphics object to use
+				m_FSM.getState().paint(g); //paint the current state
 				g.dispose(); //destroy g object
-				mStrategy.show(); //show the image on screen
+				m_Strategy.show(); //show the image on screen
 			}
 			
 			try

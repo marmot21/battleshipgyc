@@ -18,7 +18,7 @@ public class FiniteStateMachine
 	/**
 	 * A list of all the states
 	 */
-	private List<State> mStates = new ArrayList<State>();
+	private List<State> m_States = new ArrayList<State>();
 	
 	/**
 	 * The current state
@@ -28,7 +28,7 @@ public class FiniteStateMachine
 	/**
 	 * The name of the FSM
 	 */
-	public String mName = "";
+	public String m_Name = "";
 	
 	/**
 	 * Default constructor.
@@ -44,7 +44,7 @@ public class FiniteStateMachine
 	 */
 	public void addState(State state)
 	{
-		mStates.add(state);
+		m_States.add(state);
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class FiniteStateMachine
 	 */
 	private void removeState(int state)
 	{
-		mStates.remove(state);
+		m_States.remove(state);
 	}
 	
 	/**
@@ -62,8 +62,8 @@ public class FiniteStateMachine
 	 */
 	public void removeState(String str)
 	{
-		for(int i=0; i<mStates.size(); i++)
-			if(mStates.get(i).mName.equals(str))
+		for(int i=0; i<m_States.size(); i++)
+			if(m_States.get(i).mName.equals(str))
 				removeState(i);
 	}
 	
@@ -73,9 +73,9 @@ public class FiniteStateMachine
 	 */
 	public void removeState(State state)
 	{
-		State st = 	mStates.get(get(state));
+		State st = 	m_States.get(get(state));
 		st = null;
-		mStates.remove(state);
+		m_States.remove(state);
 	}
 	
 	/**
@@ -84,7 +84,7 @@ public class FiniteStateMachine
 	 */
 	public State getState()
 	{
-			return mStates.get(mCurrentState);
+			return m_States.get(mCurrentState);
 	}
 	
 	/**
@@ -96,8 +96,8 @@ public class FiniteStateMachine
 	 */
 	protected int get(State state)
 	{
-		for(int i=0; i<mStates.size(); i++)
-			if(mStates.get(i).equals(state))
+		for(int i=0; i<m_States.size(); i++)
+			if(m_States.get(i).equals(state))
 				return i;
 		return -1;
 	}
@@ -111,9 +111,9 @@ public class FiniteStateMachine
 	 */
 	private boolean setState(String str)
 	{
-		for(int i = 0; i < mStates.size(); i++)
+		for(int i = 0; i < m_States.size(); i++)
 		{
-			if(mStates.get(i).mName.equals(str))
+			if(m_States.get(i).mName.equals(str))
 			{
 				setState(i);
 				return true;
@@ -143,29 +143,29 @@ public class FiniteStateMachine
 	{
 		for(int i = 0; i < Events.get().size(); i++)
 		{
-			if(Events.get().get(i).mTarget.equals(mName))
+			if(Events.get().get(i).m_Target.equals(m_Name))
 			{
 				//if current event is a delete state then delete it and consume event
-				if(Events.get().get(i).mEvent.equals("removeState"))
+				if(Events.get().get(i).m_Event.equals("removeState"))
 				{
 					//if(mCurrentState < mStates.indexOf((String)eventMgr.get(i).mParam))
 						//mCurrentState--;//assuming that the surrent state is removed
 					//removeState((State)eventMgr.get(i).mParam);
-					removeState((String)Events.get().get(i).mParam);
+					removeState((String)Events.get().get(i).m_Param);
 					Events.get().remove(i);
 				}
 				//if current event is a change state then change it and consume event
-				else if(Events.get().get(i).mEvent.equals("setState"))
+				else if(Events.get().get(i).m_Event.equals("setState"))
 				{
 					//if(eventMgr.get(i).mTarget.equals("FuSM"))
 					//	System.out.println("state shange consumed FuSM: " + 
 					//			eventMgr.get(i).mParam);
-					if(setState((String)Events.get().get(i).mParam))
+					if(setState((String)Events.get().get(i).m_Param))
 						Events.get().remove(i);
 				}
-				else if(Events.get().get(i).mEvent.equals("addState"))
+				else if(Events.get().get(i).m_Event.equals("addState"))
 				{
-					addState((State)Events.get().get(i).mParam);
+					addState((State)Events.get().get(i).m_Param);
 					Events.get().remove(i);
 				}
 			}

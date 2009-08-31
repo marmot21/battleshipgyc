@@ -56,10 +56,10 @@ public class UserState extends State
 	{
 		for(int i=0; i < Events.get().size(); i++)
 		{
-			if(Events.get().get(i).mEvent.startsWith("mouse"))
+			if(Events.get().get(i).m_Event.startsWith("mouse"))
 			{
 				//MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
-				if(Events.get().get(i).mEvent.equals("mousePressed"))
+				if(Events.get().get(i).m_Event.equals("mousePressed"))
 				{
 					Events.get().add(new Event("addBomb", mGrid));
 					//temp point
