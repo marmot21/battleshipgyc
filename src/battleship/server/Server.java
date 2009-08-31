@@ -1,5 +1,6 @@
 package battleship.server;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
@@ -19,47 +20,82 @@ public interface Server {
 	public void messageReceived(Event e);
 	public void error(Event e);
 	
+/**
+ * Singleton server to be a server and do server stuff
+ * @author Obi
+ *
+ */
 public class cServer extends Thread
 {
-	ServerSocket servSock=null;
-	ClientGroup group;
+	private ServerSocket servSock=null;
+	private ClientGroup group;
+	private static cServer thisClass;
+	private boolean running = false;
 	/**
 	 * List of objects that are using this server
 	 */
-	static Vector<Server> listener = new Vector<Server>();
+	private Vector<Server> listener = new Vector<Server>();
 	
 	/**
 	 * Constructor
 	 * Uses port 25142 - random one that works at school
 	 */
-	public cServer()
+	private cServer()
 	{
 		try
 		{
 			servSock=new ServerSocket(25142); //create socket
-			for(Server go : listener)
-				go.sockOpen();
+
 		} 
 		catch (Exception e)
 		{	
-			System.out.println("Could not create socket. Exiting.");
-			System.exit(1);
+			//System.out.println("Could not create socket. Exiting.");
+			//System.exit(1);
 		}
 		System.out.println("Socket created. Waiting for clients.");
+		running = true;
 		group=new ClientGroup();
 		group.setName("ClientGroup");
 		group.start();
 	}
 	
-	public static void addNetworkListener(Server obj)
+	/**
+	 * Returns a pointer to the server
+	 * @return The server
+	 */
+	public static cServer getServer()
 	{
-		listener.add(obj);
+		if (thisClass == null)
+			thisClass = new cServer();
+		thisClass.running = true;
+		return thisClass;
+	}
+	
+	public void end()
+	{
+		running = false;
+	}
+	
+	/**
+	 * Send events to the object 'obj'
+	 * @param obj The object to have messages sent to
+	 */
+	public void addNetworkListener(Server obj)
+	{
+		if (!listener.contains(obj))
+			listener.add(obj);
 	}
 	
 	public void run()
 	{
+		if (thisClass.servSock != null)
+			for(Server go : thisClass.listener)
+				go.sockOpen();
+		else
+			for(Server go : listener)
+				go.error(new Event("socket", "Error"));
 		setName("Server");
-		while (servSock!=null)
+		while (servSock!=null && running)
 		{
 			Socket tempSock;
 			try
@@ -73,16 +109,24 @@ public class cServer extends Thread
 				System.exit(1);
 			}
 		}
+		try {
+			servSock.close();
+		} catch (Exception e) {}
+		servSock = null;
+		group = null;
+		thisClass = null;
 	}
 	
 	public void finalize()
 	{
+		//System.out.println("exiting");
 		try
 		{
 			servSock.close();
 		}
 		catch (Exception e){};
 		servSock=null;
+		listener.clear();
 	}
 }
 }
