@@ -2,14 +2,37 @@ package battleship;
 
 import java.util.Vector;
 
+/**
+ * Singleton class
+ * @author Obi
+ * @author Amec
+ *
+ */
 public class Events
 {
-	private static Events mInstance = new Events();
+	private static Events mInstance;
 	private Vector<Event> mEvents = new Vector<Event>();
 	
+	private Events()
+	{
+		//stuff
+	}
 	
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		throw new CloneNotSupportedException(); 
+		//prevent any cloning
+	}
+
+	/**
+	 * Return a pointer to the singleton class
+	 * @return The class
+	 */
 	public static Events get()
 	{
+		if (mInstance == null)
+			mInstance = new Events();
 		return mInstance;
 	}
 	
@@ -41,7 +64,7 @@ public class Events
 	public void print()
 	{
 		for(int i = 0; i < mEvents.size(); i++)
-			System.out.println(mEvents.get(i).mEvent);
+			System.out.println(mEvents.get(i).m_Event);
 		System.out.println();
 	}
 }

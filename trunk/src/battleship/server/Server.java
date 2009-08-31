@@ -59,6 +59,13 @@ public class cServer extends Thread
 		group.start();
 	}
 	
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		throw new CloneNotSupportedException(); 
+		//prevent any cloning
+	}
+	
 	/**
 	 * Returns a pointer to the server
 	 * @return The server

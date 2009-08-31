@@ -135,9 +135,9 @@ public class Battleship extends GameObject
 	{
 		for(int i = 0; i < Events.get().size(); i++)
 		{
-			if(Events.get().get(i).mEvent.equals("setShips"))
+			if(Events.get().get(i).m_Event.equals("setShips"))
 			{
-				if(Events.get().get(i).mParam.equals("SET"))
+				if(Events.get().get(i).m_Param.equals("SET"))
 					STATE = SHIPS.SET;
 				if(mShips.size() > 1)
 					if(mShips.get(mShips.size()-1).equals(this))
@@ -194,8 +194,11 @@ public class Battleship extends GameObject
 					mPrevPos.mPos.y = mBounds.y;
 					mPrevPos.mSTATE = STATE;
 				}
-				else if(Input.get().mouseIsPressed(MouseEvent.BUTTON1))
-				{
+				
+				//WTF, blanking this made it work????
+				//Tyson, explain
+				//else if(Input.get().mouseIsPressed(MouseEvent.BUTTON1))
+				//{
 					if((STATE == SHIPS.INIT || STATE == SHIPS.NORMAL) && mBounds.contains(Input.get().getMouse()))
 					{
 						mMouse.x = Input.get().getMouse().x - mBounds.x;
@@ -205,12 +208,12 @@ public class Battleship extends GameObject
 						mPrevPos.mSTATE = STATE;
 						STATE = SHIPS.FOLLOW;
 					}
-				}
-				else if(Input.get().mouseIsPressed(MouseEvent.BUTTON3)) //rotate ship
-				{
+				//}
+				//else if(Input.get().mouseIsPressed(MouseEvent.BUTTON3)) //rotate ship
+				//{
 					if(STATE == SHIPS.FOLLOW)
 					{
-						mRotated = !mRotated;
+						mRotated = Input.get().mouseIsPressed(MouseEvent.BUTTON3);
 						if(mRotated)
 						{
 							mBounds.width = mImgH.getWidth();
@@ -223,7 +226,7 @@ public class Battleship extends GameObject
 						}
 						Events.get().add(new Event("repaint"));
 					}	
-				}
+				//}
 			}
 		}
 	}

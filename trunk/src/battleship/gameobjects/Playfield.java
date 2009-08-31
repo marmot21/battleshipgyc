@@ -117,28 +117,28 @@ public class Playfield extends GameObject
 		{
 			 for(int i = 0; i < Events.get().size(); i++)
 			 { 
-				 if(Events.get().get(i).mEvent.equals("addBomb"))
+				 if(Events.get().get(i).m_Event.equals("addBomb"))
 				 {
-					 mGrid = (int[][][]) Events.get().get(i).mParam;
+					 mGrid = (int[][][]) Events.get().get(i).m_Param;
 					 System.out.println("bomb added");
 					 Events.get().add(new Event("repaint"));
 					 Events.get().remove(i);
 				 }
-				 else if(Events.get().get(i).mEvent.startsWith("setField"))
+				 else if(Events.get().get(i).m_Event.startsWith("setField"))
 				 {
 					 System.out.println("arrows");
-					 if(Events.get().get(i).mParam.equals("TargetArrows"))
+					 if(Events.get().get(i).m_Param.equals("TargetArrows"))
 						 mTargetArrows = true;
-					 else if(Events.get().get(i).mParam.equals("Normal"))
+					 else if(Events.get().get(i).m_Param.equals("Normal"))
 						 mTargetArrows = false;
-					 else if(Events.get().get(i).mParam.equals("Toggle"))
+					 else if(Events.get().get(i).m_Param.equals("Toggle"))
 						 mTargetArrows = !mTargetArrows;
 					 Events.get().remove(i);
 				 }
-				 else if(Events.get().get(i).mEvent.startsWith("mouse"))
+				 else if(Events.get().get(i).m_Event.startsWith("mouse"))
 				 {
-					 MouseEvent me = (MouseEvent) Events.get().get(i).mParam;
-					 if(Events.get().get(i).mEvent.equals("mouseMoved") || Events.get().get(i).mEvent.equals("mouseDragged")) 
+					 MouseEvent me = (MouseEvent) Events.get().get(i).m_Param;
+					 if(Events.get().get(i).m_Event.equals("mouseMoved") || Events.get().get(i).m_Event.equals("mouseDragged")) 
 					 {
 						 if(mBounds.contains(me.getPoint()))
 						 { 

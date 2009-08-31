@@ -20,7 +20,7 @@ public class Background extends GameObject
 	public Background(String s, Rectangle r)
 	{
 		super(s, r);
-		mImg = new BufferedImage(Main.mDim.width, Main.mDim.height, BufferedImage.OPAQUE);
+		mImg = new BufferedImage(Main.m_Dim.width, Main.m_Dim.height, BufferedImage.OPAQUE);
 		int n = 10 + (int)(Math.random()*10);
 		for(int i = 0; i < n; i++)
 			clouds.add(new Cloud());

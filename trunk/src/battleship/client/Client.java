@@ -69,12 +69,12 @@ public class cClient extends Thread
 		return thisClass;
 	}
 	
-	 public Object clone()
-		throws CloneNotSupportedException
-	  {
-	    throw new CloneNotSupportedException(); 
-	    // that'll teach 'em
-	  }
+	@Override
+	public Object clone() throws CloneNotSupportedException
+	{
+		throw new CloneNotSupportedException(); 
+	    //prevent any cloning
+	}
 	
 	private boolean output(String str) 
 	{

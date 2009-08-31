@@ -94,19 +94,19 @@ public class Button extends GameObject
 	{
 		for(int i = 0; i < Events.get().size(); i++)
 		{
-			if(Events.get().get(i).mTarget.equals(mName))
+			if(Events.get().get(i).m_Target.equals(mName))
 			{
-				if(Events.get().get(i).mEvent.equals("visibility"))
+				if(Events.get().get(i).m_Event.equals("visibility"))
 				{
-					if(Events.get().get(i).mParam.equals(new Boolean(true)))
+					if(Events.get().get(i).m_Param.equals(new Boolean(true)))
 					{
 						visibility = true;
 					}
-					else if(Events.get().get(i).mParam.equals(new Boolean(false)))
+					else if(Events.get().get(i).m_Param.equals(new Boolean(false)))
 					{
 						visibility = false;
 					}
-					else if(Events.get().get(i).mParam.equals("toggle"))
+					else if(Events.get().get(i).m_Param.equals("toggle"))
 					{
 						visibility = !visibility;
 					}
