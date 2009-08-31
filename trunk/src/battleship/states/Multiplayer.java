@@ -11,7 +11,6 @@ import java.util.StringTokenizer;
 import battleship.Event;
 import battleship.EventManager;
 import battleship.client.Client;
-import battleship.client.Client.cClient;
 import battleship.gameobjects.Battleship;
 import battleship.gameobjects.Playfield;
 
@@ -55,7 +54,7 @@ public class Multiplayer extends State implements Client
 	public void enterState()
 	{
 		mEventMgr.add(new Event("visibility", false, "StartGame"));//set button "StartGame" to invisible
-		cClient.addClientListener(this);//Receive events from the client
+		cClient.getClient().addClientListener(this);//Receive events from the client
 		mEventMgr.add(new Event("setGrid"));
 	}
 
@@ -144,7 +143,7 @@ public class Multiplayer extends State implements Client
 			if(mEventMgr.get(i).mEvent.equals("setGrid"))
 			{
 				setGrid();
-				cClient.sendMessage(convertArray());
+				cClient.getClient().sendMessage(convertArray());
 				if(mSTATE==STATE.WAIT)
 					mEventMgr.add(new Event("setField", "TargetArrows"));
 				mEventMgr.consume(i);
@@ -165,15 +164,15 @@ public class Multiplayer extends State implements Client
 				{
 					mSTATE = STATE.CURRENT;
 					mEventMgr.add(new Event("setField", "TargetArrows"));
-					mEventMgr.consume(i);
 				}
 				else if (mEventMgr.get(i).mParam.equals("gameStarted") && mSTATE != STATE.CURRENT)
 				{
-					cClient.sendMessage("turn");
-					mSTATE = STATE.OTHER;
-					mEventMgr.consume(i);
+					cClient.getClient().sendMessage("turn");
 				}
+				mEventMgr.add(new Event("repaint"));
+				mEventMgr.consume(i);
 			}
+			//mouse events
 			else if(mEventMgr.get(i).mEvent.startsWith("mouse"))
 			{
 				//MouseEvent me = (MouseEvent) mEventMgr.get(i).mParam;
@@ -186,7 +185,7 @@ public class Multiplayer extends State implements Client
 						mSTATE = STATE.OTHER;
 						mEventMgr.add(new Event("addBomb", mPGrid));
 						//mEventMgr.add(new Event("setField", "Normal"));
-						cClient.sendMessage("turn");
+						cClient.getClient().sendMessage("turn");
 						if(mOGrid[p.x][p.y][0] == 0)
 							mPGrid[p.x][p.y][1] = 1;
 						else if(mOGrid[p.x][p.y][0] > 0)

@@ -28,23 +28,55 @@ public interface Client{
 	public void clientMsg(Event e);
 	public void shipsRecieve(String str);
 	
-public static class cClient extends Thread
+/**
+ * Singleton class to handle client stuff
+ * @author Obi
+ *
+ */
+public class cClient extends Thread
 {
-	private static Vector<Client> listener = new Vector<Client>();
-	private static Socket sock;
-	private static BufferedReader bReader;
-	private static PrintWriter pWriter;
-	private static String theHost="localHost";
-	private static String mName;
-	private static int thePort=25142;		//The communications port on the server.
+	//pointer to this class
+	private static cClient thisClass;
+	
+	private Vector<Client> listener = new Vector<Client>();
+	private Socket sock;
+	private BufferedReader bReader;
+	private PrintWriter pWriter;
+	private String theHost="localHost";
+	private String mName;
+	private int thePort=25142;		//The communications port on the server.
 
 	
 	private static Thread chatThread = null;
 	//java.awt.List chatList;
 
-
+	/**
+	 * Class is a singleton
+	 */
+	private cClient()
+	{
+		
+	}
 	
-	private static boolean output(String str) 
+	/**
+	 * Returns the pointer to the class
+	 * @return pointer to this class
+	 */
+	public static cClient getClient()
+	{
+		if (thisClass == null)
+			thisClass = new cClient();
+		return thisClass;
+	}
+	
+	 public Object clone()
+		throws CloneNotSupportedException
+	  {
+	    throw new CloneNotSupportedException(); 
+	    // that'll teach 'em
+	  }
+	
+	private boolean output(String str) 
 	{
 		try 
 		{
@@ -56,16 +88,17 @@ public static class cClient extends Thread
 		}
 	}
 	
-	public static void addClientListener(Client obj)
+	public void addClientListener(Client obj)
 	{
-		listener.add(obj);
+		if (!listener.contains(obj))
+			listener.add(obj);
 	}
 	
 	/**
 	 * Wrapper for output
 	 * @param str The message to send
 	 */
-	public static void sendMessage(String str)
+	public void sendMessage(String str)
 	{
 		output("message||"+str);
 	}
@@ -78,7 +111,7 @@ public static class cClient extends Thread
 		chatThread.start();
 	}
 	
-	public static void logout()
+	public void logout()
 	{
 		output("logout");
 		try 
@@ -106,7 +139,7 @@ public static class cClient extends Thread
 			} catch (Exception e) 
 			{
 				for(Client go : listener)
-					go.error(new Event("error","connection"));
+					go.error(new Event("clientError","connection"));
 				sock = null;
 			}
 			try{ Thread.sleep( 100 ); } catch(InterruptedException e){};
