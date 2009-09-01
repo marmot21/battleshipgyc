@@ -3,8 +3,10 @@ package battleship.states;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Label;
 import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -93,6 +95,7 @@ public class GameState extends State implements Server, Client
 		//Add the buttons
 		mObj.add(new Button("StartGame", new Rectangle(300+210+32, 50, 1,1), GameObject.loadImage("res/img/BeginGame.png")));
 		mObj.add(new Button("EndGame", new Rectangle(300, 50, 1,1), GameObject.loadImage("res/img/EndGame.png")));
+		mObj.add(new Button("Help", new Rectangle(280, 200, 1, 1), GameObject.loadImage("res/img/Help.png")));
 		
 		//Add the popup window
 		popup = new PopupWindow();
@@ -151,10 +154,11 @@ public class GameState extends State implements Server, Client
 		for(int i = 0; i < mObj.size(); i++)
 			mObj.get(i).paint(g);
 		g.setColor(new Color(255,0,0));
-		while(mPrint.size()>10)
+		g.setFont(new Font("Dialog", Font.BOLD, 14));
+		while(mPrint.size()>6)
 			mPrint.remove(0);
 		for(int i = 0; i < mPrint.size(); i++)
-			g.drawString(mPrint.get(i), 400, 250+15*i);
+			g.drawString(mPrint.get(i), 450, 250+18*i);
 	}
 	
 	@Override
@@ -188,12 +192,13 @@ public class GameState extends State implements Server, Client
 					//mEventMgr.add(new Event("setState", "MenuState", "Main"));
 					//mEventMgr.add(new Event("error", "Joining not implemented"));
 					//make sure there is no server running
-					String sHost = new String();
 					//display the popup window
 					frame.setVisible(true);
 					synchronized (m_syncObj)
 						{
-						popup.init(m_syncObj, "Enter ip of computer to join game");
+						//popup.init();
+						popup.init(m_syncObj, "Enter ip of computer to join game", 0);
+						//popup.start();
 						try {
 							m_syncObj.wait();
 						} catch (InterruptedException e1) {}
@@ -278,7 +283,7 @@ public class GameState extends State implements Server, Client
 					mPrint.add("Your opponent left the game :(");
 					mPrint.add("The Game will now exit");
 					Events.get().add(new Event("repaint"));
-					System.exit(0);
+					System.exit(1);
 					//TODO: will not draw this
 				}
 				Events.get().remove(i);
@@ -328,6 +333,23 @@ public class GameState extends State implements Server, Client
 					}
 					Events.get().remove(i);
 				}
+				else if (Events.get().get(i).m_Param.equals("Help"))
+				{
+					frame.setSize(500, 600);
+					frame.setVisible(true);
+					synchronized (m_syncObj)
+						{
+						//popup.init();
+						popup.init(m_syncObj, "FAQ:", 1);
+						frame.validate();
+						popup.start();
+						try {
+							m_syncObj.wait();
+						} catch (InterruptedException e1) {}
+					}
+					frame.setVisible(false);
+					frame.setSize(400, 100);
+				}
 			}
 		}
 		for(int i = 0; i < mObj.size(); i++)
@@ -357,8 +379,7 @@ public class GameState extends State implements Server, Client
 
 	@Override
 	public void messageReceived(Event e) {
-		// TODO Auto-generated method stub
-		
+		Events.get().add(e);
 	}
 
 	@Override
