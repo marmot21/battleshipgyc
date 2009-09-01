@@ -77,15 +77,15 @@ public class GameState extends State implements Server, Client
 		Playfield pTrg = new Playfield("Targeting Screen", new Rectangle(24, 0, 10, 10), new Dimension(24, 24));
 		
 		//Add ships to the Status Screen
-		pStat.mObj.add(new Battleship("BS1", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
-		pStat.mObj.add(new Battleship("BS2", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
+		pStat.m_Obj.add(new Battleship("BS1", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
+		pStat.m_Obj.add(new Battleship("BS2", new Rectangle(0, 0, 49, 24), GameObject.loadImage("res/img/Ship1.png"), GameObject.loadImage("res/img/Ship2.png")));
 		
 		//Add the Fuzzy logic thing to the Targeting screen
-		pTrg.mFuSM = new FiniteStateMachine();
-		pTrg.mFuSM.addState(new GenericState());
-		pTrg.mFuSM.addState(new UserState());
-		pTrg.mFuSM.addState(new Multiplayer());
-		pTrg.mFuSM.m_Name = "FuSM";
+		pTrg.m_FuSM = new FiniteStateMachine();
+		pTrg.m_FuSM.addState(new GenericState());
+		pTrg.m_FuSM.addState(new UserState());
+		pTrg.m_FuSM.addState(new Multiplayer());
+		pTrg.m_FuSM.m_Name = "FuSM";
 		//Add the grids to this state
 		mObj.add(pTrg);
 		mObj.add(pStat);
@@ -300,6 +300,8 @@ public class GameState extends State implements Server, Client
 			{
 				if(Events.get().get(i).m_Param.equals("EndGame"))
 				{
+					if(!(m_STATE == STATE.sRUNING || m_STATE == STATE.SINGLE))
+						m_Client.sendMessage("clientlogout");
 					Events.get().add(new Event("setState", "MenuState", "Main"));
 					Events.get().remove(i);
 				}

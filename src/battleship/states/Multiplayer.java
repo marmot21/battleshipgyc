@@ -6,10 +6,12 @@ package battleship.states;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.util.StringTokenizer;
 
 import battleship.Event;
 import battleship.Events;
+import battleship.Input;
 import battleship.client.Client;
 import battleship.gameobjects.Battleship;
 import battleship.gameobjects.Playfield;
@@ -171,26 +173,22 @@ public class Multiplayer extends State implements Client
 				Events.get().add(new Event("repaint"));
 				Events.get().remove(i);
 			}
-			//mouse events
-			else if(Events.get().get(i).m_Event.startsWith("mouse"))
+		}
+		//mouse events
+		if(Input.get().mouseIsPressed(MouseEvent.BUTTON1))
+		{
+			//temp point
+			Point p = Playfield.getgridPoint();
+			if(p.x >=0 && p.y >= 0 && mSTATE == STATE.CURRENT)
 			{
-				//MouseEvent me = (MouseEvent) Events.get().get(i).mParam;
-				if(Events.get().get(i).m_Event.equals("mousePressed"))
-				{
-					//temp point
-					Point p = Playfield.getgridPoint();
-					if(p.x >=0 && p.y >= 0 && mSTATE == STATE.CURRENT)
-					{
-						mSTATE = STATE.OTHER;
-						Events.get().add(new Event("addBomb", mPGrid));
-						//Events.get().add(new Event("setField", "Normal"));
-						cClient.getClient().sendMessage("turn");
-						if(mOGrid[p.x][p.y][0] == 0)
-							mPGrid[p.x][p.y][1] = 1;
-						else if(mOGrid[p.x][p.y][0] > 0)
-							mPGrid[p.x][p.y][1] = 2;
-					}
-				}
+				mSTATE = STATE.OTHER;
+				Events.get().add(new Event("addBomb", mPGrid));
+				//Events.get().add(new Event("setField", "Normal"));
+				cClient.getClient().sendMessage("turn");
+				if(mOGrid[p.x][p.y][0] == 0)
+					mPGrid[p.x][p.y][1] = 1;
+				else if(mOGrid[p.x][p.y][0] > 0)
+					mPGrid[p.x][p.y][1] = 2;
 			}
 		}
 	}

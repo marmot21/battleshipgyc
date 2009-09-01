@@ -161,17 +161,17 @@ public class Battleship extends GameObject
 					mBounds.y = mBounds.y/24*24;
 					mBounds.x = mBounds.x/24*24;
 
-					int iWidth = (mBounds.width+10)/Playfield.mGridSize.width;
-					int iHeight = (mBounds.height+10)/Playfield.mGridSize.height;
+					int iWidth = (mBounds.width+10)/Playfield.m_GridSize.width;
+					int iHeight = (mBounds.height+10)/Playfield.m_GridSize.height;
 					mXY.clear();
 					if(isLarger(iWidth,iHeight))//i.e. is horizontal
 						for(int j = 0; j<(larger(iWidth,iHeight)); j++)
-							mXY.add(new Point((mBounds.x+12+Playfield.mGridSize.width*j)/Playfield.mGridSize.width - mStatusScreen.x/Playfield.mGridSize.width,
-									(mBounds.y+12)/Playfield.mGridSize.height - mStatusScreen.y/Playfield.mGridSize.height));
+							mXY.add(new Point((mBounds.x+12+Playfield.m_GridSize.width*j)/Playfield.m_GridSize.width - mStatusScreen.x/Playfield.m_GridSize.width,
+									(mBounds.y+12)/Playfield.m_GridSize.height - mStatusScreen.y/Playfield.m_GridSize.height));
 					else//i.e. is vertical
 						for(int j = 0; j<(larger(iWidth,iHeight)); j++)
-							mXY.add(new Point((mBounds.x+12)/Playfield.mGridSize.width - mStatusScreen.x/Playfield.mGridSize.width,
-									(mBounds.y+12+Playfield.mGridSize.height*j)/Playfield.mGridSize.height - mStatusScreen.y/Playfield.mGridSize.height));
+							mXY.add(new Point((mBounds.x+12)/Playfield.m_GridSize.width - mStatusScreen.x/Playfield.m_GridSize.width,
+									(mBounds.y+12+Playfield.m_GridSize.height*j)/Playfield.m_GridSize.height - mStatusScreen.y/Playfield.m_GridSize.height));
 					
 					System.out.println("Ship position:");
 					for(Point go : mXY)
