@@ -23,7 +23,7 @@ public class Input
 	private static Input mInstance;
 	private boolean[] mKeys = new boolean[256];
 	private boolean mBUTTON1, mBUTTON2, mBUTTON3;
-	private Point mMouse;
+	private Point mMouse = new Point();
 	
 	private Input()
 	{

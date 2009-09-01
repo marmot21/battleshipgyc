@@ -12,15 +12,15 @@ public class PopupWindow extends Applet implements ActionListener
 	TextField t;
 	Label l;
 	Object p_parent;
-	String p_str;
+	public String p_str;
 	
 	/**
 	 * Popup window for joining the game.
 	 */
-	public void init(Object obj, String str, String text)
+	public void init(Object obj, String text)
 	{
 		//set variables
-		p_str = str;
+		p_str = new String();
 		p_parent = obj;
 		
 		t = new TextField(12);
