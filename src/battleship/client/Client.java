@@ -165,7 +165,7 @@ public class cClient extends Thread
 					if(cmd.equals("logout")) 
 					{
 						for(Client go : listener)
-							go.clientMsg(new Event("client", val+cmd));
+							go.clientMsg(new Event("client", /*val+*/cmd));
 					}
 					else
 					if(cmd.equals("granted")) 

@@ -273,7 +273,7 @@ public class GameState extends State implements Server, Client
 					Events.get().add(new Event("visibility", true, "StartGame"));
 				}
 				//they left the game
-				else if(Events.get().get(i).m_Param.equals("clientlogout"))
+				else if(Events.get().get(i).m_Param.equals("logout"))
 				{
 					mPrint.add("Your opponent left the game :(");
 					mPrint.add("The Game will now exit");
@@ -301,7 +301,7 @@ public class GameState extends State implements Server, Client
 				if(Events.get().get(i).m_Param.equals("EndGame"))
 				{
 					if(!(m_STATE == STATE.sRUNING || m_STATE == STATE.SINGLE))
-						m_Client.sendMessage("clientlogout");
+						m_Client.logout();
 					Events.get().add(new Event("setState", "MenuState", "Main"));
 					Events.get().remove(i);
 				}
