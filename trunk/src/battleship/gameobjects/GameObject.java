@@ -66,6 +66,9 @@ public abstract class GameObject
 		return tempImage;
 	}
 	
+	/**
+	 * Makes the object run it code - not part of the thread system
+	 */
 	public abstract void run();
 	
 	/**

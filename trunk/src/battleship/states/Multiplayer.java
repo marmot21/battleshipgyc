@@ -4,6 +4,7 @@
 package battleship.states;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -93,7 +94,8 @@ public class Multiplayer extends State implements Client
 		StringTokenizer st = new StringTokenizer(str,"&");
 		String tmp;
 		int[][][] grid = new int[10][10][2];
-		for(int i = 0; i<=st.countTokens(); i++)
+		int iTemp = st.countTokens();
+		for(int i = 0; i<iTemp; i++)
 		{
 			tmp = st.nextToken();
 			grid[(int)tmp.charAt(0)-48][(int)tmp.charAt(1)-48][(int)tmp.charAt(2)-48] = (int)tmp.charAt(3)-48;
@@ -129,10 +131,13 @@ public class Multiplayer extends State implements Client
 	@Override
 	public void paint(Graphics g) {
 		g.setColor(Color.GREEN);
+		g.setFont(new Font("Dialog", Font.BOLD, 14));
 		if(mSTATE == STATE.CURRENT)
-			g.drawString("Your Turn", 400, 400);
-		else //if(mSTATE == STATE.OTHER)
-			g.drawString("Opponents Turn", 400, 400);
+			g.drawString("Your Turn", 450, 400);
+		else if(mSTATE == STATE.OTHER)
+			g.drawString("Opponents Turn", 450, 400);
+		else 
+			g.drawString("Waiting for other player", 450, 400);
 	}
 
 
