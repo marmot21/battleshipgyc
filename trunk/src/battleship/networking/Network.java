@@ -11,7 +11,7 @@ import java.net.Socket;
 //NEEDS MOAR ELEGANCE
 public class Network
 {
-	private static Network mInstance = new Network();
+/*	private static Network mInstance = new Network();
 	private boolean client;
 	private Socket mSock;
 	private BufferedReader mReader;
@@ -49,5 +49,5 @@ public class Network
 	public void sendData(String data)
 	{
 		
-	}
+	}*/
 }

@@ -194,40 +194,39 @@ public class Battleship extends GameObject
 					mPrevPos.mPos.y = mBounds.y;
 					mPrevPos.mSTATE = STATE;
 				}
-				
-				//WTF, blanking this made it work????
-				//Tyson, explain
-				//else if(Input.get().mouseIsPressed(MouseEvent.BUTTON1))
-				//{
-					if((STATE == SHIPS.INIT || STATE == SHIPS.NORMAL) && mBounds.contains(Input.get().getMouse()))
-					{
-						mMouse.x = Input.get().getMouse().x - mBounds.x;
-						mMouse.y = Input.get().getMouse().y - mBounds.y;
-						mPrevPos.mPos.x = mBounds.x;
-						mPrevPos.mPos.y = mBounds.y;
-						mPrevPos.mSTATE = STATE;
-						STATE = SHIPS.FOLLOW;
-					}
-				//}
-				//else if(Input.get().mouseIsPressed(MouseEvent.BUTTON3)) //rotate ship
-				//{
-					if(STATE == SHIPS.FOLLOW)
-					{
-						mRotated = Input.get().mouseIsPressed(MouseEvent.BUTTON3);
-						if(mRotated)
-						{
-							mBounds.width = mImgH.getWidth();
-							mBounds.height = mImgH.getHeight();
-						}
-						else
-						{
-							mBounds.width = mImgV.getWidth();
-							mBounds.height = mImgV.getHeight();
-						}
-						Events.get().add(new Event("repaint"));
-					}	
-				//}
 			}
+				
+			else if(Input.get().mouseIsPressed(MouseEvent.BUTTON1))
+			{
+				if((STATE == SHIPS.INIT || STATE == SHIPS.NORMAL) && mBounds.contains(Input.get().getMouse()))
+				{
+					mMouse.x = Input.get().getMouse().x - mBounds.x;
+					mMouse.y = Input.get().getMouse().y - mBounds.y;
+					mPrevPos.mPos.x = mBounds.x;
+					mPrevPos.mPos.y = mBounds.y;
+					mPrevPos.mSTATE = STATE;
+					STATE = SHIPS.FOLLOW;
+				}
+			}
+			//else if(Input.get().mouseIsPressed(MouseEvent.BUTTON3)) //rotate ship
+			//{
+				if(STATE == SHIPS.FOLLOW)
+				{
+					mRotated = Input.get().mouseIsPressed(MouseEvent.BUTTON3);
+					if(mRotated)
+					{
+						mBounds.width = mImgH.getWidth();
+						mBounds.height = mImgH.getHeight();
+					}
+					else
+					{
+						mBounds.width = mImgV.getWidth();
+						mBounds.height = mImgV.getHeight();
+					}
+					Events.get().add(new Event("repaint"));
+				}	
+			//}
 		}
+		
 	}
 }

@@ -49,14 +49,14 @@ public class GameState extends State implements Server, Client
 	/**
 	 * The current state
 	 *///we don't want this to be changed by an outside source
-	private static STATE mSTATE;
+	private static STATE m_STATE;
 	
 	protected Object m_syncObj = new Object();
 	//TODO: Change all things to m_
 	protected Frame frame;
 	protected PopupWindow popup;
-	protected cServer mServer;
-	protected cClient mClient;
+	protected cServer m_Server;
+	protected cClient m_Client;
 	
 	protected ArrayList<String> mPrint = new ArrayList<String>();
 	
@@ -68,8 +68,8 @@ public class GameState extends State implements Server, Client
 	{
 		super();
 		//Initialise variables
-		mServer = null;
-		mClient = null;
+		m_Server = null;
+		m_Client = null;
 		mName = "GameState";
 		
 		//Create the grids 
@@ -130,10 +130,10 @@ public class GameState extends State implements Server, Client
 		//mEventMgr.add(new Event("removeState", "AIBombState", "FuSM"));
 		mObj.clear();
 		//mServer.finalize();
-		if (mServer != null)
-			mServer.end();
-		mServer = null;
-		mClient = null;
+		if (m_Server != null)
+			m_Server.end();
+		m_Server = null;
+		m_Client = null;
 	}
 
 	@Override
@@ -169,13 +169,13 @@ public class GameState extends State implements Server, Client
 				if(Events.get().get(i).m_Param.equals("Host"))
 				{
 					//Start the server
-					mServer = cServer.getServer();
+					m_Server = cServer.getServer();
 					//listen to events from the server
-					mServer.addNetworkListener(this);
+					m_Server.addNetworkListener(this);
 					//start the server
-					mServer.start();
+					m_Server.start();
 					//set the state
-					mSTATE = STATE.HOST;
+					m_STATE = STATE.HOST;
 					//set button "StartGame" to invisible
 					Events.get().add(new Event("visibility", false, "StartGame"));
 					//add thing to output
@@ -193,24 +193,24 @@ public class GameState extends State implements Server, Client
 					frame.setVisible(true);
 					synchronized (m_syncObj)
 						{
-						popup.init(m_syncObj, sHost, "Enter ip of computer to join game");
+						popup.init(m_syncObj, "Enter ip of computer to join game");
 						try {
 							m_syncObj.wait();
 						} catch (InterruptedException e1) {}
 					}
 					frame.setVisible(false);
-					//ensure there is not server available
-					mServer = null;
-					mClient = cClient.getClient();
-					mClient.addClientListener(this);
-					mClient.setName("Client");
-					mClient.start();
-					mClient.login(sHost, "client");
+					//ensure there is no server available
+					m_Server = null;
+					m_Client = cClient.getClient();
+					m_Client.addClientListener(this);
+					m_Client.setName("Client");
+					m_Client.start();
+					m_Client.login(popup.p_str, "client");
 					//set button "StartGame" to invisible
 					Events.get().add(new Event("visibility", false, "StartGame"));
 					//output to screen
 					mPrint.add("Client started");
-					mSTATE = STATE.jMULTI;
+					m_STATE = STATE.jMULTI;
 				}
 				else if(Events.get().get(i).m_Param.equals("Single"))
 				{
@@ -230,15 +230,15 @@ public class GameState extends State implements Server, Client
 				{//when socket is opened...
 					mPrint.add("Socket open, waiting for local client...");
 					//Get client
-					mClient = cClient.getClient();
+					m_Client = cClient.getClient();
 					//listen to events from the client
-					mClient.addClientListener(this);
-					mClient.setName("Client");
+					m_Client.addClientListener(this);
+					m_Client.setName("Client");
 					//Begin the client
-					mClient.start();
+					m_Client.start();
 					//Login to local host
-					mClient.login("127.0.0.1", "host");
-					mSTATE = STATE.hRUNNING;
+					m_Client.login("127.0.0.1", "host");
+					m_STATE = STATE.hRUNNING;
 				}
 				else if (Events.get().get(i).m_Param.equals("Error"))
 				{
@@ -258,7 +258,7 @@ public class GameState extends State implements Server, Client
 							addr = InetAddress.getLocalHost();
 						} catch (UnknownHostException e) {}
 					mPrint.add("client connected");
-					if(mSTATE == STATE.hRUNNING)//local client joined
+					if(m_STATE == STATE.hRUNNING)//local client joined
 						mPrint.add("waiting for player to join game on ip: " + addr.getHostAddress());
 					else//other user
 						mPrint.add("joining game");
@@ -266,7 +266,7 @@ public class GameState extends State implements Server, Client
 				}
 				//if some has joined the game
 				else if(Events.get().get(i).m_Param.equals("joined")){
-					if (mSTATE == STATE.jMULTI)
+					if (m_STATE == STATE.jMULTI)
 						mPrint.add("You joined a game");
 					else
 						mPrint.add("Someone joined the game!");
@@ -309,13 +309,13 @@ public class GameState extends State implements Server, Client
 						//make ships non-movable
 						Events.get().add(new Event("setShips", "SET"));
 						Events.get().add(new Event("repaint"));//repaint
-						if(mSTATE == STATE.SINGLE){
-							mSTATE = STATE.sRUNING;
+						if(m_STATE == STATE.SINGLE){
+							m_STATE = STATE.sRUNING;
 							Events.get().add(new Event("setState", "UserState", "FuSM"));//begin single player game
 						}
-						else if(mSTATE == STATE.hRUNNING || mSTATE == STATE.jMULTI){
-							mSTATE = STATE.hMULTI;
-							mClient.sendMessage("gameStarted");
+						else if(m_STATE == STATE.hRUNNING || m_STATE == STATE.jMULTI){
+							m_STATE = STATE.hMULTI;
+							m_Client.sendMessage("gameStarted");
 							Events.get().add(new Event("setState", "MultiPlayer", "FuSM"));//begin militplayer
 						}
 					}
@@ -394,13 +394,13 @@ public class GameState extends State implements Server, Client
 	 * @param mSTATE the mSTATE to set
 	 */
 	public void setMSTATE(STATE mSTATE) {
-		this.mSTATE = mSTATE;
+		this.m_STATE = mSTATE;
 	}
 
 	/**
 	 * @return the mSTATE
 	 */
 	public static STATE getMSTATE() {
-		return mSTATE;
+		return m_STATE;
 	}
 }

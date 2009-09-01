@@ -43,7 +43,7 @@ public class cServer extends Thread
 	private cServer()
 	{
 		try
-		{
+		{//25142
 			servSock=new ServerSocket(25142); //create socket
 
 		} 
