@@ -11,6 +11,7 @@ public class PopupWindow extends Applet implements ActionListener
 	
 	TextField t;
 	Label l;
+	java.awt.Button b;
 	public Object p_parent;
 	int flag;
 	public String p_str;
@@ -32,7 +33,7 @@ public class PopupWindow extends Applet implements ActionListener
 		
 		t = new TextField(12);
 		l = new Label(text);
-		
+		b = new java.awt.Button("Return to game");
 		removeAll();
 		switch(flag)
 		{
@@ -41,6 +42,7 @@ public class PopupWindow extends Applet implements ActionListener
 			add(t);
 			break;
 		case 1:
+			add(b);
 			add(l);
 			//g.setFont(new Font("FAQfont", Font.ITALIC, 12));
 			add(new Label("Q: How do I begin a game."));
@@ -55,6 +57,7 @@ public class PopupWindow extends Applet implements ActionListener
 			break;
 		}
 		t.addActionListener(this);
+		b.addActionListener(this);
 		repaint();
 	}
 
