@@ -113,13 +113,16 @@ public class cClient extends Thread
 	
 	public void logout()
 	{
-		output("logout");
-		try 
+		output("logout||");
+		/*try 
 		{
-			bReader.close();
-			pWriter.close();
-			sock.close();
-		} catch (Exception e){};
+			if(bReader != null && pWriter != null && sock != null)
+			{
+				bReader.close();
+				pWriter.close();
+				sock.close();
+			}
+		} catch (Exception e){};*/
 		sock = null;
 		chatThread = null;
 	}
@@ -166,6 +169,7 @@ public class cClient extends Thread
 					{
 						for(Client go : listener)
 							go.clientMsg(new Event("client", /*val+*/cmd));
+						System.exit(0);
 					}
 					else
 					if(cmd.equals("granted")) 

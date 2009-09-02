@@ -29,8 +29,8 @@ public class Multiplayer extends State implements Client
 	 * X and Y: the grid. 0-no ship, 1-battleship, 2-small ship
 	 * Z: The status of that ship. 0-normal, 1-bombed, 2-ship hit
 	 */
-	private static int[][][] mPGrid = new int[10][10][2];
-	private static int[][][] mOGrid = null;
+	private static int[][][] m_PGrid = new int[10][10][2];
+	private static int[][][] m_OGrid = new int[10][10][2];
 	
 	/**
 	 * Wait: waiting to receive the ship positions from the other user. 
@@ -64,24 +64,24 @@ public class Multiplayer extends State implements Client
 	 * Converts the grid into a string and vice-versa
 	 * @return the string of the array
 	 */
-	private String convertArray() {
+	private String convertArray(int [][][] grid) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("grid");
 		for(int iX = 0; iX<10; iX++){
 			for(int iY = 0; iY<10; iY++){
-				if(mPGrid[iX][iY][0]!=0)
+				if(grid[iX][iY][0]!=0)
 				{
 					buf.append(iX);
 					buf.append(iY);
 					buf.append(0);
-					buf.append(mPGrid[iX][iY][0]+"&");
+					buf.append(grid[iX][iY][0]+"&");
 				}
-				if(mPGrid[iX][iY][1]!=0)
+				if(grid[iX][iY][1]!=0)
 				{
 					buf.append(iX);
 					buf.append(iY);
 					buf.append(1);
-					buf.append(mPGrid[iX][iY][0]+"&");
+					buf.append(grid[iX][iY][0]+"&");
 				}
 			}
 		}
@@ -109,11 +109,11 @@ public class Multiplayer extends State implements Client
 	 */
 	public static boolean setGrid()
 	{
-		mPGrid = new int[10][10][2];
+		m_PGrid = new int[10][10][2];
 		for(Battleship go : Battleship.mShips)
 			for(int i = 0; i<go.mXY.size(); i++)
-				if(mPGrid[go.mXY.get(i).x][go.mXY.get(i).y][0] == 0)
-					mPGrid[go.mXY.get(i).x][go.mXY.get(i).y][0] = getShipType(go.mXY.size());
+				if(m_PGrid[go.mXY.get(i).x][go.mXY.get(i).y][0] == 0)
+					m_PGrid[go.mXY.get(i).x][go.mXY.get(i).y][0] = getShipType(go.mXY.size());
 				else
 					return false;
 		return true;
@@ -149,7 +149,7 @@ public class Multiplayer extends State implements Client
 			if(Events.get().get(i).m_Event.equals("setGrid"))
 			{
 				setGrid();
-				cClient.getClient().sendMessage(convertArray());
+				cClient.getClient().sendMessage(convertArray(m_PGrid));
 				if(mSTATE==STATE.WAIT)
 					Events.get().add(new Event("setField", "TargetArrows"));
 				Events.get().remove(i);
@@ -161,9 +161,15 @@ public class Multiplayer extends State implements Client
 				if(GameState.getMSTATE() == GameState.STATE.hMULTI ||
 						GameState.getMSTATE() ==  GameState.STATE.jMULTI)
 					Events.get().add(new Event("setField", "TargetArrows"));
-				mOGrid = (int[][][])Events.get().get(i).m_Param;
+				m_OGrid = (int[][][])Events.get().get(i).m_Param;
 				Events.get().remove(i);
 			}
+			else if(Events.get().get(i).m_Event.equals("updategrid"))
+			{//update the grid to show if ships have been hit
+				m_PGrid = convertString((String)Events.get().get(i).m_Param);
+				Events.get().remove(i);
+			}
+			
 			else if(Events.get().get(i).m_Event.equals("clientMessage"))
 			{
 				if(Events.get().get(i).m_Param.equals("turn"))
@@ -178,6 +184,7 @@ public class Multiplayer extends State implements Client
 				Events.get().add(new Event("repaint"));
 				Events.get().remove(i);
 			}
+			
 		}
 		//mouse events
 		if(Input.get().mouseIsPressed(MouseEvent.BUTTON1))
@@ -187,13 +194,18 @@ public class Multiplayer extends State implements Client
 			if(p.x >=0 && p.y >= 0 && mSTATE == STATE.CURRENT)
 			{
 				mSTATE = STATE.OTHER;
-				Events.get().add(new Event("addBomb", mPGrid));
+				Events.get().add(new Event("addBomb", m_PGrid));
 				//Events.get().add(new Event("setField", "Normal"));
-				cClient.getClient().sendMessage("turn");
-				if(mOGrid[p.x][p.y][0] == 0)
-					mPGrid[p.x][p.y][1] = 1;
-				else if(mOGrid[p.x][p.y][0] > 0)
-					mPGrid[p.x][p.y][1] = 2;
+				//Set the other players turn
+				if(m_PGrid[p.x][p.y][1] == 0)
+					cClient.getClient().sendMessage("turn");
+				//if there are no ships in that position
+				if(m_OGrid[p.x][p.y][0] == 0)
+					m_PGrid[p.x][p.y][1] = 1;
+				//if there are ships in given position
+				else if(m_OGrid[p.x][p.y][0] > 0)
+					m_PGrid[p.x][p.y][1] = 2;
+				cClient.getClient().sendMessage("Update"+convertArray(m_OGrid));
 			}
 		}
 	}
@@ -226,6 +238,8 @@ public class Multiplayer extends State implements Client
 	public void shipsRecieve(String str) {
 		if(str.startsWith("grid"))
 			mSTATE = STATE.RECEIVED;
+		else if(str.startsWith("updategrid"))
+			Events.get().add(new Event("updategrid", str.substring(10)));
 		System.out.println("message recieved "+str);
 	}
 }

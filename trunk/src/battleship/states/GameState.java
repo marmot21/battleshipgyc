@@ -305,10 +305,11 @@ public class GameState extends State implements Server, Client
 			{
 				if(Events.get().get(i).m_Param.equals("EndGame"))
 				{
-					if(!(m_STATE == STATE.sRUNING || m_STATE == STATE.SINGLE))
+					if(m_STATE != STATE.sRUNING)// || m_STATE != STATE.SINGLE)
 						m_Client.logout();
-					Events.get().add(new Event("setState", "MenuState", "Main"));
-					Events.get().remove(i);
+					System.exit(0);
+					//Events.get().add(new Event("setState", "MenuState", "Main"));
+					//Events.get().remove(i);
 				}
 				//if start game is pressed
 				if(Events.get().get(i).m_Param.equals("StartGame")) {
@@ -349,6 +350,7 @@ public class GameState extends State implements Server, Client
 					}
 					frame.setVisible(false);
 					frame.setSize(400, 100);
+					Events.get().remove(i);
 				}
 			}
 		}
