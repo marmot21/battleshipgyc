@@ -88,6 +88,9 @@ public class GameState extends State implements Server, Client
 		pTrg.m_FuSM.addState(new UserState());
 		pTrg.m_FuSM.addState(new Multiplayer());
 		pTrg.m_FuSM.m_Name = "FuSM";
+		pTrg.setM_TargetGrid(true);
+		//ensure m_FuSM is empty
+		pStat.setM_TargetGrid(false);
 		//Add the grids to this state
 		mObj.add(pTrg);
 		mObj.add(pStat);
@@ -297,6 +300,12 @@ public class GameState extends State implements Server, Client
 					mPrint.add("Unable to connect, retrying");
 					Events.get().add(new Event("repaint"));
 				}
+				Events.get().remove(i);
+			}
+			//game lost
+			else if (Events.get().get(i).m_Event.equals("gamelost"))
+			{
+				mPrint.add("You have lost the game");
 				Events.get().remove(i);
 			}
 			
