@@ -103,6 +103,11 @@ public class cClient extends Thread
 		output("message||"+str);
 	}
 	
+	public void sendGrid(String str)
+	{
+		output("screen||"+str);
+	}
+	
 	public void login(String host, String name)
 	{//Login to server
 		theHost=host;
@@ -185,6 +190,11 @@ public class cClient extends Thread
 						//outputArea.append( val + "\n" );
 					}
 					else if(cmd.equals("message"))
+					{
+						for(Client go : listener)
+							go.clientMsg(new Event("clientMessage",val));
+					}
+					else if(cmd.equals("screen"))//was grid - but changed it for debugging
 					{
 						for(Client go : listener)
 							go.shipsRecieve(val);
