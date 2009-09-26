@@ -33,13 +33,23 @@ public class Multiplayer extends State implements Client
 	private static int[][][] m_OGrid = new int[10][10][2];
 	
 	/**
+	 * The number of ships which have been hit
+	 */
+	private static int m_ShipCount;
+	/**
+	 * The number of ship hits required to win the game
+	 */
+	private int m_Ships_in_Game = 6;
+	
+	/**
 	 * Wait: waiting to receive the ship positions from the other user. 
 	 * Received: got the info from the other player. 
 	 * Current: the current user's turn. 
 	 * Other: the other player's turn. 
+	 * End: the other player has won the game :(
 	 */
 	private enum STATE {
-		WAIT, RECEIVED, CURRENT, OTHER
+		WAIT, RECEIVED, CURRENT, OTHER, END
 	} 
 	
 	private STATE mSTATE = STATE.WAIT;
@@ -61,7 +71,7 @@ public class Multiplayer extends State implements Client
 	}
 
 	/**
-	 * Converts the grid into a string and vice-versa
+	 * Converts the grid into a string
 	 * @return the string of the array
 	 */
 	private String convertArray(int [][][] grid) {
@@ -88,7 +98,11 @@ public class Multiplayer extends State implements Client
 		if (buf.length() >0 ) buf.setLength(buf.length()-1);
 		return buf.toString();
 	}
-	
+	/**
+	 * Convert a string back into an array
+	 * @param str The string to convert
+	 * @return The grid with the converted string
+	 */
 	static int[][][] convertString(String str)
 	{
 		StringTokenizer st = new StringTokenizer(str,"&");
@@ -132,12 +146,19 @@ public class Multiplayer extends State implements Client
 	public void paint(Graphics g) {
 		g.setColor(Color.GREEN);
 		g.setFont(new Font("Dialog", Font.BOLD, 14));
-		if(mSTATE == STATE.CURRENT)
-			g.drawString("Your Turn", 450, 400);
-		else if(mSTATE == STATE.OTHER)
-			g.drawString("Opponents Turn", 450, 400);
-		else 
-			g.drawString("Waiting for other player", 450, 400);
+		if(m_ShipCount<m_Ships_in_Game)
+		{
+			if(mSTATE == STATE.CURRENT)
+				g.drawString("Your Turn", 450, 400);
+			else if(mSTATE == STATE.OTHER)
+				g.drawString("Opponents Turn", 450, 400);
+			else if (mSTATE == STATE.END)
+				g.drawString("You lost", 450, 400);
+			else 
+				g.drawString("Waiting for other player", 450, 400);
+		}
+		else
+			g.drawString("You have won", 450, 400);
 	}
 
 
@@ -146,7 +167,12 @@ public class Multiplayer extends State implements Client
 	{
 		for(int i=0; i < Events.get().size(); i++)
 		{
-			if(Events.get().get(i).m_Event.equals("setGrid"))
+			if(Events.get().get(i).m_Event.equals("GameEnded"))
+			{
+				mSTATE = STATE.END;
+				Events.get().remove(i);
+			}
+			else if(Events.get().get(i).m_Event.equals("setGrid"))
 			{
 				setGrid();
 				cClient.getClient().sendMessage(convertArray(m_PGrid));
@@ -164,9 +190,11 @@ public class Multiplayer extends State implements Client
 				m_OGrid = (int[][][])Events.get().get(i).m_Param;
 				Events.get().remove(i);
 			}
+			//update the grid to show if ships have been hit
 			else if(Events.get().get(i).m_Event.equals("updategrid"))
-			{//update the grid to show if ships have been hit
-				m_PGrid = convertString((String)Events.get().get(i).m_Param);
+			{
+				m_OGrid = convertString((String)Events.get().get(i).m_Param);
+				Events.get().add(new Event("updatefield", m_OGrid));//draw the new bomb drops to the status grid
 				Events.get().remove(i);
 			}
 			
@@ -189,8 +217,9 @@ public class Multiplayer extends State implements Client
 		//mouse events
 		if(Input.get().mouseIsPressed(MouseEvent.BUTTON1))
 		{
-			//temp point
+			//point used in this function only
 			Point p = Playfield.getgridPoint();
+			//if a grid position is pressed - add a bomb
 			if(p.x >=0 && p.y >= 0 && mSTATE == STATE.CURRENT)
 			{
 				mSTATE = STATE.OTHER;
@@ -204,8 +233,14 @@ public class Multiplayer extends State implements Client
 					m_PGrid[p.x][p.y][1] = 1;
 				//if there are ships in given position
 				else if(m_OGrid[p.x][p.y][0] > 0)
+				{
 					m_PGrid[p.x][p.y][1] = 2;
-				cClient.getClient().sendMessage("Update"+convertArray(m_OGrid));
+					m_ShipCount++;
+				}
+				if(m_ShipCount>=m_Ships_in_Game)
+					cClient.getClient().sendMessage("GameEnded");
+				else
+					cClient.getClient().sendMessage("update"+convertArray(m_PGrid));
 			}
 		}
 	}

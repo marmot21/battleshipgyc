@@ -32,6 +32,7 @@ public class Playfield extends GameObject
 	 */
 	public int m_Grid[][][] = new int[10][10][2];
 	private static Point m_XY = new Point(-1, -1);
+	private boolean m_TargetGrid = false;
 	private boolean m_TargetArrows = false;
 	/**
 	 * Fuzzy State Machine.
@@ -62,7 +63,7 @@ public class Playfield extends GameObject
 	{
 		for(int i = 0; i < m_Obj.size(); i++)
 			m_Obj.get(i).run();
-		if(m_FuSM != null)
+		if(m_TargetGrid)
 			m_FuSM.getState().run();
 	}
 	
@@ -105,23 +106,39 @@ public class Playfield extends GameObject
 						g.fillRect(iX*m_GridSize.width+24, iY*m_GridSize.height, m_GridSize.width, m_GridSize.height);
 					}
 		}
+		//Draw hits and dropped bombs for the status screen
+		if(m_TargetGrid)
+			for(int iX = 0; iX<10; iX++)
+				for(int iY = 0; iY<10; iY++)
+					if(m_Grid[iX][iY][1] == 1)
+					{
+						g.setColor(new Color(255,255,255,125));
+						g.fillRect(iX*m_GridSize.width+24, iY*m_GridSize.height+m_GridSize.height*10+24, m_GridSize.width, m_GridSize.height);
+					}
+					else if(m_Grid[iX][iY][1] == 2)
+					{
+						g.setColor(new Color(255,0,0,125));
+						g.fillRect(iX*m_GridSize.width+24, iY*m_GridSize.height+m_GridSize.height*10+24, m_GridSize.width, m_GridSize.height);
+					}
+		
 		for(int i = 0; i < m_Obj.size(); i++)
 			m_Obj.get(i).paint(g);
-		if(m_FuSM != null)
+		if(m_TargetGrid)
 			m_FuSM.getState().paint(g);
 	}
 	
 	@Override
 	public void processEvents()
 	{
-		if(m_FuSM != null)//checks if it is necessary to do all this
+		if(m_TargetGrid)//checks if it is necessary to do all this
 		{
 			 for(int i = 0; i < Events.get().size(); i++)
 			 { 
+				 //add bomb to the grid
 				 if(Events.get().get(i).m_Event.equals("addBomb"))
 				 {
 					 m_Grid = (int[][][]) Events.get().get(i).m_Param;
-					 System.out.println("bomb added");
+					 //System.out.println("bomb added"); //debugging stuff
 					 Events.get().add(new Event("repaint"));
 					 Events.get().remove(i);
 				 }
@@ -157,17 +174,44 @@ public class Playfield extends GameObject
 			 }
 					 //}
 				 //}
-		 }
+		 }//end of stuff concerning the FuSM
+		
+		else
+		for(int i = 0; i < Events.get().size(); i++)
+		{
+			 if(Events.get().get(i).m_Event.equals("updatefield"))
+			 {
+				 m_Grid = (int[][][]) Events.get().get(i).m_Param;
+				 Events.get().add(new Event("repaint"));
+				 Events.get().remove(i);
+			 }
+		}
 		
 		for(int i = 0; i < m_Obj.size(); i++)
 			m_Obj.get(i).processEvents();
-		if(m_FuSM != null)
+		if(m_TargetGrid)
 		{
 			m_FuSM.processEvents(); //pass on events to the FuSM
 			m_FuSM.getState().processEvents();
 		}
 	}
 	
+	
+
+	/**
+	 * @param m_TargetGrid the m_TargetGrid to set
+	 */
+	public void setM_TargetGrid(boolean m_TargetGrid) {
+		this.m_TargetGrid = m_TargetGrid;
+	}
+
+	/**
+	 * @return the m_TargetGrid
+	 */
+	public boolean isM_TargetGrid() {
+		return m_TargetGrid;
+	}
+
 	/*
 	 * Returns the size of the individual grid blocks
 	 * @return Dimension Object
