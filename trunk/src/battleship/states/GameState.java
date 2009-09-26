@@ -421,8 +421,8 @@ public class GameState extends State implements Server, Client
 	public void shipsRecieve(String str) {
 		if(str.startsWith("grid"))
 			Events.get().add(new Event("grid", Multiplayer.convertString(str.substring(4))));
-		//else
-			//Events.get().add(new Event("clientMessage", str));
+		else
+			Events.get().add(new Event("clientMessage", str));
 	}
 
 	/**
