@@ -91,7 +91,7 @@ public class Multiplayer extends State implements Client
 					buf.append(iX);
 					buf.append(iY);
 					buf.append(1);
-					buf.append(grid[iX][iY][0]+"&");
+					buf.append(grid[iX][iY][1]+"&");
 				}
 			}
 		}
@@ -175,7 +175,7 @@ public class Multiplayer extends State implements Client
 			else if(Events.get().get(i).m_Event.equals("setGrid"))
 			{
 				setGrid();
-				cClient.getClient().sendMessage(convertArray(m_PGrid));
+				cClient.getClient().sendGrid(convertArray(m_PGrid));
 				if(mSTATE==STATE.WAIT)
 					Events.get().add(new Event("setField", "TargetArrows"));
 				Events.get().remove(i);
@@ -239,8 +239,7 @@ public class Multiplayer extends State implements Client
 				}
 				if(m_ShipCount>=m_Ships_in_Game)
 					cClient.getClient().sendMessage("GameEnded");
-				else
-					cClient.getClient().sendMessage("update"+convertArray(m_PGrid));
+				cClient.getClient().sendGrid("update"+convertArray(m_PGrid));
 			}
 		}
 	}
@@ -254,7 +253,7 @@ public class Multiplayer extends State implements Client
 	@Override
 	public void clientMsg(Event e) {
 		// TODO Auto-generated method stub
-		
+		//System.out.println("message recieved "+e.m_Event+e.m_Param);
 	}
 
 	@Override
