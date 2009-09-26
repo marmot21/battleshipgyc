@@ -107,7 +107,7 @@ public class Playfield extends GameObject
 					}
 		}
 		//Draw hits and dropped bombs for the status screen
-		if(m_TargetGrid)
+		if(!m_TargetGrid)
 			for(int iX = 0; iX<10; iX++)
 				for(int iY = 0; iY<10; iY++)
 					if(m_Grid[iX][iY][1] == 1)
