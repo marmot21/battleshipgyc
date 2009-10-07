@@ -1,6 +1,5 @@
-#summary The Algorithm for the project - each time you add something add it here too.
+#summary The Algorithm for the project.
 #labels Featured,Algorithm
-
 ==General==
 
 *Initially*
