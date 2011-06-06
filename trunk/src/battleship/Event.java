@@ -1,7 +1,7 @@
 package battleship;
 
 /**
- * A simple wrapper for events.
+ * A simple wrapper for events. with a change here!
  * @author Amec
  * @author OBi
  */
